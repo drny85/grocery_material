@@ -3,11 +3,12 @@
   flex: 1;
   box-shadow: 2px 4px 3px rgba(0, 0, 0, 0.3);
   background-image: u;
-  height: 6rem;
-  max-height: 400;
+  height: 5rem;
+  max-height: 100px;
   margin: 1rem 0px;
   width: 100%;
   position: relative;
+  border-radius: 10px;
 }
 
 .order_item > .img {

@@ -5,7 +5,7 @@ import './styles.css'
 
 
 const OrderItem = ({ item }) => {
-    console.log(item)
+
     return (
         <div className='order_item'>
             <div style={{ backgroundImage: `url(${item.imageUrl})` }} className="img">
@@ -24,10 +24,7 @@ const OrderItem = ({ item }) => {
                 </div>
 
             </div>
-            <div className="bottom">
 
-
-            </div>
 
         </div>
     )

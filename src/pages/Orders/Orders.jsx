@@ -20,9 +20,9 @@ const Orders = () => {
     }, [dispatch, user])
 
     return (
-        <div>
+        <div style={{ maxWidth: '1280px' }}>
             <Grid container>
-                <Typography variant='h3'>Orders</Typography>
+                {/* <Typography variant='h3'>Orders</Typography> */}
 
                 <Grid item xs={12} sm={4}>
                     {orders.length > 0 && (orders.map(order => <OrderCard onClick={() => history.push(`/orders/${order.id}`)} key={order.id} order={order} />))}

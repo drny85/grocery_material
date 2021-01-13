@@ -18,7 +18,7 @@ const OrderCard = ({ order, onClick }) => {
             </div>
             <div className="details_order_card">
                 <div className="items">
-                    {order?.items.map(order => (<Typography component='li' variant='subtitle2'>{order.name}</Typography>))}
+                    {order?.items.map(order => (<Typography key={order.id} component='li' variant='subtitle2'>{order.name}</Typography>))}
                 </div>
                 <div className="price">
                     <Typography>Total ${order?.totalAmount.toFixed(2)}</Typography>

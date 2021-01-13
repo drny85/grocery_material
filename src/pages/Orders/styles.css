@@ -51,6 +51,8 @@
   margin: 1rem;
   padding: 1.5rem;
   border-radius: 10px;
+  max-width: 1080px;
+  margin: 2rem auto;
 }
 .top {
   width: 100%;
@@ -69,6 +71,7 @@
 .top_details {
   display: flex;
   flex: 1;
+  border-bottom: solid 1px lightgray;
 }
 .top_details > .customer {
   display: flex;
@@ -85,4 +88,20 @@
 
   justify-content: center;
   align-items: center;
+}
+
+.order_details_container .totalPrice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+}
+
+.order_details_container .bottom_details {
+  border-bottom: solid 1px lightgray;
+}
+
+.top_details .actions {
+  display: flex;
+  flex-direction: column;
 }

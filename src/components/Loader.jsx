@@ -16,7 +16,7 @@ const Loader = () => {
     const theme = useTheme()
     const classes = useStyles();
     return <Backdrop className={classes.backdrop} open={true} >
-        <CircularProgress color={theme.palette.primary.main} />
+        <CircularProgress color='primary' />
     </Backdrop>
 }
 

@@ -46,9 +46,9 @@ const Home = () => {
     return (
         <div className={classes.root}>
 
-            <ActionCard title='Orders' onClick={() => { history.push('/orders') }} />
+            <ActionCard title='Today`s Orders' onClick={() => { history.push('/orders') }} />
             <ActionCard title='Admin' onClick={() => { history.push('/admin') }} />
-            <ActionCard title='Home' onClick={() => { }} />
+            <ActionCard title='Past Orders' onClick={() => { }} />
             <ActionCard title='Home' onClick={() => { }} />
             <ActionCard title='Home' onClick={() => { }} />
             <ActionCard title='Home' onClick={() => { }} />
