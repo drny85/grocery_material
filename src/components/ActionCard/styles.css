@@ -1,0 +1,8 @@
+.action_card {
+  display: flex;
+  background-color: burlywood;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
+}

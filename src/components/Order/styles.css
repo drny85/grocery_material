@@ -1,0 +1,39 @@
+.order_item {
+  display: flex;
+  flex: 1;
+  box-shadow: 2px 4px 3px rgba(0, 0, 0, 0.3);
+  background-image: u;
+  height: 6rem;
+  max-height: 400;
+  margin: 1rem 0px;
+  width: 100%;
+  position: relative;
+}
+
+.order_item > .img {
+  display: flex;
+  width: 100%;
+  flex: 0.2;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  display: block;
+  background-position: center;
+  background-size: cover;
+}
+
+.order_item > .details {
+  display: flex;
+  padding: 0.8rem;
+  justify-content: space-between;
+  align-items: center;
+  flex: 0.6;
+}
+
+.order_item > .price {
+  display: flex;
+  padding: 0.8rem;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex: 0.2;
+  background-color: rosybrown;
+}
