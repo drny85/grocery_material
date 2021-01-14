@@ -18,7 +18,7 @@ const OrderCard = ({ order, onClick }) => {
             ? "#4caf50"
             : order?.status === "in progress"
             ? "#ffc107"
-            : "#3f51b5",
+            : "#b0bec5",
       }}
       className="order_card"
     >
@@ -39,9 +39,6 @@ const OrderCard = ({ order, onClick }) => {
             </Typography>
           ))}
         </div>
-        <div className="price">
-          <Typography>Total ${order?.totalAmount.toFixed(2)}</Typography>
-        </div>
       </div>
       <div className="order_card_bottom">
         <Typography>
@@ -49,6 +46,9 @@ const OrderCard = ({ order, onClick }) => {
         </Typography>
         <Typography>
           Order Type: {order?.orderType === "delivery" ? "Delivery" : "Pick Up"}
+        </Typography>
+        <Typography style={{ textTransform: "capitalize" }}>
+          Payment: {order?.paymentMethod}
         </Typography>
         {order?.orderType === "delivery" && (
           <Typography>
@@ -60,6 +60,11 @@ const OrderCard = ({ order, onClick }) => {
         <Typography>Date: {moment(order?.orderPlaced).calendar()}</Typography>
         <Typography style={{ textTransform: "uppercase" }}>
           Status: {order.status}
+        </Typography>
+      </div>
+      <div className="price">
+        <Typography variant="h6">
+          Total ${order?.totalAmount.toFixed(2)}
         </Typography>
       </div>
     </div>

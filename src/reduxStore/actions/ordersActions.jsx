@@ -56,6 +56,10 @@ export const setCurrentOrder = (id) => async (dispatch) => {
   }
 };
 
+export const filterOrders = (params) => (dispatch) => {
+  dispatch({ type: SEARCH_ORDERS, payload: params });
+};
+
 export const clearCurrent = () => (dispatch) =>
   dispatch({ type: CLEAR_CURRENT_ITEM });
 

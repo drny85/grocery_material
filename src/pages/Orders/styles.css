@@ -9,6 +9,7 @@
   height: 400;
   margin: 1.5rem;
   border-radius: 10px;
+  z-index: -1;
 }
 
 .order_card > .order_card_top {
@@ -16,7 +17,7 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: flex-start;
-  border-bottom: solid 1px lightgray;
+  border-bottom: solid 1px rgba(70, 60, 60, 0.5);
   width: 100%;
 }
 
@@ -27,7 +28,7 @@
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  border-bottom: solid 1px lightgray;
+  border-bottom: solid 1px rgba(70, 60, 60, 0.5);
   padding: 0.5rem 0px;
 }
 
@@ -35,11 +36,13 @@
   display: flex;
   width: 100%;
   flex-direction: column;
+  border-bottom: solid 1px rgba(70, 60, 60, 0.5);
 }
 
 .details_order_card > .items {
   display: flex;
   flex-direction: column;
+  flex: 1;
 }
 
 .order_details_container {
@@ -56,7 +59,7 @@
 }
 .top {
   width: 100%;
-  border-bottom: solid 0.5px lightgray;
+  border-bottom: solid 1px rgba(70, 60, 60, 0.5);
   margin-top: 1.5rem;
 }
 .order_number {
@@ -64,14 +67,14 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  border-bottom: solid 0.5px lightgray;
+  border-bottom: solid 1px rgba(70, 60, 60, 0.5);
   padding: 0.5rem;
 }
 
 .top_details {
   display: flex;
   flex: 1;
-  border-bottom: solid 1px lightgray;
+  border-bottom: solid 1px rgba(70, 60, 60, 0.5);
 }
 .top_details > .customer {
   display: flex;
@@ -98,7 +101,7 @@
 }
 
 .order_details_container .bottom_details {
-  border-bottom: solid 1px lightgray;
+  border-bottom: solid 1px rgba(70, 60, 60, 0.5);
 }
 
 .top_details .actions {

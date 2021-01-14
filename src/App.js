@@ -9,6 +9,7 @@ import { useDispatch } from "react-redux";
 import { Orders } from "./pages/Orders";
 import { AdminPage } from "./pages/Admin";
 import OrderDetails from "./pages/Orders/OrderDetails";
+import PastOrders from "./pages/Orders/PastOrders";
 
 const theme = createMuiTheme({
   palette: {
@@ -44,6 +45,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <Router>
         <Switch>
+          <Route exact path="/pastOrders" component={PastOrders} />
           <Route exact path="/admin" component={AdminPage} />
           <Route exact path="/orders/:id" component={OrderDetails} />
           <Route exact path="/orders" component={Orders} />

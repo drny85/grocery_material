@@ -4,6 +4,7 @@ import {
   DialogContent,
   DialogTitle,
   Typography,
+  DialogContentText,
 } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,7 +13,6 @@ import Loader from "../../components/Loader";
 import moment from "moment";
 import {
   setCurrentOrder,
-  clearCurrent,
   changeStatus,
 } from "../../reduxStore/actions/ordersActions";
 
@@ -23,6 +23,13 @@ import BackArrow from "../../components/BackArrow";
 import Controls from "../../components/controls/Controls";
 
 import { phoneFormatted } from "../../utils/phoneFormatted";
+import sendNotification from "../../utils/sendNotification";
+
+import Slide from "@material-ui/core/Slide";
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 const options = [
   {
@@ -49,12 +56,19 @@ const OrderDetails = () => {
   const { user } = useSelector((state) => state.userData);
   const dispatch = useDispatch();
   const [show, setShow] = useState(false);
+  const [modalAlert, setModalAlert] = useState(false);
   const [status, setStatus] = useState(false);
 
   const isDelivery = () => current?.orderType === "delivery";
 
   const changeOrderStatus = () => {
     if (status !== "") {
+      if (current.status === "delivered") {
+        setShow(false);
+        setModalAlert(true);
+        setStatus("");
+        return;
+      }
       if (status === "delivered") {
         dispatch(changeStatus(current.id, status, user));
         setShow(false);
@@ -63,10 +77,27 @@ const OrderDetails = () => {
         dispatch(changeStatus(current.id, status, user));
         setShow(false);
         setStatus("");
+        sendNotification(
+          `Congratulations ${current.customer.name}!`,
+          "Your order has been picked up, enjoy!",
+          current
+        );
       } else {
         dispatch(changeStatus(current.id, status));
         setShow(false);
         setStatus("");
+      }
+    }
+
+    if (status === "delivered") {
+      // send notification to user when order is delivered
+      //@params { title = string, body = string, order = object}
+      if (!current.deliveredOn) {
+        sendNotification(
+          `Congratulations ${current.customer.name}!`,
+          "Your order is on its way!",
+          current
+        );
       }
     }
   };
@@ -75,7 +106,7 @@ const OrderDetails = () => {
     dispatch(setCurrentOrder(id));
 
     return () => {
-      clearCurrent();
+      //clearCurrent();
       setShow(false);
     };
   }, [id, dispatch]);
@@ -83,14 +114,27 @@ const OrderDetails = () => {
   if (!current || loading) return <Loader />;
   return (
     <div>
-      <Dialog open={show}>
+      {/* Modal for changing order status */}
+      <Dialog
+        open={show}
+        TransitionComponent={Transition}
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
+      >
         <DialogTitle>Change Order Status</DialogTitle>
         <DialogContent>
-          <div className="content_dialog" style={{ width: "100%" }}>
+          <div
+            className="content_dialog"
+            style={{ width: "100%", height: "8rem" }}
+          >
             <Controls.Select
               value={status}
               label="Status"
-              options={options}
+              options={
+                current.orderType === "pickup"
+                  ? options.filter((s) => s.id !== "delivered")
+                  : options.filter((i) => i.id !== "pickup")
+              }
               onChange={(e) => setStatus(e.target.value)}
             />
           </div>
@@ -102,6 +146,23 @@ const OrderDetails = () => {
             onClick={() => setShow(false)}
           />
           <Controls.Button text="Change" onClick={changeOrderStatus} />
+        </DialogActions>
+      </Dialog>
+      {/* alert if order already marked as delivered */}
+      <Dialog
+        open={modalAlert}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"WARNING!"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            This order has been marked as Delivery already. Contact the customer
+            to inform any changes.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Controls.Button text="Okay" onClick={() => setModalAlert(false)} />
         </DialogActions>
       </Dialog>
       <div className="order_details_container">
@@ -151,9 +212,11 @@ const OrderDetails = () => {
               >
                 Payment Type: {current.paymentMethod}
               </Typography>
-              <Typography variant="body2">
-                Delivery Instuctions: {current.instruction}
-              </Typography>
+              {current.instruction && (
+                <Typography variant="body2">
+                  Delivery Instuctions: {current.instruction}
+                </Typography>
+              )}
             </div>
             <div className="actions">
               <Typography
