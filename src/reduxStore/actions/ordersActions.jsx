@@ -13,9 +13,7 @@ import {
 
 export const getOrders = (restaurantId) => async (dispatch, getState) => {
   try {
-    setLoading();
-
-    //const { ordersData: { orders } } = getState()
+    dispatch({ type: SET_LOADING })
 
     const listener = await db
       .collection("orders")
@@ -75,6 +73,11 @@ export const getOrder = (orderId) => async (dispatch) => {
   const order = await db.collection("orders").doc(orderId).get();
   dispatch({ type: GET_ORDER, payload: { id: order.id, ...order.data() } });
 };
+
+export const filterOrderByDates = (start, end) => dispatch => {
+  dispatch({ type: SET_LOADING });
+  dispatch({ type: 'BY_DATES', payload: { start, end } })
+}
 
 
 export const clearOrderFilter = () => dispatch => dispatch({ type: "SET_CLEAR" });

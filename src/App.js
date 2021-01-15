@@ -11,6 +11,7 @@ import { AdminPage } from "./pages/Admin";
 import OrderDetails from "./pages/Orders/OrderDetails";
 import PastOrders from "./pages/Orders/PastOrders";
 
+
 const theme = createMuiTheme({
   palette: {
     primary: {

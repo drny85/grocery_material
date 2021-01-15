@@ -9,6 +9,8 @@ import {
     SEARCH_ORDERS,
 } from "../types";
 
+import moment from 'moment'
+
 const initialState = {
     orders: [],
     current: null,
@@ -18,6 +20,7 @@ const initialState = {
     in_progress: 0,
     _new: 0,
 };
+
 
 const ordersReducer = (state = initialState, action) => {
     switch (action.type) {
@@ -90,6 +93,21 @@ const ordersReducer = (state = initialState, action) => {
                 loading: false,
                 filtered: [...state.orders],
             };
+
+        case 'BY_DATES':
+
+            const start = moment(action.payload.start).startOf("day");
+            const end = moment(action.payload.end).endOf("day");
+            return {
+                ...state,
+                filtered: state.orders.filter(
+                    (order) =>
+                        moment(order.orderPlaced).isAfter(start) &&
+                        moment(order.orderPlaced).isBefore(end)
+                ),
+                loading: false,
+
+            }
 
         case "SET_CLEAR":
             return {
