@@ -1,30 +1,14 @@
 import { Grid, Typography } from "@material-ui/core";
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+
+
 import { useHistory } from "react-router-dom";
 import BackArrow from "../../components/BackArrow";
-import Loader from "../../components/Loader";
-import { getOrders } from "../../reduxStore/actions/ordersActions";
-import useDatedOrders from "../../utils/useDatedOrders";
+import { useDatedOrders } from "../../utils/useDatedOrders";
 import OrderCard from "./OrderCard";
 
 const Orders = () => {
   const history = useHistory();
-  const dispatch = useDispatch();
-  //const { orders, loading } = useSelector((state) => state.ordersData);
-  const { user } = useSelector((state) => state.userData);
-  const orders = useDatedOrders();
-
-  //   useEffect(() => {
-  //     dispatch(getOrders(user?.store));
-
-  //     return () => {
-  //       // unsudscribe && unsudscribe()
-  //     };
-  //   }, [dispatch, user]);
-
-  //if (loading) return <Loader />;
-
+  const orders = useDatedOrders()
   return (
     <div
       style={{
@@ -108,21 +92,21 @@ const Orders = () => {
           </Grid>
         </Grid>
       ) : (
-        <div
-          className="no_orders"
-          style={{
-            display: "flex",
-            alignContent: "center",
-            justifyContent: "center",
-            width: "800px",
-            height: "100vh",
-            flexDirection: "column",
-            margin: "0 auto",
-          }}
-        >
-          <Typography align="center">No Orders</Typography>
-        </div>
-      )}
+          <div
+            className="no_orders"
+            style={{
+              display: "flex",
+              alignContent: "center",
+              justifyContent: "center",
+              width: "800px",
+              height: "100vh",
+              flexDirection: "column",
+              margin: "0 auto",
+            }}
+          >
+            <Typography align="center">No Orders</Typography>
+          </div>
+        )}
     </div>
   );
 };

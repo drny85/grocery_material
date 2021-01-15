@@ -8,30 +8,43 @@ import {
   TableRow,
   TableCell,
   TableBody,
-  IconButton,
+
   TablePagination,
+  Typography,
 } from "@material-ui/core";
-import EditIcon from "@material-ui/icons/Edit";
 
 import { useDispatch, useSelector } from "react-redux";
-import { getOrders } from "../../reduxStore/actions/ordersActions";
+import { clearOrderFilter, getOrders } from "../../reduxStore/actions/ordersActions";
 import { useHistory } from "react-router-dom";
 import Loader from "../../components/Loader";
+import SearchBar from "../../components/SearchBar";
+import Controls from "../../components/controls/Controls";
+import BackArrow from "../../components/BackArrow";
+
 
 const useStyles = makeStyles((theme) => ({
   table: {
     minWidth: 650,
+    maxWidth: 1080,
+
+
   },
 
   cell: {
     backgroundColor: theme.palette.action.focus,
     fontWeight: "bold",
   },
+  pag: {
+    minWidth: 650,
+    maxWidth: 1080,
+    margin: '1rem auto',
+  },
+
 }));
 
 const PastOrders = () => {
   const history = useHistory();
-  const { orders, loading } = useSelector((state) => state.ordersData);
+  const { orders, loading, filtered } = useSelector((state) => state.ordersData);
   const { user } = useSelector((state) => state.userData);
   const dispatch = useDispatch();
   const classes = useStyles();
@@ -45,15 +58,40 @@ const PastOrders = () => {
     setPage(0);
   };
   const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, orders.length - page * rowsPerPage);
+    rowsPerPage - Math.min(rowsPerPage, (filtered.length > 0 ? filtered : orders) - page * rowsPerPage);
+
+
 
   useEffect(() => {
-    dispatch(getOrders(user?.store));
+    if (user) {
+      dispatch(getOrders(user.store));
+    }
+
+    return () => {
+      dispatch(clearOrderFilter())
+    }
+
   }, [dispatch, user]);
 
   if (loading) return <Loader />;
   return (
-    <div tyle={{ maxWidth: "1080px" }}>
+    <div style={{ maxWidth: "1080px", display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '1rem auto', flexDirection: 'column' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+        <BackArrow />
+        <Typography variant="h4" align="center">
+          Orders Look Up
+      </Typography>
+        <div></div>
+      </div>
+
+      <div
+        style={{
+          borderBottom: "solid 1px lightgray",
+          width: "100%",
+          margin: "10px 0",
+        }}
+      ></div>
+      <SearchBar />
       <TableContainer component={Paper}>
         <Table className={classes.table}>
           <TableHead>
@@ -67,10 +105,10 @@ const PastOrders = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {orders
+            {(filtered.length > 0 ? filtered : orders)
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((order) => (
-                <TableRow key={order._id}>
+                <TableRow key={order.id}>
                   <TableCell className="capitalize">
                     {order.orderNumber}
                   </TableCell>
@@ -83,11 +121,7 @@ const PastOrders = () => {
                   </TableCell>
                   <TableCell>{order.deliveredOn ? "Yes" : "No"}</TableCell>
                   <TableCell>
-                    <IconButton
-                      onClick={() => history.push(`/orders/${order.id}`)}
-                    >
-                      <EditIcon color="primary" />
-                    </IconButton>
+                    <Controls.Button text='View Order' size='small' onClick={() => history.push(`/orders/${order.id}`)} />
                   </TableCell>
                 </TableRow>
               ))}
@@ -99,9 +133,10 @@ const PastOrders = () => {
           </TableBody>
         </Table>
         <TablePagination
+          className={classes.pag}
           rowsPerPageOptions={[5, 10, 15, 20, 30]}
           component="div"
-          count={orders.length}
+          count={(filtered.length > 0 ? filtered : orders).length}
           page={page}
           onChangePage={handleChangePage}
           rowsPerPage={rowsPerPage}

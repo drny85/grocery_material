@@ -27,3 +27,9 @@ code {
 .capitalize {
   text-transform: capitalize !important;
 }
+
+.MuiTablePagination-root {
+  min-width: 650px;
+  max-width: 1080px;
+  margin: 1rem auto;
+}

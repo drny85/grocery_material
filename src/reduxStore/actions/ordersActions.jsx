@@ -10,26 +10,33 @@ import {
   SEARCH_ORDERS,
 } from "../types";
 
-export const getOrders = (restaurantId) => async (dispatch) => {
+
+export const getOrders = (restaurantId) => async (dispatch, getState) => {
   try {
     setLoading();
+
+    //const { ordersData: { orders } } = getState()
 
     const listener = await db
       .collection("orders")
       .where("restaurantId", "==", restaurantId)
       .orderBy("orderPlaced", "desc")
       .onSnapshot((values) => {
-        let orders = [];
+
+        let newOrders = [];
         values.forEach((doc) => {
           let order = {
             id: doc.id,
             ...doc.data(),
           };
-          orders.push(order);
+          newOrders.push(order);
         });
 
-        dispatch({ type: GET_ORDERS, payload: orders });
+
+        dispatch({ type: GET_ORDERS, payload: newOrders });
         calculateOrderCounts();
+      }, (e) => {
+        console.log(e)
       });
 
     return listener;
@@ -68,6 +75,9 @@ export const getOrder = (orderId) => async (dispatch) => {
   const order = await db.collection("orders").doc(orderId).get();
   dispatch({ type: GET_ORDER, payload: { id: order.id, ...order.data() } });
 };
+
+
+export const clearOrderFilter = () => dispatch => dispatch({ type: "SET_CLEAR" });
 
 export const changeStatus = (id, status, user = null) => async (dispatch) => {
   try {

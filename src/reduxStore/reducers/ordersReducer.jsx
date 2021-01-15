@@ -100,17 +100,15 @@ const ordersReducer = (state = initialState, action) => {
         case SEARCH_ORDERS:
             return {
                 ...state,
-                filtered: state.filtered.filter((order) => {
+                filtered: state.orders.filter((order) => {
                     const regex = new RegExp(`${action.payload}`, "gi");
-
-                    return order.orderType === "delivery"
-                        ? order.customer.name.match(regex) ||
+                    return order.customer.name.match(regex) ||
                         order.customer.lastName.match(regex) ||
                         order.customer.phone.match(regex) ||
-                        order.customer.address.street.match(regex)
-                        : order.customer.name.match(regex) ||
-                        order.customer.lastName.match(regex) ||
-                        order.customer.phone.match(regex);
+
+                        order.orderNumber.toString().match(regex)
+
+
                 }),
                 loading: false,
             };

@@ -3,7 +3,7 @@ import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
 import { getOrders } from "../reduxStore/actions/ordersActions";
 
-const useDatedOrders = (startDate = new Date(), endDate = new Date()) => {
+export const useDatedOrders = (startDate = new Date(), endDate = new Date()) => {
   const { orders } = useSelector((state) => state.ordersData);
   const { user } = useSelector((state) => state.userData);
   const dispatch = useDispatch();
@@ -20,9 +20,9 @@ const useDatedOrders = (startDate = new Date(), endDate = new Date()) => {
     dispatch(getOrders(user?.store));
 
     // eslint-disable-next-line
-  }, [dispatch]);
+  }, [dispatch, user]);
 
   return sorted;
 };
 
-export default useDatedOrders;
+
