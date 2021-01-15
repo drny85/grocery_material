@@ -25,36 +25,55 @@ export const signin = ({ email, password }) => async (dispatch) => {
 
 export const setLogin = (user) => async (dispatch) => {
   try {
-    setLoading();
+    dispatch({ type: actions.SET_LOADING });
     const n = await db.collection("users").doc(user.uid).get();
 
     const u = n.data();
 
-    userStore(u.store);
     if (u) {
       dispatch({
         type: actions.USER_LOGIN,
         payload: u,
       });
     }
+
+    //userStore(u?.store);
   } catch (error) {
     console.log("logging in", error);
   }
 };
 
-const userStore = (storeId) => async (dispatch) => {
+export const userStore = (userId) => async (dispatch) => {
   try {
-    if (storeId) {
-      setLoading();
-      const store = await db.collection("stores").doc(storeId).get();
-      dispatch({
-        type: actions.SET_STORE,
-        payload: { id: store.id, ...store.data() },
-      });
+    if (userId) {
+      const user = await db.collection("users").doc(userId).get();
+      if (user.data().store) {
+        await db
+          .collection("stores")
+          .doc(user.data().store)
+          .onSnapshot((doc) => {
+            if (doc.exists) {
+              dispatch({
+                type: actions.SET_STORE,
+                payload: { id: doc.id, ...doc.data() },
+              });
+            }
+          });
+      } else {
+        return;
+      }
     }
   } catch (error) {
     console.log(error);
   }
+};
+
+export const closeOpenStore = () => async (dispatch, getState) => {
+  const {
+    userData: { store },
+  } = getState();
+
+  await db.collection("stores").doc(store.id).update({ open: !store.open });
 };
 
 export const autoLogin = () => {

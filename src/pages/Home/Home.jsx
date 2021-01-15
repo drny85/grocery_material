@@ -35,30 +35,51 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Home = () => {
-  const { user } = useSelector((state) => state.userData);
+  const { user, store } = useSelector((state) => state.userData);
   const classes = useStyles();
   const history = useHistory();
-  const [today, setToday] = useState('')
+  const [today, setToday] = useState("");
 
   useEffect(() => {
-    const interval = setInterval(() => { setToday(moment().format('MMMM Do YYYY, h:mm:ss a')) }, 1000)
+    const interval = setInterval(() => {
+      setToday(moment().format("MMMM Do YYYY, h:mm:ss a"));
+    }, 1000);
 
     return () => {
-      clearInterval(interval)
-    }
-  }, [])
+      clearInterval(interval);
+    };
+  }, []);
 
   if (!user) history.replace("/signin");
   return (
     <div className="main">
-      <div className="main-top" style={{ display: 'flex', padding: '0.5rem 2rem', width: '100%', justifyContent: 'flex-end', alignItems: 'flex-end' }}>
-        <Typography variant='h5'>{today}</Typography>
+      <div
+        className="main-top"
+        style={{
+          display: "flex",
+          padding: "0.5rem 3rem",
+          width: "100%",
+          justifyContent: "space-between",
+          alignItems: "flex-end",
+        }}
+      >
+        {store && store.open ? (
+          <Typography variant="h4">Store Open</Typography>
+        ) : (
+          <Typography variant="h4">Store Closed</Typography>
+        )}
+
+        <Typography variant="h5">{today}</Typography>
       </div>
       <div className={classes.root}>
         <ActionCard
           title="Today`s Orders"
           onClick={() => {
-            history.push("/orders");
+            if (store && store.open) {
+              history.push("/orders");
+            } else {
+              alert("Store is closed");
+            }
           }}
         />
         <ActionCard
@@ -71,12 +92,11 @@ const Home = () => {
           title="Past Orders"
           onClick={() => history.push("/pastOrders")}
         />
-        <ActionCard title="Products/Items" onClick={() => { }} />
-        <ActionCard title="Categories" onClick={() => { }} />
-        <ActionCard title="Home" onClick={() => { }} />
+        <ActionCard title="Products/Items" onClick={() => {}} />
+        <ActionCard title="Categories" onClick={() => {}} />
+        <ActionCard title="Home" onClick={() => {}} />
       </div>
     </div>
-
   );
 };
 

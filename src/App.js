@@ -4,13 +4,12 @@ import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { Signin, Signup } from "./pages/Auth";
 import { Home } from "./pages/Home";
 import { auth } from "./database";
-import { setLogin } from "./reduxStore/actions/userActions";
+import { setLogin, userStore } from "./reduxStore/actions/userActions";
 import { useDispatch } from "react-redux";
 import { Orders } from "./pages/Orders";
 import { AdminPage } from "./pages/Admin";
 import OrderDetails from "./pages/Orders/OrderDetails";
 import PastOrders from "./pages/Orders/PastOrders";
-
 
 const theme = createMuiTheme({
   palette: {
@@ -18,7 +17,6 @@ const theme = createMuiTheme({
       light: "#4f83cc",
       main: "#00695f",
       dark: "#002f6c",
-      contrastText: "#f5f5f5",
     },
     secondary: {
       light: "#718792",
@@ -39,6 +37,7 @@ function App() {
     auth.onAuthStateChanged((user) => {
       if (user) {
         dispatch(setLogin(user));
+        dispatch(userStore(user.uid));
       }
     });
   }, [dispatch]);
