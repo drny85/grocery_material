@@ -1,3 +1,4 @@
-import AdminPage from  './AdminPage'
+import AdminPage from "./AdminPage";
+import AllItems from "./Items/AllItems";
 
-export {AdminPage}
+export { AdminPage, AllItems };

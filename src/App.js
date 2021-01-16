@@ -7,9 +7,10 @@ import { auth } from "./database";
 import { setLogin, userStore } from "./reduxStore/actions/userActions";
 import { useDispatch } from "react-redux";
 import { Orders } from "./pages/Orders";
-import { AdminPage } from "./pages/Admin";
+import { AdminPage, AllItems } from "./pages/Admin";
 import OrderDetails from "./pages/Orders/OrderDetails";
 import PastOrders from "./pages/Orders/PastOrders";
+import { getItems } from "./reduxStore/actions/itemsActions";
 
 const theme = createMuiTheme({
   palette: {
@@ -38,6 +39,7 @@ function App() {
       if (user) {
         dispatch(setLogin(user));
         dispatch(userStore(user.uid));
+        dispatch(getItems());
       }
     });
   }, [dispatch]);
@@ -46,6 +48,7 @@ function App() {
       <Router>
         <Switch>
           <Route exact path="/pastOrders" component={PastOrders} />
+          <Route exact path="/admin/allItems" component={AllItems} />
           <Route exact path="/admin" component={AdminPage} />
           <Route exact path="/orders/:id" component={OrderDetails} />
           <Route exact path="/orders" component={Orders} />

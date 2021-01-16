@@ -92,7 +92,10 @@ const Home = () => {
           title="Past Orders"
           onClick={() => history.push("/pastOrders")}
         />
-        <ActionCard title="Products/Items" onClick={() => {}} />
+        <ActionCard
+          title="Products/Items"
+          onClick={() => history.push("/admin/allItems")}
+        />
         <ActionCard title="Categories" onClick={() => {}} />
         <ActionCard title="Home" onClick={() => {}} />
       </div>
