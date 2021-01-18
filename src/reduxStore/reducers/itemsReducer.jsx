@@ -1,6 +1,7 @@
-import { GET_ITEMS, SET_LOADING } from "../types";
+import { GET_ITEMS, ITEMS_LOADING } from "../types";
 const initialState = {
   items: [],
+  filtered: [],
   current: null,
   loading: false,
   error: null,
@@ -15,7 +16,7 @@ const itemsReducer = (state = initialState, action) => {
         loading: false,
       };
 
-    case SET_LOADING:
+    case ITEMS_LOADING:
       return {
         ...state,
         loading: true,

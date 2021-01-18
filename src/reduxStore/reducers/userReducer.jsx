@@ -3,8 +3,10 @@ import {
   USER_LOGIN,
   USER_LOGOUT,
   USER_SIGN_UP,
-  SET_LOADING,
+
   SET_STORE,
+  USER_LOADING,
+  STORE_LOADING,
 } from "../types";
 
 const initialState = {
@@ -27,7 +29,8 @@ const userReducer = (state = initialState, action) => {
         isAuthenticated: true,
       };
 
-    case SET_LOADING:
+    case USER_LOADING:
+
       return {
         ...state,
         loading: true,
@@ -46,8 +49,9 @@ const userReducer = (state = initialState, action) => {
     case SET_STORE:
       return {
         ...state,
-        loading: false,
+
         store: action.payload,
+        loading: false,
       };
 
     case USER_ERROR:

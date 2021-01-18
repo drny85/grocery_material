@@ -1,7 +1,7 @@
 export const ADD_ITEM = "ADD_ITEM";
 export const GET_ITEMS = "GET_ITEMS";
 export const GET_ITEM = "GET_ITEM";
-export const SET_LOADING = "SET_LOADING";
+
 export const ADD_CATEGORY = "ADD_CATEGORY";
 export const GET_CATEGORIES = "GET_CATEGORIES";
 export const GET_CATEGORY = "GET_CATEGORY";
@@ -35,6 +35,8 @@ export const GET_ORDERS = "GET_ORDERS";
 export const FILTER_ORDERS = "FILTER_ORDERS";
 export const GET_NAMES = "GET_NAMES";
 
+
+
 export const REMOVE_NOTICATION = "REMOVE_NOTICATION";
 export const SET_NOTIFICATION = "SET_NOTIFICATION";
 export const CHANGE_STATUS = "CHANGE_STATUS";
@@ -53,4 +55,11 @@ export const USER_SIGN_UP = 'USER_SIGN_UP';
 export const USER_LOGOUT = 'USER_LOGOUT';
 export const USER_ERROR = 'USER_ERROR';
 export const USER_LOGIN = 'USER_LOGIN';
+
+
+//loading
+export const USER_LOADING = "USER_LOADING";
+export const ITEMS_LOADING = "ITEMS_LOADING";
+export const STORE_LOADING = "STORE_LOADING";
+export const ORDERS_LOADING = "ORDERS_LOADING";
 

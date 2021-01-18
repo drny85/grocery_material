@@ -1,6 +1,6 @@
 import { db } from "../../database";
 import {
-  SET_LOADING,
+
   GET_ORDER,
   GET_ORDERS,
   SET_CURRENT_ITEM,
@@ -8,12 +8,13 @@ import {
   CHANGE_STATUS,
   ORDERS_COUNT,
   SEARCH_ORDERS,
+  ORDERS_LOADING,
 } from "../types";
 
 
 export const getOrders = (restaurantId) => async (dispatch, getState) => {
   try {
-    dispatch({ type: SET_LOADING })
+    dispatch({ type: ORDERS_LOADING });
 
     const listener = await db
       .collection("orders")
@@ -46,7 +47,7 @@ export const getOrders = (restaurantId) => async (dispatch, getState) => {
 
 export const setCurrentOrder = (id) => async (dispatch) => {
   try {
-    dispatch({ type: SET_LOADING });
+    dispatch({ type: ORDERS_LOADING });
     await db
       .collection("orders")
       .doc(id)
@@ -69,13 +70,13 @@ export const clearCurrent = () => (dispatch) =>
   dispatch({ type: CLEAR_CURRENT_ITEM });
 
 export const getOrder = (orderId) => async (dispatch) => {
-  dispatch({ type: SET_LOADING });
+  dispatch({ type: ORDERS_LOADING });
   const order = await db.collection("orders").doc(orderId).get();
   dispatch({ type: GET_ORDER, payload: { id: order.id, ...order.data() } });
 };
 
 export const filterOrderByDates = (start, end) => dispatch => {
-  dispatch({ type: SET_LOADING });
+  dispatch({ type: ORDERS_LOADING });
   dispatch({ type: 'BY_DATES', payload: { start, end } })
 }
 
@@ -84,7 +85,7 @@ export const clearOrderFilter = () => dispatch => dispatch({ type: "SET_CLEAR" }
 
 export const changeStatus = (id, status, user = null) => async (dispatch) => {
   try {
-    dispatch({ type: SET_LOADING });
+    dispatch({ type: ORDERS_LOADING });
     await db
       .collection("orders")
       .doc(id)
@@ -104,4 +105,3 @@ const calculateOrderCounts = () => (dispatch) => {
   dispatch({ type: ORDERS_COUNT });
 };
 
-const setLoading = () => (dispatch) => dispatch({ type: SET_LOADING });

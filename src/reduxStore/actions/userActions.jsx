@@ -3,6 +3,7 @@ import * as actions from "../types";
 
 export const signin = ({ email, password }) => async (dispatch) => {
   try {
+    dispatch({ type: actions.USER_LOADING });
     const response = await auth.signInWithEmailAndPassword(email, password);
     const user = await db.collection("users").doc(response.user.uid).get();
 
@@ -25,7 +26,7 @@ export const signin = ({ email, password }) => async (dispatch) => {
 
 export const setLogin = (user) => async (dispatch) => {
   try {
-    dispatch({ type: actions.SET_LOADING });
+    dispatch({ type: actions.USER_LOADING });
     const n = await db.collection("users").doc(user.uid).get();
 
     const u = n.data();
@@ -39,12 +40,14 @@ export const setLogin = (user) => async (dispatch) => {
 
     //userStore(u?.store);
   } catch (error) {
-    console.log("logging in", error);
+    console.log("logging in", error.message);
+    dispatch({ type: actions.USER_ERROR, payload: error.message })
   }
 };
 
 export const userStore = (userId) => async (dispatch) => {
   try {
+
     if (userId) {
       const user = await db.collection("users").doc(userId).get();
       if (user.data().store) {
@@ -76,18 +79,23 @@ export const closeOpenStore = () => async (dispatch, getState) => {
   await db.collection("stores").doc(store.id).update({ open: !store.open });
 };
 
-export const autoLogin = () => {
-  auth.onAuthStateChanged((u) => {
-    if (u) {
-      setLogin(u);
-    }
-  });
+export const autoLogin = () => dispatch => {
+  try {
+    dispatch({ type: actions.USER_LOADING });
+    auth.onAuthStateChanged((u) => {
+      if (u) {
+        setLogin(u);
+      }
+    });
+  } catch (error) {
+    console.log('Error autoling user', error.message)
+  }
+
 };
 
 export const logout = () => async (dispatch) => {
-  setLoading();
+  dispatch({ type: actions.USER_LOADING });
   await auth.signOut();
   dispatch({ type: actions.USER_LOGOUT });
 };
 
-const setLoading = () => (dispatch) => dispatch({ type: actions.SET_LOADING });

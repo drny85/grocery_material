@@ -1,5 +1,5 @@
 import {
-    SET_LOADING,
+
     GET_ORDER,
     GET_ORDERS,
     SET_CURRENT_ITEM,
@@ -7,6 +7,7 @@ import {
     CHANGE_STATUS,
     ORDERS_COUNT,
     SEARCH_ORDERS,
+    ORDERS_LOADING,
 } from "../types";
 
 import moment from 'moment'
@@ -24,7 +25,7 @@ const initialState = {
 
 const ordersReducer = (state = initialState, action) => {
     switch (action.type) {
-        case SET_LOADING:
+        case ORDERS_LOADING:
             return {
                 ...state,
                 loading: true,

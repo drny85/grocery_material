@@ -80,6 +80,7 @@ const Signing = () => {
                     <Grid item sx={12} md={12}>
                         <Controls.Input
                             name='email'
+                            fontSize={32}
                             value={values.email}
                             error={errors.email}
                             label='Email'
@@ -89,6 +90,7 @@ const Signing = () => {
                         <Controls.Input
                             name='password'
                             type='password'
+                            fontSize={32}
                             value={values.password}
                             error={errors.password}
                             label='Password'

@@ -1,0 +1,9 @@
+.horizontal-scroll-wrapper::-webkit-scrollbar {
+  width: 0;
+}
+
+.horizontal-scroll-wrapper {
+  scroll-snap-type: proximity;
+  scroll-behavior: smooth;
+  border-radius: 80px;
+}

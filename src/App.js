@@ -39,7 +39,7 @@ function App() {
       if (user) {
         dispatch(setLogin(user));
         dispatch(userStore(user.uid));
-        dispatch(getItems());
+        dispatch(getItems(user.uid));
       }
     });
   }, [dispatch]);
@@ -48,6 +48,7 @@ function App() {
       <Router>
         <Switch>
           <Route exact path="/pastOrders" component={PastOrders} />
+          <Route exact path="/admin/allItems/:id" component={AllItems} />
           <Route exact path="/admin/allItems" component={AllItems} />
           <Route exact path="/admin" component={AdminPage} />
           <Route exact path="/orders/:id" component={OrderDetails} />

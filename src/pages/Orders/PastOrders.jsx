@@ -111,6 +111,8 @@ const PastOrders = () => {
         return "Picked Up";
       case "delivered":
         return "Delivered";
+      default:
+        return status;
     }
   };
 
@@ -148,8 +150,8 @@ const PastOrders = () => {
         <Typography variant="h6" align="center">
           {isSorted
             ? `Orders from ${moment(startDate).format("MMM Do YY")} to ${moment(
-                untilDate
-              ).format("MMM Do YY")}`
+              untilDate
+            ).format("MMM Do YY")}`
             : "Orders Look Up"}
         </Typography>
         <Controls.Button
