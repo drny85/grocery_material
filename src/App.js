@@ -13,6 +13,7 @@ import PastOrders from "./pages/Orders/PastOrders";
 import { getItems } from "./reduxStore/actions/itemsActions";
 import { getCategories } from "./reduxStore/actions/categoriesActions";
 import AllCategories from "./pages/Admin/Categories/AllCategories";
+import ItemDetails from "./pages/Admin/Items/ItemDetails";
 
 const theme = createMuiTheme({
   palette: {
@@ -52,6 +53,7 @@ function App() {
         <Switch>
           <Route exact path="/categories" component={AllCategories} />
           <Route exact path="/pastOrders" component={PastOrders} />
+          <Route exact path="/item/:id" component={ItemDetails} />
           <Route exact path="/admin/allItems/:id" component={AllItems} />
           <Route exact path="/admin/allItems" component={AllItems} />
           <Route exact path="/admin" component={AdminPage} />

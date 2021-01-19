@@ -20,11 +20,11 @@ const useStyles = makeStyles({
   },
 });
 
-const CardItem = ({ item }) => {
+const CardItem = ({ item, onClick }) => {
   const classes = useStyles();
 
   return (
-    <Card className={classes.root}>
+    <Card onClick={onClick} className={classes.root}>
       <CardActionArea>
         <CardMedia
           className={classes.media}

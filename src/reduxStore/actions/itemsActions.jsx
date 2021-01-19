@@ -1,10 +1,13 @@
 import { db } from "../../database";
 import {
   CATEGORY_LOADING,
+  CLEAR_CURRENT_ITEM,
   CLEAR_ITEMS_FILTERS,
   FILTER_BY_CATEGORY,
   GET_ITEMS,
   ITEMS_LOADING,
+  LOADING_CURRENT_ITEM,
+  SET_CURRENT_ITEM,
 } from "../types";
 
 export const getItems = (userId) => async (dispatch, getState) => {
@@ -31,6 +34,23 @@ export const getItems = (userId) => async (dispatch, getState) => {
     console.log("Error getting items", error);
   }
 };
+
+export const setCurrentItem = (itemId, storeId) => async dispatch => {
+  try {
+    // const { userData: { store } } = getState()
+
+    dispatch({ type: LOADING_CURRENT_ITEM });
+    const item = await db.collection('items').doc(storeId).collection('items').doc(itemId).get()
+    dispatch({ type: SET_CURRENT_ITEM, payload: { id: item.id, ...item.data() } })
+  } catch (error) {
+    console.log('error setting current item', error.message)
+  }
+
+}
+
+export const clearCurrentItem = () => dispatch => {
+  dispatch({ type: CLEAR_CURRENT_ITEM })
+}
 
 export const filterCategoriesBy = (categoryId) => (dispatch) => {
   dispatch({ type: CATEGORY_LOADING });

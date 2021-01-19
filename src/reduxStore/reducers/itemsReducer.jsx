@@ -1,8 +1,11 @@
 import {
+  CLEAR_CURRENT_ITEM,
   CLEAR_ITEMS_FILTERS,
   FILTER_BY_CATEGORY,
   GET_ITEMS,
   ITEMS_LOADING,
+  LOADING_CURRENT_ITEM,
+  SET_CURRENT_ITEM,
 } from "../types";
 const initialState = {
   items: [],
@@ -22,6 +25,7 @@ const itemsReducer = (state = initialState, action) => {
       };
 
     case ITEMS_LOADING:
+    case LOADING_CURRENT_ITEM:
       return {
         ...state,
         loading: true,
@@ -39,6 +43,20 @@ const itemsReducer = (state = initialState, action) => {
         ],
         loading: false,
       };
+    case SET_CURRENT_ITEM:
+      return {
+        ...state,
+        current: action.payload,
+        loading: false,
+      }
+
+    case CLEAR_CURRENT_ITEM:
+      return {
+        ...state,
+        current: null,
+        loading: false,
+        error: null,
+      }
     case CLEAR_ITEMS_FILTERS:
       return {
         ...state,

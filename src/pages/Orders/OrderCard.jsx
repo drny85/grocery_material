@@ -8,6 +8,7 @@ import moment from "moment";
 import "./styles.css";
 
 const OrderCard = ({ order, onClick }) => {
+
   return (
     <div
       onClick={onClick}
@@ -40,7 +41,6 @@ const OrderCard = ({ order, onClick }) => {
               {item.name}
             </Typography>
           }
-
           )}
         </div>
       </div>

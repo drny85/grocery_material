@@ -69,7 +69,7 @@ const AllItems = ({ history }) => {
 
         {!filtered ? items.map((item) => (
           <Grid key={item.id} item xs={12} sm={6} md={4} lg={3}>
-            <CardItem item={item} />
+            <CardItem item={item} onClick={() => history.push(`/item/${item.id}`)} />
           </Grid>
         )) : filtered.length === 0 ? (<div
           style={{
