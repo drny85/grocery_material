@@ -37,8 +37,16 @@ const ItemDetails = () => {
                 </div>
                 <div className="desc-div">
                     <Typography className='capitalize' align='center' variant='h5'>{current?.name}</Typography>
-                    <Typography>{current?.description}</Typography>
-                    <Typography>${current?.price}</Typography>
+                    <Typography variant='subtitle2'>{current?.description}</Typography>
+                    <div style={{ display: 'flex' }} className="sizes">
+                        {current?.sizes && (current.sizes.map(size => <Typography style={{ marginRight: '1rem', textTransform: 'capitalize' }} key={size}>{size}</Typography>))}
+                    </div>
+                    <div className="desc-price">
+                        {current?.sizes ? (`As low as $${current.price[current.sizes[0]]}`) : `$${current?.price.toFixed(2)}`}
+                    </div>
+
+
+                    {/* <Typography>${current?.price}</Typography> */}
                 </div>
 
             </div>
