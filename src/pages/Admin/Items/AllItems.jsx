@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { filterCategoriesBy } from "../../../reduxStore/actions/itemsActions";
+import { clearItemsFilters, filterCategoriesBy } from "../../../reduxStore/actions/itemsActions";
 
 import Loader from "../../../components/Loader";
 import CardItem from "../../../components/Items/CardItem";
@@ -23,8 +23,10 @@ const AllItems = ({ history }) => {
   };
 
   useEffect(() => {
-    return () => { };
-  }, [id, history, dispatch]);
+    return () => {
+      dispatch(clearItemsFilters())
+    };
+  }, [history, dispatch]);
 
 
   if (loading) return <Loader />;
@@ -47,60 +49,23 @@ const AllItems = ({ history }) => {
           padding: "1rem",
         }}
       >
-
+        <CategoryScrollItem name='All Categories' key='all' id='all' selected={id} onClick={() => {
+          history.push('/admin/allItems/all')
+          dispatch(clearItemsFilters())
+        }} />
         {categories
           .sort((a, b) => (a.name > b.name ? 1 : -1))
           .map((i) => (
             <CategoryScrollItem
               key={i.id}
               name={i.name}
+              id={i.id}
               selected={id}
               onClick={() => filterItemsByCategory(i.id)}
             />
           ))}
       </div>
       <Grid container alignItems="center" justify="center">
-        {/* {filtered.length > 0 ? (
-          filtered.length > 0 ? (
-            filtered.map((item) => (
-              <Grid key={item.id} item xs={12} sm={6} md={4} lg={3}>
-                <CardItem item={item} />
-              </Grid>
-            ))
-          ) : (
-              <div
-                style={{
-                  display: "flex",
-                  margin: "0 auto",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  width: "100vw",
-                  height: "100vh",
-                }}
-              >
-                <h3>No Products</h3>
-              </div>
-            )
-        ) : items.length > 0 ? (
-          items.map((item) => (
-            <Grid key={item.id} item xs={12} sm={6} md={4} lg={3}>
-              <CardItem item={item} />
-            </Grid>
-          ))
-        ) : (
-              <div
-                style={{
-                  display: "flex",
-                  margin: "0 auto",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  width: "100vw",
-                  height: "100vh",
-                }}
-              >
-                <h3>No Products</h3>
-              </div>
-            )} */}
 
         {!filtered ? items.map((item) => (
           <Grid key={item.id} item xs={12} sm={6} md={4} lg={3}>

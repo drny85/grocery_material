@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import Controls from "../../../components/controls/Controls";
 import CategoryScrollItem from "../../../components/Items/CategoryScrollItem";
 import Loader from "../../../components/Loader";
-import { addNewCategory, clearCategoriesError, deleteCategory, updateCategory } from '../../../reduxStore/actions/categoriesActions'
+import { addNewCategory, clearCategoriesError, deleteCategory, getCategories, updateCategory } from '../../../reduxStore/actions/categoriesActions'
 import CloseIcon from '@material-ui/icons/Close';
 import { Alert } from "@material-ui/lab";
 import BackArrow from '../../../components/BackArrow'
@@ -87,10 +87,12 @@ const AllCategories = () => {
   }
 
   useEffect(() => {
+
+    dispatch(getCategories(user?.userId))
     return () => {
 
     }
-  }, []);
+  }, [dispatch, user]);
 
   if (loading) return <Loader />;
   return (

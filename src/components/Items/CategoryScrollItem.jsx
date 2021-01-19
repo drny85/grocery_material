@@ -1,14 +1,14 @@
 import React from "react";
 
-const CategoryScrollItem = ({ name, selected, onClick, onDoubleClick }) => {
+const CategoryScrollItem = ({ id, name, selected, onClick }) => {
   return (
     <div
       onClick={onClick}
-      onDoubleClick={onDoubleClick}
+
       style={{
         display: "flex",
         height: "3rem",
-        backgroundColor: name === selected ? "lightgray" : "#eee",
+        backgroundColor: id === selected ? "gray" : "#eee",
         padding: "1rem 2rem",
         borderRadius: "20px",
         justifyContent: "center",
