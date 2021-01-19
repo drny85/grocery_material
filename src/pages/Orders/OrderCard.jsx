@@ -16,10 +16,10 @@ const OrderCard = ({ order, onClick }) => {
           order?.status === "delivered" || order?.status === "pickup"
             ? "#4caf50"
             : order?.status === "in progress"
-            ? "#ffc107"
-            : order?.status === "canceled"
-            ? "#ff784e"
-            : "#b0bec5",
+              ? "#ffc107"
+              : order?.status === "canceled"
+                ? "#ff784e"
+                : "#b0bec5",
       }}
       className="order_card"
     >
@@ -28,17 +28,20 @@ const OrderCard = ({ order, onClick }) => {
         {order?.orderType === "delivery" ? (
           <LocalShippingIcon />
         ) : (
-          <DirectionsWalkIcon />
-        )}
+            <DirectionsWalkIcon />
+          )}
         <Typography variant="h6">Items {order?.items.length}</Typography>
       </div>
       <div className="details_order_card">
         <div className="items">
-          {order?.items.map((order) => (
-            <Typography key={order.id} component="li" variant="subtitle2">
-              {order.name}
+          {order?.items.map((item, i) => {
+
+            return <Typography key={item.id + (i).toString()} component="li" variant="subtitle2">
+              {item.name}
             </Typography>
-          ))}
+          }
+
+          )}
         </div>
       </div>
       <div className="order_card_bottom">

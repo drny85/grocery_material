@@ -1,9 +1,10 @@
 import React from "react";
 
-const CategoryScrollItem = ({ name, selected, onClick }) => {
+const CategoryScrollItem = ({ name, selected, onClick, onDoubleClick }) => {
   return (
     <div
       onClick={onClick}
+      onDoubleClick={onDoubleClick}
       style={{
         display: "flex",
         height: "3rem",

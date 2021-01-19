@@ -6,7 +6,7 @@ import {
 } from "../types";
 const initialState = {
   items: [],
-  filtered: [],
+  filtered: null,
   current: null,
   loading: false,
   error: null,
@@ -29,7 +29,7 @@ const itemsReducer = (state = initialState, action) => {
       };
 
     case FILTER_BY_CATEGORY:
-      console.log(action.payload);
+
       return {
         ...state,
         filtered: [
@@ -42,7 +42,7 @@ const itemsReducer = (state = initialState, action) => {
     case CLEAR_ITEMS_FILTERS:
       return {
         ...state,
-        filtered: [],
+        filtered: null,
         loading: false,
       };
 

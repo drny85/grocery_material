@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export default async (title, body, order) => {
+const sendNotification = async (title, body, order) => {
   try {
     axios.post(
       "https://us-central1-grocery-409ef.cloudfunctions.net/sendNotification/sendNotification",
@@ -15,3 +15,6 @@ export default async (title, body, order) => {
     console.log("Error from sending notification", error);
   }
 };
+
+
+export default sendNotification

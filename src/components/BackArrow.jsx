@@ -4,12 +4,12 @@ import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { useTheme } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 
-const BackArrow = () => {
+const BackArrow = ({ onClick }) => {
   const theme = useTheme();
   const history = useHistory();
   return (
     <div
-      onClick={() => history.goBack()}
+      onClick={onClick ? onClick : () => history.goBack()}
       style={{
         alignItems: "center",
         borderRadius: "10px",

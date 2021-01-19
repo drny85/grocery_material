@@ -24,7 +24,7 @@ export const getItems = (userId) => async (dispatch, getState) => {
             items.push({ id: item.id, ...item.data() });
           }
         });
-        console.log(items.length);
+
         dispatch({ type: GET_ITEMS, payload: items });
       });
   } catch (error) {

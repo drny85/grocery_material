@@ -40,7 +40,7 @@ export const getOrders = (restaurantId) => async (dispatch, getState) => {
 
     return listener;
   } catch (error) {
-    console.log(error);
+    console.log(error.message);
     dispatch({ type: GET_ORDERS, payload: [] });
   }
 };
