@@ -11,6 +11,8 @@ import { AdminPage, AllItems } from "./pages/Admin";
 import OrderDetails from "./pages/Orders/OrderDetails";
 import PastOrders from "./pages/Orders/PastOrders";
 import { getItems } from "./reduxStore/actions/itemsActions";
+import { getCategories } from "./reduxStore/actions/categoriesActions";
+import AllCategories from "./pages/Admin/Categories/AllCategories";
 
 const theme = createMuiTheme({
   palette: {
@@ -40,6 +42,7 @@ function App() {
         dispatch(setLogin(user));
         dispatch(userStore(user.uid));
         dispatch(getItems(user.uid));
+        dispatch(getCategories(user.uid));
       }
     });
   }, [dispatch]);
@@ -47,6 +50,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <Router>
         <Switch>
+          <Route exact path="/categories" component={AllCategories} />
           <Route exact path="/pastOrders" component={PastOrders} />
           <Route exact path="/admin/allItems/:id" component={AllItems} />
           <Route exact path="/admin/allItems" component={AllItems} />

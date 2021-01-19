@@ -1,7 +1,7 @@
 import { createStore, applyMiddleware, combineReducers, compose } from "redux";
 import thunk from "redux-thunk";
 import userReducer from "./reduxStore/reducers/userReducer";
-// import categoriesReducer from './reduxStore/reducers/categoriesReducer.'
+import categoriesReducer from "./reduxStore/reducers/categoriesReducer";
 import ordersReducer from "./reduxStore/reducers/ordersReducer";
 import itemsReducer from "./reduxStore/reducers/itemsReducer";
 // import cartReducer from './reduxStore/reducers/shoppingCartReducer'
@@ -10,7 +10,7 @@ const reducer = combineReducers({
   itemsData: itemsReducer,
   // cartData: cartReducer,
   userData: userReducer,
-  // categoriesData: categoriesReducer,
+  categoriesData: categoriesReducer,
   ordersData: ordersReducer,
 });
 

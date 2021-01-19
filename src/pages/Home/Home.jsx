@@ -96,7 +96,10 @@ const Home = () => {
           title="Products/Items"
           onClick={() => history.push("/admin/allItems")}
         />
-        <ActionCard title="Categories" onClick={() => {}} />
+        <ActionCard
+          title="Categories"
+          onClick={() => history.push("/categories")}
+        />
         <ActionCard title="Home" onClick={() => {}} />
       </div>
     </div>

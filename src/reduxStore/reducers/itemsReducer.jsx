@@ -1,4 +1,9 @@
-import { GET_ITEMS, ITEMS_LOADING } from "../types";
+import {
+  CLEAR_ITEMS_FILTERS,
+  FILTER_BY_CATEGORY,
+  GET_ITEMS,
+  ITEMS_LOADING,
+} from "../types";
 const initialState = {
   items: [],
   filtered: [],
@@ -21,6 +26,24 @@ const itemsReducer = (state = initialState, action) => {
         ...state,
         loading: true,
         error: null,
+      };
+
+    case FILTER_BY_CATEGORY:
+      console.log(action.payload);
+      return {
+        ...state,
+        filtered: [
+          ...state.items.filter(
+            (category) => category.category === action.payload
+          ),
+        ],
+        loading: false,
+      };
+    case CLEAR_ITEMS_FILTERS:
+      return {
+        ...state,
+        filtered: [],
+        loading: false,
       };
 
     default:

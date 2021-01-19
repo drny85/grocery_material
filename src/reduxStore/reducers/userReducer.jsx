@@ -3,10 +3,8 @@ import {
   USER_LOGIN,
   USER_LOGOUT,
   USER_SIGN_UP,
-
   SET_STORE,
   USER_LOADING,
-  STORE_LOADING,
 } from "../types";
 
 const initialState = {
@@ -30,7 +28,6 @@ const userReducer = (state = initialState, action) => {
       };
 
     case USER_LOADING:
-
       return {
         ...state,
         loading: true,

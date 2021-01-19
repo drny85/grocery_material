@@ -6,6 +6,7 @@ export const ADD_CATEGORY = "ADD_CATEGORY";
 export const GET_CATEGORIES = "GET_CATEGORIES";
 export const GET_CATEGORY = "GET_CATEGORY";
 export const CATEGORY_ERROR = "CATEGORY_ERROR";
+export const CATEGORY_LOADING = "CATEGORY_LOADING";
 export const EDIT_CATEGORY = "EDIT_CATEGORY";
 export const SET_CATEGORY = "SET_CATEGORY";
 export const SET_CURRENT_ITEM = "SET_CURRENT_ITEM";
@@ -35,8 +36,6 @@ export const GET_ORDERS = "GET_ORDERS";
 export const FILTER_ORDERS = "FILTER_ORDERS";
 export const GET_NAMES = "GET_NAMES";
 
-
-
 export const REMOVE_NOTICATION = "REMOVE_NOTICATION";
 export const SET_NOTIFICATION = "SET_NOTIFICATION";
 export const CHANGE_STATUS = "CHANGE_STATUS";
@@ -48,18 +47,16 @@ export const CLEAR_ADDON_ERROR = "CLEAR_ADDON_ERROR";
 export const CLEAR_ADDON = "CLEAR_ADDON";
 export const UPDATE_ADDON = "UPDATE_ADDON";
 export const SET_ADDON = "SET_ADDON";
-export const SET_STORE = 'SET_STORE';
+export const SET_STORE = "SET_STORE";
 
 // user constants
-export const USER_SIGN_UP = 'USER_SIGN_UP';
-export const USER_LOGOUT = 'USER_LOGOUT';
-export const USER_ERROR = 'USER_ERROR';
-export const USER_LOGIN = 'USER_LOGIN';
-
+export const USER_SIGN_UP = "USER_SIGN_UP";
+export const USER_LOGOUT = "USER_LOGOUT";
+export const USER_ERROR = "USER_ERROR";
+export const USER_LOGIN = "USER_LOGIN";
 
 //loading
 export const USER_LOADING = "USER_LOADING";
 export const ITEMS_LOADING = "ITEMS_LOADING";
 export const STORE_LOADING = "STORE_LOADING";
 export const ORDERS_LOADING = "ORDERS_LOADING";
-
