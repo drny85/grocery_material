@@ -65,7 +65,7 @@ const Signing = () => {
     };
 
     useEffect(() => {
-        if (user) history.replace('/')
+        user && history.replace('/')
     }, [user, history])
     return (
         <div className="auth_login_container">

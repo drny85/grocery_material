@@ -1,4 +1,5 @@
 import {
+  ADD_ITEM,
   CLEAR_CURRENT_ITEM,
   CLEAR_ITEMS_FILTERS,
   FILTER_BY_CATEGORY,
@@ -23,6 +24,12 @@ const itemsReducer = (state = initialState, action) => {
         items: action.payload,
         loading: false,
       };
+    case ADD_ITEM:
+      return {
+        ...state,
+        items: action.payload,
+        loading: false
+      }
 
     case ITEMS_LOADING:
     case LOADING_CURRENT_ITEM:

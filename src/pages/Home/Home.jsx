@@ -21,9 +21,9 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     alignItems: "center",
     flexWrap: "wrap",
-    gap: "0.5rem",
+    gap: "0.2rem",
     overflow: "hidden",
-    margin: "0.5rem",
+    margin: "0 auto",
   },
 
   title: {
@@ -57,7 +57,7 @@ const Home = () => {
         className="main-top"
         style={{
           display: "flex",
-          padding: "0.5rem 3rem",
+          padding: "0.5rem auto",
           width: "100%",
           justifyContent: "space-between",
           alignItems: "flex-end",
@@ -66,8 +66,8 @@ const Home = () => {
         {store && store.open ? (
           <Typography variant="h4">Store Open</Typography>
         ) : (
-          <Typography variant="h4">Store Closed</Typography>
-        )}
+            <Typography variant="h4">Store Closed</Typography>
+          )}
 
         <Typography variant="h5">{today}</Typography>
       </div>
@@ -100,7 +100,7 @@ const Home = () => {
           title="Categories"
           onClick={() => history.push("/categories")}
         />
-        <ActionCard title="Home" onClick={() => {}} />
+        <ActionCard title="Home" onClick={() => { }} />
       </div>
     </div>
   );

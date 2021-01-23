@@ -1,5 +1,6 @@
 import { db } from "../../database";
 import {
+  ADD_ITEM,
   CATEGORY_LOADING,
   CLEAR_CURRENT_ITEM,
   CLEAR_ITEMS_FILTERS,
@@ -34,6 +35,44 @@ export const getItems = (userId) => async (dispatch, getState) => {
     console.log("Error getting items", error);
   }
 };
+
+export const addItem = item => async (dispatch, getState) => {
+  try {
+    dispatch({ type: ITEMS_LOADING })
+    const { userData: { store } } = getState()
+
+    item.storeId = store?.id;
+    await db.collection('items').doc(store?.id).collection('items').add(item)
+    const itemData = await db
+      .collection("items")
+      .doc(store.id)
+      .collection("items")
+      .get();
+
+    const allItems = itemData.docs.map((item) => {
+      return { id: item.id, ...item.data() };
+    });
+
+    const data = await db.collection("stores").doc(store?.id).get();
+    console.log(data.data())
+    if (data.exists) {
+      if (!data.data().hasItems) {
+        data.ref.update({
+          hasItems: true,
+        });
+      }
+    }
+
+    dispatch({ type: ADD_ITEM, payload: allItems });
+
+    return true;
+  } catch (error) {
+    console.log('Error adding item', error.message)
+  }
+
+
+
+}
 
 export const setCurrentItem = (itemId, storeId) => async dispatch => {
   try {

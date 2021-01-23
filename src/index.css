@@ -34,3 +34,8 @@ body {
 .MuiDialog-container {
   background-color: #fff;
 }
+
+.MuiList-root {
+  background-color: #fff;
+  opacity: 0.95;
+}
