@@ -17,6 +17,7 @@ const AllCategories = () => {
   const textRef = useRef()
   const dispatch = useDispatch()
   const [category, setCategory] = useState("");
+  const { items } = useSelector(s => s.itemsData)
   const [fieldError, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [mode, setMode] = useState('add')
@@ -172,7 +173,7 @@ const AllCategories = () => {
           {categories.length > 0 ? (
             categories
               .sort((a, b) => (a.name < b.name ? -1 : 1))
-              .map((cat) => <CategoryScrollItem key={cat.id} name={cat.name} selected={selected} onClick={() => handleUpdateSteps(cat)} />)
+              .map((cat) => <CategoryScrollItem key={cat.id} name={cat.name} selected={selected} onClick={() => handleUpdateSteps(cat)} count={items.filter(c => c.category === cat.id).length} />)
           ) : (
               <Grid item>
                 <Typography variant="h6">No Categories</Typography>

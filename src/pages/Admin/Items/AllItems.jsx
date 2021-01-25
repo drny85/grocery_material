@@ -22,20 +22,26 @@ const AllItems = ({ history }) => {
   const { items, loading, filtered } = useSelector((state) => state.itemsData);
   const { categories } = useSelector((state) => state.categoriesData);
 
+
+
   const filterItemsByCategory = (categoryId) => {
     dispatch(filterCategoriesBy(categoryId));
     history.push(`/admin/allItems/${categoryId}`);
   };
 
   useEffect(() => {
+
     return () => {
       dispatch(clearItemsFilters());
+
     };
   }, [history, dispatch]);
 
+
+
   if (loading) return <Loader />;
   return (
-    <div className="main" style={{ maxWidth: "1280px", margin: "0 auto" }}>
+    <div className="main" style={{ maxWidth: "1280px", margin: "0 auto", width: '100%' }}>
       <div
         className="back_arroe"
         style={{
@@ -45,18 +51,20 @@ const AllItems = ({ history }) => {
         }}
       >
         <BackArrow onClick={() => history.replace("/")} />
-        <Typography variant="h5">All Items / Products</Typography>
+        <Typography variant="h6">All Items / Products</Typography>
         {user && user.isAdmin ? (
           <Controls.Button
             text="Add Item"
             color="secondary"
+            style={{ padding: '0 2rem' }}
             onClick={() => history.push("/admin/item")}
           />
         ) : (
-          <Typography></Typography>
-        )}
+            <Typography></Typography>
+          )}
       </div>
       <div
+        id='scrolling'
         className="horizontal-scroll-wrapper"
         style={{
           display: "flex",
@@ -70,6 +78,7 @@ const AllItems = ({ history }) => {
       >
         <CategoryScrollItem
           name="All Categories"
+
           key="all"
           id="all"
           selected={id}
@@ -90,7 +99,7 @@ const AllItems = ({ history }) => {
             />
           ))}
       </div>
-      <Grid container alignItems="center" justify="center">
+      <Grid container alignItems="center" justify="center" style={{ padding: '0 auto', maxWidth: '1280px', width: '100%' }}>
         {!filtered ? (
           items.map((item) => (
             <Grid key={item.id} item xs={12} sm={6} md={4} lg={3}>
@@ -114,12 +123,12 @@ const AllItems = ({ history }) => {
             <h3>No Products</h3>
           </div>
         ) : (
-          filtered.map((item) => (
-            <Grid key={item.id} item xs={12} sm={6} md={4} lg={3}>
-              <CardItem item={item} />
-            </Grid>
-          ))
-        )}
+              filtered.map((item) => (
+                <Grid key={item.id} item xs={12} sm={6} md={4} lg={3}>
+                  <CardItem onClick={() => history.push(`/item/${item.id}`)} item={item} />
+                </Grid>
+              ))
+            )}
       </Grid>
     </div>
   );

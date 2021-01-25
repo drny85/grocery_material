@@ -8,7 +8,7 @@ import {
 } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import Loader from "../../components/Loader";
 import moment from "moment";
 import {
@@ -62,6 +62,7 @@ const OrderDetails = () => {
   const [show, setShow] = useState(false);
   const [modalAlert, setModalAlert] = useState(false);
   const [status, setStatus] = useState("");
+  const history = useHistory()
 
   const isDelivery = () => current?.orderType === "delivery";
 
@@ -91,6 +92,7 @@ const OrderDetails = () => {
         setShow(false);
         setStatus("");
       }
+
     }
 
     if (status === "delivered") {
@@ -104,6 +106,7 @@ const OrderDetails = () => {
         );
       }
     }
+    history.goBack()
   };
 
   useEffect(() => {
@@ -181,8 +184,8 @@ const OrderDetails = () => {
             {current.orderType === "delivery" ? (
               <LocalShippingIcon />
             ) : (
-              <DirectionsWalkIcon />
-            )}
+                <DirectionsWalkIcon />
+              )}
             <Typography>Order # {current.orderNumber}</Typography>
           </div>
 
@@ -208,8 +211,8 @@ const OrderDetails = () => {
                   {current.customer.address.zipcode}
                 </Typography>
               ) : (
-                <Typography></Typography>
-              )}
+                  <Typography></Typography>
+                )}
               <Typography
                 variant="body2"
                 style={{ textTransform: "capitalize" }}

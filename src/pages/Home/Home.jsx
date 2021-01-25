@@ -57,10 +57,11 @@ const Home = () => {
         className="main-top"
         style={{
           display: "flex",
-          padding: "0.5rem auto",
+          margin: '0.5rem auto',
           width: "100%",
+          maxWidth: '1280px',
           justifyContent: "space-between",
-          alignItems: "flex-end",
+          alignItems: "center",
         }}
       >
         {store && store.open ? (
@@ -94,7 +95,7 @@ const Home = () => {
         />
         <ActionCard
           title="Products/Items"
-          onClick={() => history.push("/admin/allItems")}
+          onClick={() => history.push("/admin/allItems/all")}
         />
         <ActionCard
           title="Categories"

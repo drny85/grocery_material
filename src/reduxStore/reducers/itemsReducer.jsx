@@ -2,6 +2,7 @@ import {
   ADD_ITEM,
   CLEAR_CURRENT_ITEM,
   CLEAR_ITEMS_FILTERS,
+  DELETE_ITEM,
   FILTER_BY_CATEGORY,
   GET_ITEMS,
   ITEMS_LOADING,
@@ -70,6 +71,12 @@ const itemsReducer = (state = initialState, action) => {
         filtered: null,
         loading: false,
       };
+    case DELETE_ITEM:
+      return {
+        ...state,
+        items: [...state.items.filter(i => i.id !== action.payload)],
+        loading: false
+      }
 
     default:
       return state;

@@ -1,6 +1,8 @@
 import React from "react";
 
-const CategoryScrollItem = ({ id, name, selected, onClick }) => {
+const CategoryScrollItem = ({ id, name, selected, count, onClick }) => {
+
+
   return (
     <div
       onClick={onClick}
@@ -18,7 +20,7 @@ const CategoryScrollItem = ({ id, name, selected, onClick }) => {
         boxShadow: "3px 5px 5px rgba(0,0,0,0.5)",
       }}
     >
-      <h4 className="capitalize">{name}</h4>
+      <h4 className="capitalize">{name} {count && `(${(count)})`}</h4>
     </div>
   );
 };

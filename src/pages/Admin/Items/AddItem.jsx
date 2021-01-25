@@ -4,9 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 import Controls from "../../../components/controls/Controls";
 import { Form, useForm } from "../../../components/useForm";
 import { getCategories } from "../../../reduxStore/actions/categoriesActions";
-
+import BackArrow from '../../../components/BackArrow'
 import { storage } from "../../../database";
 import { addItem } from "../../../reduxStore/actions/itemsActions";
+import Message from "../../../components/Message";
 
 
 const SIZES = [
@@ -32,21 +33,26 @@ const initialValues = {
 const AddItem = () => {
   const { categories } = useSelector(state => state.categoriesData)
   const { user } = useSelector(state => state.userData)
+  const [error, setError] = useState(null)
   const dispatch = useDispatch()
   const imgRef = useRef()
+  const priceRef = useRef()
   const [selectedSizes, setSelectedSizes] = useState({});
   const [comeInSizes, setComeInSizes] = useState(false)
   const [image, setImage] = useState('')
   const [sizes, setSizes] = useState(null)
 
-
   const handlePriceBySizes = (event) => {
 
     setSelectedSizes({ ...selectedSizes, [event.target.name]: parseFloat(event.target.value) })
+
+
   };
 
   const handleSizes = e => {
+
     setSizes({ ...sizes, [e.target.name]: e.target.checked })
+
   }
 
 
@@ -76,7 +82,7 @@ const AddItem = () => {
     setErrors({
       ...temp,
     });
-    console.log(errors)
+
 
     if (fieldValues === values)
       return Object.values(temp).every((x) => x === "");
@@ -92,26 +98,53 @@ const AddItem = () => {
   } = useForm(initialValues, true, validate);
 
   const resetEverything = () => {
-    resetForm()
+
     setImage('')
     imgRef.current.style.backgroundImage = null;
     setComeInSizes(false)
     setSizes(null)
     setSelectedSizes({})
+    resetForm()
+
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!comeInSizes && values.price === '') {
+
+      showMessage('Item price is missing', 'error')
+      priceRef.current.focus()
+
+
+      return
+
+    }
+
+    //verified that all sizes selcted have prices assigned
+    if (comeInSizes && sizes) {
+      const sl = Object.keys(sizes).length
+      const pl = Object.keys(selectedSizes).length;
+
+      if (sl !== pl) {
+        showMessage('All sizes must have a price', 'error')
+        return
+      }
+    } else if (comeInSizes && sizes === null) {
+      showMessage('All sizes must have a price', 'error')
+      return
+    }
+
     if (validate()) {
 
       values.sizes = comeInSizes ? Object.keys(selectedSizes) : null
-
       values.price = comeInSizes ? selectedSizes : parseFloat(values.price);
-      console.log(values)
+      values.addedOn = new Date().toISOString();
+
       const submitted = dispatch(addItem(values));
       if (submitted) {
         resetEverything()
+        showMessage('Item has been added', 'success')
       } else {
         alert('Error adding item')
       }
@@ -122,6 +155,14 @@ const AddItem = () => {
     }
 
   };
+
+  const showMessage = (message, severity) => {
+    setError({ message, severity })
+
+    setTimeout(() => {
+      setError(null)
+    }, 4000)
+  }
 
   const handleImage = async (e) => {
     if (e.target.files && e.target.files[0]) {
@@ -153,6 +194,7 @@ const AddItem = () => {
 
   };
 
+
   useEffect(() => {
     dispatch(getCategories(user?.userId))
 
@@ -168,9 +210,14 @@ const AddItem = () => {
         boxShadow: "4px 6px 4px 2px rgba(0,0,0,0.4)",
       }}
     >
-      <Typography align="center" variant="h4">
-        Add Item
+      <div className="top-titles">
+        <BackArrow />
+        <Typography align="center" variant="h4">
+          Add Item
       </Typography>
+      </div>
+      {error && (<Message message={error?.message} severity={error?.severity} />)}
+
       <div style={{ margin: "1rem 2rem" }}>
         <Form onSubmit={handleSubmit}>
           <Grid container>
@@ -191,7 +238,7 @@ const AddItem = () => {
                 onChange={handleInputChange}
               />
 
-              <Controls.Select name='category' error={errors.category} label='Select a Category' value={values.category} onChange={handleInputChange} options={categories} />
+              <Controls.Select name='category' error={errors.category} label='Select a Category' value={values.category} onChange={handleInputChange} options={categories.sort((a, b) => (a.name < b.name ? -1 : 1))} />
               <Controls.Input error={errors.imageUrl} type='file' onChange={handleImage} />
 
               <Grid item container>
@@ -203,8 +250,8 @@ const AddItem = () => {
 
                 </Grid>
                 <Grid item>
-                  {comeInSizes && (SIZES.map(size => (<FormControlLabel style={{ paddingLeft: '1rem' }} key={size.size}
-                    control={<Checkbox checked={size[size.size]} onChange={handleSizes} name={size.size} />}
+                  {comeInSizes && (SIZES.map((size, i) => (<FormControlLabel style={{ paddingLeft: '1rem' }} key={i.toString()}
+                    control={<Checkbox key={size} checked={size[size.size]} onChange={handleSizes} value={selectedSizes[size.size]} name={size.size} />}
                     label={size.size}
                   />)))}
 
@@ -221,7 +268,7 @@ const AddItem = () => {
               </Grid>
               {!comeInSizes && (
                 <Grid item>
-                  <Controls.Input name='price' label='Item Price' inputProps={{ min: 0, step: 0.01 }} type='number' values={values.price} error={errors.price} onChange={handleInputChange} />
+                  <Controls.Input inputRef={priceRef} name='price' label='Item Price' inputProps={{ min: 0, step: 0.01 }} type='number' values={values.price} error={errors.price} onChange={handleInputChange} />
                 </Grid>
               )}
 
@@ -241,6 +288,7 @@ const AddItem = () => {
                   </div>
                   <div className="previews_details_bottom">
                     <Typography variant='h5'>{values.price && '$'}{values.price}</Typography>
+                    {selectedSizes && (Object.entries(selectedSizes).map(s => ({ size: s[0], price: s[1] })).sort((a, b) => (a.price < b.price)).map(size => <Typography className='capitalize' key={size.size}>{size.size}: ${size.price}</Typography>))}
                   </div>
                 </div>
               </div>

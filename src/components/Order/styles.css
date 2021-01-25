@@ -30,11 +30,10 @@
   flex: 0.6;
 }
 
-.order_item > .price {
+.order_item .price {
   display: flex;
   padding: 0.8rem;
-  justify-content: space-between;
-  align-items: flex-end;
+  justify-content: center;
+  align-items: center;
   flex: 0.2;
-  background-color: rosybrown;
 }

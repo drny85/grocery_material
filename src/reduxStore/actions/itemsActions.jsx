@@ -54,7 +54,7 @@ export const addItem = item => async (dispatch, getState) => {
     });
 
     const data = await db.collection("stores").doc(store?.id).get();
-    console.log(data.data())
+
     if (data.exists) {
       if (!data.data().hasItems) {
         data.ref.update({
@@ -74,12 +74,23 @@ export const addItem = item => async (dispatch, getState) => {
 
 }
 
-export const setCurrentItem = (itemId, storeId) => async dispatch => {
+export const deleteItem = (id, storeId) => async dispatch => {
   try {
-    // const { userData: { store } } = getState()
+    await db.collection('items').doc(storeId).collection('items').doc(id).delete();
+    return true
+  } catch (error) {
+    console.log("Error deleting item", error.message)
+    return false
+  }
+}
+
+export const setCurrentItem = (itemId, storeId) => async (dispatch, getState) => {
+  try {
+    const { userData: { store } } = getState()
 
     dispatch({ type: LOADING_CURRENT_ITEM });
-    const item = await db.collection('items').doc(storeId).collection('items').doc(itemId).get()
+
+    const item = await db.collection('items').doc(storeId || store.id).collection('items').doc(itemId).get()
     dispatch({ type: SET_CURRENT_ITEM, payload: { id: item.id, ...item.data() } })
   } catch (error) {
     console.log('error setting current item', error.message)

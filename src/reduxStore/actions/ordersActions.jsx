@@ -16,9 +16,11 @@ export const getOrders = (restaurantId) => async (dispatch, getState) => {
   try {
     dispatch({ type: ORDERS_LOADING });
 
+    const { userData: { user } } = getState()
+
     const listener = await db
       .collection("orders")
-      .where("restaurantId", "==", restaurantId)
+      .where("restaurantId", "==", restaurantId || user?.store)
       .orderBy("orderPlaced", "desc")
       .onSnapshot((values) => {
 

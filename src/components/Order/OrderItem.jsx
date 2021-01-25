@@ -14,7 +14,7 @@ const OrderItem = ({ item }) => {
             <div className="details">
                 <div className="name">
                     <Typography style={{ textTransform: 'capitalize' }} variant='body2'> {item.quantity} {item.name} {item.size && `, ${item.size}`}</Typography>
-                    {item.instruction && (<i style={{ fontSize: '0.7rem', color: 'gray' }}>{item.instruction}</i>)}
+                    {item.instruction && (<i style={{ fontSize: '0.8rem', color: 'gray' }}>{item.instruction}</i>)}
                 </div>
                 <div className="price">
                     ${item.price.toFixed(2)}

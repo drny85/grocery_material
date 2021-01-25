@@ -1,20 +1,25 @@
 import { Grid, Typography } from "@material-ui/core";
-
+import React from "react";
 import { useHistory } from "react-router-dom";
 import BackArrow from "../../components/BackArrow";
 import Controls from "../../components/controls/Controls";
 import { useDatedOrders } from "../../utils/useDatedOrders";
 import OrderCard from "./OrderCard";
 
+
+const SHRINK_SIZE = 4;
+
 const Orders = () => {
   const history = useHistory();
   const orders = useDatedOrders();
+
 
   const checkForCancels = () => {
     const found = orders.find((o) => o.status === "canceled");
     if (found) return true;
     return false;
   };
+
   return (
     <div
       style={{
@@ -59,6 +64,7 @@ const Orders = () => {
                 .filter((order) => order.status === "new")
                 .map((order) => (
                   <OrderCard
+                    shrink={orders.filter(i => i.status === 'new').length > SHRINK_SIZE}
                     onClick={() => history.push(`/orders/${order.id}`)}
                     key={order.id}
                     order={order}
@@ -75,6 +81,7 @@ const Orders = () => {
                 .filter((order) => order.status === "in progress")
                 .map((order) => (
                   <OrderCard
+                    shrink={orders.filter(i => i.status === 'in progress').length > SHRINK_SIZE}
                     onClick={() => history.push(`/orders/${order.id}`)}
                     key={order.id}
                     order={order}
@@ -102,6 +109,7 @@ const Orders = () => {
                 )
                 .map((order) => (
                   <OrderCard
+                    shrink={orders.filter(i => i.status === 'pickup' || i.status === 'delivered').length > SHRINK_SIZE}
                     onClick={() => history.push(`/orders/${order.id}`)}
                     key={order.id}
                     order={order}
@@ -120,6 +128,7 @@ const Orders = () => {
                   .filter((order) => order.status === "canceled")
                   .map((order) => (
                     <OrderCard
+                      shrink={orders.filter(i => i.status === 'canceled').length > SHRINK_SIZE}
                       onClick={() => history.push(`/orders/${order.id}`)}
                       key={order.id}
                       order={order}
@@ -129,21 +138,21 @@ const Orders = () => {
           )}
         </Grid>
       ) : (
-        <div
-          className="no_orders"
-          style={{
-            display: "flex",
-            alignContent: "center",
-            justifyContent: "center",
-            width: "800px",
-            height: "100vh",
-            flexDirection: "column",
-            margin: "0 auto",
-          }}
-        >
-          <Typography align="center">No Orders</Typography>
-        </div>
-      )}
+          <div
+            className="no_orders"
+            style={{
+              display: "flex",
+              alignContent: "center",
+              justifyContent: "center",
+              width: "800px",
+              height: "100vh",
+              flexDirection: "column",
+              margin: "0 auto",
+            }}
+          >
+            <Typography align="center">No Orders</Typography>
+          </div>
+        )}
     </div>
   );
 };
