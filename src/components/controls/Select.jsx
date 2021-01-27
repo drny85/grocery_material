@@ -24,7 +24,7 @@ export default function Select(props) {
         {options.map((item) => (
           <MenuItem className='capitalize' key={item.id || item._id} value={item.id || item._id}>
             {multiple ? (<><Checkbox checked={currents && currents.indexOf(item.name || item.id) > -1} />
-              <ListItemText primary={item.title || item.name} />console.log({currents})</>) : (item.title || item.name)}
+              <ListItemText primary={item.title || item.name} />)</>) : (item.title || item.name)}
 
 
 

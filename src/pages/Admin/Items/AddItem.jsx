@@ -205,7 +205,7 @@ const AddItem = () => {
         display: "flex",
         maxWidth: "1080px",
         flexDirection: "column",
-        margin: "1rem auto",
+        margin: "3rem auto",
         width: "100%",
         boxShadow: "4px 6px 4px 2px rgba(0,0,0,0.4)",
       }}
@@ -218,7 +218,7 @@ const AddItem = () => {
       </div>
       {error && (<Message message={error?.message} severity={error?.severity} />)}
 
-      <div style={{ margin: "1rem 2rem" }}>
+      <div style={{ margin: "1.5rem 2rem" }}>
         <Form onSubmit={handleSubmit}>
           <Grid container>
             <Grid item xs={12} sm={7}>

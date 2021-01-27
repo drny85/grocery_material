@@ -34,14 +34,16 @@ const useStyles = makeStyles((theme) => ({
 
 const ItemDetails = ({ history }) => {
   const classes = useStyles();
-  const { current, loading } = useSelector((state) => state.itemsData);
+  const { id } = useParams();
   const { store, user } = useSelector((state) => state.userData);
+  const { current, loading } = useSelector((state) => state.itemsData);
+
   const [show, setShow] = useState(false)
   const dispatch = useDispatch();
-  const { id } = useParams();
+
 
   const handleDelete = async () => {
-    console.log(id)
+
     const deleted = await dispatch(deleteItem(id, store?.id))
     if (deleted) {
       history.goBack()
@@ -52,11 +54,14 @@ const ItemDetails = ({ history }) => {
   useEffect(() => {
     dispatch(setCurrentItem(id, store?.id));
     return () => {
-      //dispatch(clearCurrentItem());
+      dispatch(clearCurrentItem());
     };
   }, [dispatch, id, store?.id]);
 
-  if (loading) return <Loader />;
+
+  if (loading || !current) {
+    return <Loader />
+  }
   return (
     <div className="main">
       <div style={{ maxWidth: "1080px", margin: "1rem auto", display: 'flex', justifyContent: 'space-between' }}>
@@ -89,7 +94,7 @@ const ItemDetails = ({ history }) => {
             {current?.description}
           </Typography>
           <div style={{ display: "flex" }} className="sizes">
-            {current?.sizes &&
+            {current.sizes &&
               current.sizes.map((size, i) => (
                 <Typography
                   style={{ margin: "1rem", textTransform: "capitalize" }}

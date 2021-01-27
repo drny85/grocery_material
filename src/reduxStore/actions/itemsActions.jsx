@@ -32,7 +32,7 @@ export const getItems = (userId) => async (dispatch, getState) => {
         dispatch({ type: GET_ITEMS, payload: items });
       });
   } catch (error) {
-    console.log("Error getting items", error);
+    console.log("Error getting items", error.message);
   }
 };
 
@@ -86,11 +86,11 @@ export const deleteItem = (id, storeId) => async dispatch => {
 
 export const setCurrentItem = (itemId, storeId) => async (dispatch, getState) => {
   try {
+    dispatch({ type: LOADING_CURRENT_ITEM });
     const { userData: { store } } = getState()
 
-    dispatch({ type: LOADING_CURRENT_ITEM });
+    const item = await db.collection('items').doc(storeId || store?.id).collection('items').doc(itemId).get()
 
-    const item = await db.collection('items').doc(storeId || store.id).collection('items').doc(itemId).get()
     dispatch({ type: SET_CURRENT_ITEM, payload: { id: item.id, ...item.data() } })
   } catch (error) {
     console.log('error setting current item', error.message)

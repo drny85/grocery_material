@@ -55,7 +55,7 @@ function App() {
         <Switch>
           <Route exact path="/categories" component={AllCategories} />
           <Route exact path="/pastOrders" component={PastOrders} />
-          <Route exact path="/item/:id" component={ItemDetails} />
+          <Route exact path="/item/details/:id" component={ItemDetails} />
           <Route exact path="/admin/allItems/:id" component={AllItems} />
           <Route exact path="/admin/item/edit/:id" component={EditItem} />
           <Route exact path="/admin/item" component={AddItem} />

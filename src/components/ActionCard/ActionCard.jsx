@@ -16,13 +16,13 @@ const useStyles = makeStyles((theme) => ({
         width: '30%',
         marginBottom: '2rem',
         marginRight: '2rem',
-        backgroundColor: theme.palette.primary.main
-
-
+        backgroundColor: theme.palette.secondary.main
     },
 
     title: {
-        fontSize: 14,
+        fontSize: '2rem',
+        color: theme.palette.getContrastText(theme.palette.secondary.main)
+
     },
     pos: {
         marginBottom: 12,
@@ -35,7 +35,7 @@ const ActionCard = ({ title, onClick }) => {
     return (
         <Card onClick={onClick} className={classes.root}>
             <CardContent>
-                <Typography variant='h4'>{title}</Typography>
+                <Typography className={classes.title} variant='h4'>{title}</Typography>
             </CardContent>
         </Card>
     )

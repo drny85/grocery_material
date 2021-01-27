@@ -85,6 +85,7 @@ const AdminPage = () => {
           title={store && store.open ? "Close Store" : "Open Store"}
           onClick={() => setOpen(true)}
         />
+        <ActionCard title='Add New Item' onClick={() => history.push('/admin/item')} />
       </div>
     </div>
   );

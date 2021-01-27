@@ -105,7 +105,7 @@ const AllItems = ({ history }) => {
             <Grid key={item.id} item xs={12} sm={6} md={4} lg={3}>
               <CardItem
                 item={item}
-                onClick={() => history.push(`/item/${item.id}`)}
+                onClick={() => history.push(`/item/details/${item.id}`)}
               />
             </Grid>
           ))
@@ -125,7 +125,7 @@ const AllItems = ({ history }) => {
         ) : (
               filtered.map((item) => (
                 <Grid key={item.id} item xs={12} sm={6} md={4} lg={3}>
-                  <CardItem onClick={() => history.push(`/item/${item.id}`)} item={item} />
+                  <CardItem onClick={() => history.push(`/item/details/${item.id}`)} item={item} />
                 </Grid>
               ))
             )}
