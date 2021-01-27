@@ -1,0 +1,1 @@
+export const SIZES = ['small', 'medium', 'large', 'extra large']

@@ -8,15 +8,7 @@ import BackArrow from '../../../components/BackArrow'
 import { storage } from "../../../database";
 import { addItem } from "../../../reduxStore/actions/itemsActions";
 import Message from "../../../components/Message";
-
-
-const SIZES = [
-  { size: "small" },
-  { size: "medium" },
-  { size: "large" },
-  { size: "extra large" },
-];
-
+import { SIZES } from '../../../utils/constants'
 
 const initialValues = {
   name: "",
@@ -37,24 +29,10 @@ const AddItem = () => {
   const dispatch = useDispatch()
   const imgRef = useRef()
   const priceRef = useRef()
-  const [selectedSizes, setSelectedSizes] = useState({});
+  const [price, setPrice] = useState(null)
   const [comeInSizes, setComeInSizes] = useState(false)
   const [image, setImage] = useState('')
-  const [sizes, setSizes] = useState(null)
-
-  const handlePriceBySizes = (event) => {
-
-    setSelectedSizes({ ...selectedSizes, [event.target.name]: parseFloat(event.target.value) })
-
-
-  };
-
-  const handleSizes = e => {
-
-    setSizes({ ...sizes, [e.target.name]: e.target.checked })
-
-  }
-
+  const [sizes, setSizes] = useState([])
 
   const validate = (fieldValues = values) => {
     let temp = { ...errors };
@@ -103,7 +81,7 @@ const AddItem = () => {
     imgRef.current.style.backgroundImage = null;
     setComeInSizes(false)
     setSizes(null)
-    setSelectedSizes({})
+
     resetForm()
 
   }
@@ -121,24 +99,26 @@ const AddItem = () => {
 
     }
 
-    //verified that all sizes selcted have prices assigned
-    if (comeInSizes && sizes) {
-      const sl = Object.keys(sizes).length
-      const pl = Object.keys(selectedSizes).length;
 
-      if (sl !== pl) {
-        showMessage('All sizes must have a price', 'error')
-        return
-      }
-    } else if (comeInSizes && sizes === null) {
-      showMessage('All sizes must have a price', 'error')
-      return
-    }
+
+    //verified that all sizes selcted have prices assigned
+    // if (comeInSizes && sizes) {
+    //   const sl = Object.keys(sizes).length
+    //   const pl = Object.keys(selectedSizes).length;
+
+    //   if (sl !== pl) {
+    //     showMessage('All sizes must have a price', 'error')
+    //     return
+    //   }
+    // } else if (comeInSizes && sizes === null) {
+    //   showMessage('All sizes must have a price', 'error')
+    //   return
+    // }
 
     if (validate()) {
 
-      values.sizes = comeInSizes ? Object.keys(selectedSizes) : null
-      values.price = comeInSizes ? selectedSizes : parseFloat(values.price);
+      // values.sizes = comeInSizes ? Object.keys(selectedSizes) : null
+      // values.price = comeInSizes ? selectedSizes : parseFloat(values.price);
       values.addedOn = new Date().toISOString();
 
       const submitted = dispatch(addItem(values));
@@ -163,6 +143,29 @@ const AddItem = () => {
       setError(null)
     }, 4000)
   }
+
+  const handleSizes = e => {
+
+    let value = e.target.value;
+
+    const index = sizes.indexOf(value)
+    if (index > -1) {
+      const sc = [...sizes]
+      sc.splice(index, 1)
+      setSizes(sc)
+      delete price[value]
+      setPrice({ ...price })
+    } else {
+      setSizes([...sizes, value])
+    }
+
+  }
+
+  const handlePrices = (e) => {
+    let value = e.target.value;
+    setPrice({ ...price, [e.target.name]: value })
+  }
+
 
   const handleImage = async (e) => {
     if (e.target.files && e.target.files[0]) {
@@ -193,7 +196,6 @@ const AddItem = () => {
 
 
   };
-
 
   useEffect(() => {
     dispatch(getCategories(user?.userId))
@@ -250,19 +252,16 @@ const AddItem = () => {
 
                 </Grid>
                 <Grid item>
-                  {comeInSizes && (SIZES.map((size, i) => (<FormControlLabel style={{ paddingLeft: '1rem' }} key={i.toString()}
-                    control={<Checkbox key={size} checked={size[size.size]} onChange={handleSizes} value={selectedSizes[size.size]} name={size.size} />}
-                    label={size.size}
+                  {comeInSizes && (SIZES.map((size, i) => (<FormControlLabel style={{ paddingLeft: '1rem' }} className='capitalize' key={i.toString()}
+                    control={<Checkbox key={size} checked={sizes.includes(size)} onChange={handleSizes} value={size} name={size} />}
+                    label={size}
                   />)))}
 
                 </Grid>
                 <Grid item>
-                  {comeInSizes && sizes && (Object.entries(sizes).filter(size => size[1] === true).map((a, i) => (
-                    <>
+                  {comeInSizes && sizes.length > 0 && sizes.sort((a, b) => (a < b ? 1 : -1)).map(s => (<Controls.Input className='capitalize' key={s} name={s} label={s} onChange={handlePrices} />))
 
-                      <Controls.Input className='capitalize' key={i.toString()} name={a[0]} label={a[0]} onChange={handlePriceBySizes} />
-                    </>
-                  )))}
+                  }
                 </Grid>
 
               </Grid>
@@ -287,8 +286,12 @@ const AddItem = () => {
 
                   </div>
                   <div className="previews_details_bottom">
-                    <Typography variant='h5'>{values.price && '$'}{values.price}</Typography>
-                    {selectedSizes && (Object.entries(selectedSizes).map(s => ({ size: s[0], price: s[1] })).sort((a, b) => (a.price < b.price)).map(size => <Typography className='capitalize' key={size.size}>{size.size}: ${size.price}</Typography>))}
+                    {!comeInSizes && <Typography variant='h5'>{values.price && '$'}{values.price}</Typography>}
+                    <div className="pricing" style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
+
+                      {comeInSizes && sizes.length > 0 && price && (sizes.map(p => (<Typography className='capitalize' key={p}>{p} : ${price[p]}</Typography>)))}
+                    </div>
+
                   </div>
                 </div>
               </div>

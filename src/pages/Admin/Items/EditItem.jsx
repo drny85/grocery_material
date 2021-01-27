@@ -6,6 +6,7 @@ import BackArrow from '../../../components/BackArrow'
 import Controls from '../../../components/controls/Controls'
 import Loader from '../../../components/Loader'
 import { Form, useForm } from '../../../components/useForm'
+import { storage } from '../../../database'
 
 const SIZES = [
     { size: "small" },
@@ -15,24 +16,13 @@ const SIZES = [
 ];
 
 
-const initialValues = {
-    name: "",
-    description: "",
-    category: '',
-    price: "",
-    unitsold: 0,
-    available: true,
-    imageUrl: '',
-    storeId: '',
-    quantity: 1,
-};
 const EditItem = () => {
 
     const { id } = useParams()
     const [item, setItem] = useState(null)
     const { items, loading } = useSelector(state => state.itemsData)
     const { categories } = useSelector(state => state.categoriesData)
-    const [selectedSizes, setSelectedSizes] = useState({});
+
     const [comeInSizes, setComeInSizes] = useState(false)
     const [image, setImage] = useState('')
     const [sizes, setSizes] = useState([])
@@ -49,10 +39,42 @@ const EditItem = () => {
 
     const handleUpdateItem = e => {
         e.preventDefault()
+        if (comeInSizes && sizes.length === 0) {
+            alert('You must select a price for each size')
+            return
+        }
+        console.log(item.price, values.price)
+        values.imageUrl = image === '' ? values.imageUrl : image;
+        values.price = comeInSizes ? Object.entries(price).map(p => ({ [p[0]]: parseFloat(p[1]) })) : item.price;
+        values.sizes = comeInSizes ? sizes : values.sizes;
         console.log(values)
     }
 
-    const handleImage = async () => {
+    const handleImage = async (e) => {
+        if (e.target.files && e.target.files[0]) {
+            const image = e.target.files[0];
+            if (image.type.includes('image')) {
+
+                //valid image
+                const task = storage.ref(`/images/${image.name}`).put(image)
+                task.on('state_changed', (snapShop) => {
+
+                }, (err) => {
+                    console.log(err)
+                }, () => {
+                    storage.ref('images').child(image.name).getDownloadURL().then(url => {
+
+                        imgRef.current.style.backgroundImage = `url(${url})`
+                        setImage(url)
+                        values.imageUrl = url
+                    })
+                })
+
+            } else {
+                console.error('NO')
+            }
+        }
+
 
     }
 
@@ -117,7 +139,7 @@ const EditItem = () => {
                             <Controls.Input name='name' label='Item Name' value={values?.name} onChange={handleInputChange} />
                             <Controls.Input name='description' label="Item Description" value={values?.description} onChange={handleInputChange} />
                             <Controls.Select name='category' error={errors?.category} label='Select a Category' value={values?.category} onChange={handleInputChange} options={categories.sort((a, b) => (a.name < b.name ? -1 : 1))} />
-                            <Controls.Input error={errors.imageUrl} type='file' onChange={handleImage} />
+                            <Controls.Input error={errors.imageUrl} type='file' value={image} onChange={handleImage} />
                         </Grid>
                         <Grid container item>
                             <Grid item>
