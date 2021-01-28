@@ -105,7 +105,7 @@ const ItemDetails = ({ history }) => {
               ))}
           </div>
           <div className="desc-price">
-            {current?.sizes
+            {current.sizes
               ? `As low as $${current.price[current.sizes[0]]}`
               : `$${current?.price.toFixed(2)}`}
             {user && user.isAdmin && (

@@ -98,6 +98,21 @@ export const setCurrentItem = (itemId, storeId) => async (dispatch, getState) =>
 
 }
 
+export const updateItem = item => async dispatch => {
+  try {
+
+    await db.collection('items').doc(item.storeId).collection('items').doc(item.id).update(item)
+
+
+    return true
+
+  } catch (error) {
+    console.log('Error updating item', error.message)
+    return false
+  }
+
+}
+
 export const clearCurrentItem = () => dispatch => {
   dispatch({ type: CLEAR_CURRENT_ITEM })
 }

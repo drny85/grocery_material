@@ -7,16 +7,27 @@ import Controls from '../../../components/controls/Controls'
 import Loader from '../../../components/Loader'
 import { Form, useForm } from '../../../components/useForm'
 import { storage } from '../../../database'
+import { updateItem } from '../../../reduxStore/actions/itemsActions'
 
-const SIZES = [
-    { size: "small" },
-    { size: "medium" },
-    { size: "large" },
-    { size: "extra large" },
-];
+import { SIZES } from '../../../utils/constants'
+
+import './styles.css'
+
+const initialValues = {
+    name: "",
+    description: "",
+    category: '',
+    price: "",
+    unitSold: 0,
+    available: true,
+    imageUrl: '',
+    storeId: '',
+    quantity: 1,
+};
 
 
-const EditItem = () => {
+
+const EditItem = ({ history }) => {
 
     const { id } = useParams()
     const [item, setItem] = useState(null)
@@ -31,23 +42,57 @@ const EditItem = () => {
 
     const dispatch = useDispatch()
 
-    const validate = () => {
+    const validate = (fieldValues = values) => {
+        let temp = { ...errors };
+        if ("name" in fieldValues)
+            temp.name = fieldValues.name ? "" : "This field is required.";
+        if ("description" in fieldValues)
+            temp.description =
+                fieldValues.description.length > 10
+                    ? ""
+                    : "Minimum 10 characters required.";
+        // if ("price" in fieldValues)
+        //   temp.price = fieldValues.price.length !== 0 ? "" : "Price is required";
+        if ("category" in fieldValues)
+            temp.category =
+                fieldValues.category.length !== 0 ? "" : "This field is required";
+        if ("imageUrl" in fieldValues)
+            temp.imageUrl =
+                fieldValues.imageUrl.length !== 0 ? "" : "An Image is required";
 
-    }
 
-    const { setValues, handleInputChange, errors, values } = useForm({}, true, validate)
+        setErrors({
+            ...temp,
+        });
 
-    const handleUpdateItem = e => {
+
+        if (fieldValues === values)
+            return Object.values(temp).every((x) => x === "");
+    };
+
+
+    const { setValues, handleInputChange, setErrors, errors, values } = useForm(initialValues, true, validate)
+
+    const handleUpdateItem = async e => {
         e.preventDefault()
         if (comeInSizes && sizes.length === 0) {
             alert('You must select a price for each size')
             return
         }
-        console.log(item.price, values.price)
+
         values.imageUrl = image === '' ? values.imageUrl : image;
-        values.price = comeInSizes ? Object.entries(price).map(p => ({ [p[0]]: parseFloat(p[1]) })) : item.price;
-        values.sizes = comeInSizes ? sizes : values.sizes;
-        console.log(values)
+        values.price = comeInSizes ? price : parseFloat(values.price);
+        values.sizes = comeInSizes ? sizes : null;
+        if (validate()) {
+
+            const updated = await dispatch(updateItem(values))
+
+            if (updated) {
+                history.goBack()
+            } else {
+                return
+            }
+        }
     }
 
     const handleImage = async (e) => {
@@ -87,6 +132,8 @@ const EditItem = () => {
             const sc = [...sizes]
             sc.splice(index, 1)
             setSizes(sc)
+            delete price[value]
+            setPrice({ ...price })
         } else {
             setSizes([...sizes, value])
         }
@@ -113,97 +160,109 @@ const EditItem = () => {
             }
         }
 
-
         return () => {
 
         }
         //eslint-disable-next-line
     }, [id, items.length, item])
-    console.log(comeInSizes)
 
-    if (loading) return <Loader />
+    if (loading || !item) return <Loader />
     return (
-        <div style={{ display: 'flex', maxWidth: '1280px', padding: '1rem auto', width: '100%', flexDirection: 'column', justifyContent: 'center', margin: '2rem auto' }}>
+        <div style={{
+            display: "flex",
+            maxWidth: "1080px",
+            flexDirection: "column",
+            margin: "3rem auto",
+            width: "100%",
+            boxShadow: "4px 6px 4px 2px rgba(0,0,0,0.4)",
+        }}>
             <div className="top-titles">
                 <BackArrow />
                 <Typography align="center" variant="h4">
                     Update Item
       </Typography>
             </div>
-            <Form onSubmit={handleUpdateItem}>
-                <Grid container>
-                    <Grid item xs={12} sm={7}>
-                        <Grid container item>
+            <div style={{ margin: "1.5rem 2rem" }}>
+                <Form onSubmit={handleUpdateItem}>
+                    <Grid container>
+                        <Grid item xs={12} sm={7}>
+                            <Grid container item>
 
 
-                            <Controls.Input name='name' label='Item Name' value={values?.name} onChange={handleInputChange} />
-                            <Controls.Input name='description' label="Item Description" value={values?.description} onChange={handleInputChange} />
-                            <Controls.Select name='category' error={errors?.category} label='Select a Category' value={values?.category} onChange={handleInputChange} options={categories.sort((a, b) => (a.name < b.name ? -1 : 1))} />
-                            <Controls.Input error={errors.imageUrl} type='file' value={image} onChange={handleImage} />
+                                <Controls.Input name='name' label='Item Name' value={values?.name} onChange={handleInputChange} />
+                                <Controls.Input name='description' label="Item Description" value={values?.description} onChange={handleInputChange} />
+                                <Controls.Select name='category' error={errors?.category} label='Select a Category' value={values?.category} onChange={handleInputChange} options={categories.sort((a, b) => (a.name < b.name ? -1 : 1))} />
+                                <Controls.Input error={errors.imageUrl} type='file' value='' onChange={handleImage} />
+                            </Grid>
+                            <Grid container item>
+                                <Grid item>
+                                    <FormControlLabel
+                                        control={<Switch checked={comeInSizes} onChange={() => setComeInSizes(!comeInSizes)} name="sizes" />}
+                                        label="Does this item come in sizes?"
+                                    />
+                                </Grid>
+
+                            </Grid>
+                            {comeInSizes && (
+                                <Grid item>
+                                    {comeInSizes && (SIZES.map((size, i) => (<FormControlLabel className='capitalize' style={{ paddingLeft: '1rem' }} key={i.toString()}
+                                        control={<Checkbox key={size} checked={sizes.includes(size)} onChange={handleSizes} value={size} name={size} />}
+                                        label={size}
+                                    />)))}
+
+                                </Grid>
+                            )}
+
+                            {comeInSizes && (
+                                <Grid item>
+                                    {sizes.length > 0 && (
+                                        sizes.map(s => <Controls.Input focus={true} className='capitalize' value={price[s]} label={s} name={s} key={s} onChange={handlePrices} />)
+                                    )}
+                                </Grid>
+                            )}
+                            {!comeInSizes && item && (
+                                <Grid item>
+                                    <Controls.Input name='price' label='Item Price' focus={true} inputProps={{ min: 0, step: 0.01 }} type='number' value={values.price} error={errors.price} onChange={handleInputChange} />
+                                </Grid>
+                            )}
+
+                            <Grid container item>
+                                <Grid item>
+                                    <Controls.Button text='Update Item' type='submit' />
+                                </Grid>
+
+                            </Grid>
                         </Grid>
-                        <Grid container item>
-                            <Grid item>
-                                <FormControlLabel
-                                    control={<Switch checked={comeInSizes} onChange={() => setComeInSizes(!comeInSizes)} name="sizes" />}
-                                    label="Does this item come in sizes?"
-                                />
-                            </Grid>
-
-                        </Grid>
-                        {comeInSizes && (
-                            <Grid item>
-                                {comeInSizes && (SIZES.map((size, i) => (<FormControlLabel style={{ paddingLeft: '1rem' }} key={i.toString()}
-                                    control={<Checkbox key={size} checked={sizes.includes(size.size)} onChange={handleSizes} value={size.size} name={size.size} />}
-                                    label={size.size}
-                                />)))}
-
-                            </Grid>
-                        )}
-
-                        {comeInSizes && (
-                            <Grid item>
-                                {sizes.length > 0 && (
-                                    sizes.map(s => <Controls.Input focus={true} className='capitalize' value={price[s]} label={s} name={s} key={s} onChange={handlePrices} />)
-                                )}
-                            </Grid>
-                        )}
-
-                        <Grid container item>
-                            <Grid item>
-                                <Controls.Button text='Update Item' type='submit' />
-                            </Grid>
-
-                        </Grid>
-                    </Grid>
-                    {item && (
-                        <Grid item xs={12} sm={5}>
-                            <div className="preview">
-                                <div ref={imgRef} className="preview_img">
-                                    {/* <img r src={image ? image : 'https://billfish.org/wp-content/uploads/2019/08/placeholder-image.jpg'} alt="" /> */}
-
-                                </div>
-                                <div className="preview_details">
-                                    <div className="preview_details_title">
-                                        <Typography className='capitalize' variant='h5'>{values.name}</Typography>
-                                        <Typography noWrap variant='caption'>{values.description}</Typography>
+                        {item && (
+                            <Grid item xs={12} sm={5}>
+                                <div className="preview">
+                                    <div ref={imgRef} className="preview_img">
+                                        {/* <img r src={image ? image : 'https://billfish.org/wp-content/uploads/2019/08/placeholder-image.jpg'} alt="" /> */}
 
                                     </div>
-                                    <div className="previews_details_bottom">
-                                        {item && item.sizes === null && !comeInSizes && (<Typography variant='h5'>{values.price && '$'}{values.price}</Typography>)}
-                                        <div className="pricing" style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
+                                    <div className="preview_details">
+                                        <div className="preview_details_title">
+                                            <Typography className='capitalize' variant='h5'>{values.name}</Typography>
+                                            <Typography noWrap variant='caption'>{values.description}</Typography>
 
-                                            {item && comeInSizes && (sizes.map(p => (<Typography className='capitalize' key={p}>{p} : ${price[p]}</Typography>)))}
                                         </div>
+                                        <div className="previews_details_bottom">
+                                            {item && item.sizes === null && !comeInSizes && (<Typography variant='h5'>{values.price && '$'}{values.price}</Typography>)}
+                                            <div className="pricing" style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
+
+                                                {item && comeInSizes && (sizes.map(p => (<Typography className='capitalize' key={p}>{p} : ${price[p]}</Typography>)))}
+                                            </div>
 
 
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </Grid>
-                    )}
+                            </Grid>
+                        )}
 
-                </Grid>
-            </Form>
+                    </Grid>
+                </Form>
+            </div>
         </div>
     )
 }

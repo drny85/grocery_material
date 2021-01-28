@@ -15,7 +15,7 @@ const initialValues = {
   description: "",
   category: '',
   price: "",
-  unitsold: 0,
+  unitSold: 0,
   available: true,
   imageUrl: '',
   storeId: '',
@@ -98,27 +98,24 @@ const AddItem = () => {
       return
 
     }
-
-
-
     //verified that all sizes selcted have prices assigned
-    // if (comeInSizes && sizes) {
-    //   const sl = Object.keys(sizes).length
-    //   const pl = Object.keys(selectedSizes).length;
+    if (comeInSizes && sizes.length > 0) {
+      const sl = sizes.length
+      const pl = Object.keys(price).length;
 
-    //   if (sl !== pl) {
-    //     showMessage('All sizes must have a price', 'error')
-    //     return
-    //   }
-    // } else if (comeInSizes && sizes === null) {
-    //   showMessage('All sizes must have a price', 'error')
-    //   return
-    // }
+      if (sl !== pl) {
+        showMessage('All sizes must have a price', 'error')
+        return
+      }
+    } else if (comeInSizes && sizes === null) {
+      showMessage('All sizes must have a price', 'error')
+      return
+    }
 
     if (validate()) {
 
-      // values.sizes = comeInSizes ? Object.keys(selectedSizes) : null
-      // values.price = comeInSizes ? selectedSizes : parseFloat(values.price);
+      values.sizes = comeInSizes ? sizes : null
+      values.price = comeInSizes ? Object.entries(price).map(p => ({ [p[0]]: parseFloat(values.price) })) : parseFloat(values.price);
       values.addedOn = new Date().toISOString();
 
       const submitted = dispatch(addItem(values));
@@ -267,10 +264,9 @@ const AddItem = () => {
               </Grid>
               {!comeInSizes && (
                 <Grid item>
-                  <Controls.Input inputRef={priceRef} name='price' label='Item Price' inputProps={{ min: 0, step: 0.01 }} type='number' values={values.price} error={errors.price} onChange={handleInputChange} />
+                  <Controls.Input inputRef={priceRef} name='price' label='Item Price' inputProps={{ min: 0, step: 0.01 }} type='number' value={values.price} error={errors.price} onChange={handleInputChange} />
                 </Grid>
               )}
-
 
             </Grid>
             <Grid item xs={12} sm={5}>

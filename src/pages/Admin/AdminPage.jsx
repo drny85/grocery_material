@@ -37,7 +37,9 @@ const AdminPage = () => {
           justifyContent: "space-between",
           alignItems: "center",
           width: "100%",
+          maxWidth: '1280px',
           padding: "1rem 2rem",
+          margin: '0.5rem auto'
         }}
       >
         <BackArrow />
