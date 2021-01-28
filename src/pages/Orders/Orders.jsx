@@ -34,10 +34,11 @@ const Orders = () => {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
+          margin: '1rem'
         }}
       >
         <BackArrow />
-        <Typography variant="h4">Today's Orders</Typography>
+        <Typography variant="h5">Today's Orders</Typography>
         <Controls.Button
           text="View Past Orders"
           onClick={() => history.push("/pastOrders")}

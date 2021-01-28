@@ -54,7 +54,7 @@ const ItemDetails = ({ history }) => {
   useEffect(() => {
     dispatch(setCurrentItem(id, store?.id));
     return () => {
-      dispatch(clearCurrentItem());
+      //dispatch(clearCurrentItem());
     };
   }, [dispatch, id, store?.id]);
 
@@ -107,7 +107,7 @@ const ItemDetails = ({ history }) => {
           <div className="desc-price">
             {current.sizes
               ? `As low as $${current.price[current.sizes[0]]}`
-              : `$${current?.price.toFixed(2)}`}
+              : `$${current?.price}`}
             {user && user.isAdmin && (
               <Controls.Button
                 text="Edit Item"
