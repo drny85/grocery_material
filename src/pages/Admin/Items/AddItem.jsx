@@ -47,7 +47,7 @@ const AddItem = () => {
     //   temp.price = fieldValues.price.length !== 0 ? "" : "Price is required";
     if ("category" in fieldValues)
       temp.category =
-        fieldValues.category.length !== 0 ? "" : "This field is required";
+        fieldValues.category.length !== 0 ? "" : "A category is required";
     if ("imageUrl" in fieldValues)
       temp.imageUrl =
         fieldValues.imageUrl.length !== 0 ? "" : "An Image is required";
@@ -89,15 +89,7 @@ const AddItem = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!comeInSizes && values.price === '') {
 
-      showMessage('Item price is missing', 'error')
-      priceRef.current.focus()
-
-
-      return
-
-    }
     //verified that all sizes selcted have prices assigned
     if (comeInSizes && sizes.length > 0) {
       const sl = sizes.length
@@ -113,6 +105,15 @@ const AddItem = () => {
     }
 
     if (validate()) {
+      if (!comeInSizes && values.price === '') {
+
+        showMessage('Item price is missing', 'error')
+        priceRef.current.focus()
+
+
+        return
+
+      }
 
       values.sizes = comeInSizes ? sizes : null
       values.price = comeInSizes ? Object.entries(price).map(p => ({ [p[0]]: parseFloat(values.price) })) : parseFloat(values.price);
@@ -225,7 +226,7 @@ const AddItem = () => {
                 name="name"
                 error={errors.name}
                 value={values.name}
-                label="Item name"
+                label="Item Name"
                 onChange={handleInputChange}
               />
               <Controls.Input

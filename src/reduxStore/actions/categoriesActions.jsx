@@ -1,8 +1,9 @@
 import { db } from "../../database";
-import { CATEGORY_ERROR, CLEAR_CATEGORY_ERROR, GET_CATEGORIES } from "../types";
+import { CATEGORY_ERROR, CATEGORY_LOADING, CLEAR_CATEGORY_ERROR, GET_CATEGORIES } from "../types";
 
 export const getCategories = (userId = null) => async (dispatch, getState) => {
   try {
+    dispatch({ type: CATEGORY_LOADING })
     const { store } = await (
       await db.collection("users").doc(userId).get()
     ).data();
@@ -34,7 +35,7 @@ export const addNewCategory = category => async (dispatch, getState) => {
 
     const { userData: { store } } = getState()
     const data = { name: category, storeId: store.id }
-    const found = await (await db.collection('categories').doc(store.id).collection('categories').where('name', '==', name).get()).size
+    const found = (await db.collection('categories').doc(store.id).collection('categories').where('name', '==', name).get()).size
     if (found > 0) {
       dispatch({ type: CATEGORY_ERROR, payload: `${name} already exist!` })
       return;

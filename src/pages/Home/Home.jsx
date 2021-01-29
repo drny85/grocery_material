@@ -6,6 +6,7 @@ import ActionCard from "../../components/ActionCard/ActionCard";
 import { makeStyles } from "@material-ui/core/styles";
 import { Typography } from "@material-ui/core";
 import moment from "moment";
+import Loader from "../../components/Loader";
 
 //import Button from '@material-ui/core/Button';
 //import Typography from '@material-ui/core/Typography';
@@ -15,8 +16,8 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     width: "100vw",
     height: "90vh",
-    maxWidth: "1800px",
-    maxWwidth: "2680px",
+
+    maxWidth: "1280px",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
@@ -35,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Home = () => {
-  const { user, store } = useSelector((state) => state.userData);
+  const { user, store, loading } = useSelector((state) => state.userData);
   const classes = useStyles();
   const history = useHistory();
   const [today, setToday] = useState("");
@@ -43,12 +44,15 @@ const Home = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setToday(moment().format("MMMM Do YYYY, h:mm:ss a"));
+
     }, 1000);
 
     return () => {
       clearInterval(interval);
     };
   }, []);
+
+  if (loading) return <Loader />
 
   if (!user) history.replace("/signin");
   return (
@@ -57,8 +61,9 @@ const Home = () => {
         className="main-top"
         style={{
           display: "flex",
-          margin: '0.5rem auto',
-          width: "100%",
+          margin: '1rem auto',
+          padding: '0rem 2rem',
+          width: "100vw",
           maxWidth: '1280px',
           justifyContent: "space-between",
           alignItems: "center",

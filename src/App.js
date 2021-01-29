@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { Signin, Signup } from "./pages/Auth";
@@ -16,6 +16,9 @@ import AllCategories from "./pages/Admin/Categories/AllCategories";
 import ItemDetails from "./pages/Admin/Items/ItemDetails";
 import AddItem from "./pages/Admin/Items/AddItem";
 import EditItem from "./pages/Admin/Items/EditItem";
+import Loader from "./components/Loader";
+import AdminRoute from "./middlewares/AdminRoute";
+import PrivateRoute from "./middlewares/PrivateRoute";
 
 const theme = createMuiTheme({
   palette: {
@@ -39,32 +42,40 @@ const theme = createMuiTheme({
 
 function App() {
   const dispatch = useDispatch();
+  const [starting, setStarting] = useState(true)
   useEffect(() => {
+    
     auth.onAuthStateChanged((user) => {
       if (user) {
         dispatch(setLogin(user));
         dispatch(userStore(user.uid));
         dispatch(getItems(user.uid));
         dispatch(getCategories(user.uid));
+        setStarting(false)
+      } else {
+        setStarting(false)
       }
     });
   }, [dispatch]);
+
+  if (starting)  return <Loader />
+    
   return (
     <ThemeProvider theme={theme}>
       <Router>
         <Switch>
-          <Route exact path="/categories" component={AllCategories} />
-          <Route exact path="/pastOrders" component={PastOrders} />
-          <Route exact path="/item/details/:id" component={ItemDetails} />
-          <Route exact path="/admin/allItems/:id" component={AllItems} />
-          <Route exact path="/admin/item/edit/:id" component={EditItem} />
-          <Route exact path="/admin/item" component={AddItem} />
-          <Route exact path="/admin" component={AdminPage} />
-          <Route exact path="/orders/:id" component={OrderDetails} />
-          <Route exact path="/orders" component={Orders} />
+          <AdminRoute exact path="/categories" component={AllCategories} />
+          <PrivateRoute exact path="/pastOrders" component={PastOrders} />
+          <PrivateRoute exact path="/item/details/:id" component={ItemDetails} />
+          <PrivateRoute exact path="/admin/allItems/:id" component={AllItems} />
+          <PrivateRoute exact path="/admin/item/edit/:id" component={EditItem} />
+          <AdminRoute exact path="/admin/item" component={AddItem} />
+          <AdminRoute exact path="/admin" component={AdminPage} />
+          <PrivateRoute exact path="/orders/:id" component={OrderDetails} />
+          <PrivateRoute exact path="/orders" component={Orders} />
           <Route exact path="/signin" component={Signin} />
           <Route exact path="/signup" component={Signup} />
-          <Route exact path="/" component={Home} />
+          <PrivateRoute exact path="/" component={Home} />
         </Switch>
       </Router>
     </ThemeProvider>

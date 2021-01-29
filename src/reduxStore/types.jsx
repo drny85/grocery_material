@@ -54,6 +54,8 @@ export const USER_SIGN_UP = "USER_SIGN_UP";
 export const USER_LOGOUT = "USER_LOGOUT";
 export const USER_ERROR = "USER_ERROR";
 export const USER_LOGIN = "USER_LOGIN";
+export const SET_CURRENT_ORDER = 'SET_CURRENT_ORDER';
+export const CLEAR_CURRENT_ORDER = 'CLEAR_CURRENT_ORDER';
 
 //loading
 export const USER_LOADING = "USER_LOADING";

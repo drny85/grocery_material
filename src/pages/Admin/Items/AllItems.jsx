@@ -8,6 +8,8 @@ import {
 import Loader from "../../../components/Loader";
 import CardItem from "../../../components/Items/CardItem";
 import { Grid, Typography } from "@material-ui/core";
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 
 import "./styles.css";
 import CategoryScrollItem from "../../../components/Items/CategoryScrollItem";
@@ -73,9 +75,11 @@ const AllItems = ({ history }) => {
           width: "100%",
           height: "100px",
           maxHeight: "100px",
+          alignItems: 'center',
           padding: "1rem",
         }}
       >
+        <ArrowBackIosIcon />
         <CategoryScrollItem
           name="All Categories"
 
@@ -98,6 +102,7 @@ const AllItems = ({ history }) => {
               onClick={() => filterItemsByCategory(i.id)}
             />
           ))}
+        <ArrowForwardIosIcon />
       </div>
       <Grid container alignItems="center" justify="center" style={{ padding: '0 auto', maxWidth: '1280px', width: '100%' }}>
         {!filtered ? (

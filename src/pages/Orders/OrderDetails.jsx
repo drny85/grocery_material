@@ -13,6 +13,7 @@ import Loader from "../../components/Loader";
 import moment from "moment";
 import {
   setCurrentOrder,
+  clearCurrentOrder,
   changeStatus,
 } from "../../reduxStore/actions/ordersActions";
 
@@ -56,7 +57,7 @@ const options = [
 
 const OrderDetails = () => {
   const { id } = useParams();
-  const { current, loading } = useSelector((state) => state.ordersData);
+  const { current } = useSelector((state) => state.ordersData);
   const { user } = useSelector((state) => state.userData);
   const dispatch = useDispatch();
   const [show, setShow] = useState(false);
@@ -113,12 +114,12 @@ const OrderDetails = () => {
     dispatch(setCurrentOrder(id));
 
     return () => {
-      //clearCurrent();
+      dispatch(clearCurrentOrder())
       setShow(false);
     };
   }, [id, dispatch]);
 
-  if (!current || loading) return <Loader />;
+  if (!current) return <Loader />;
   return (
     <div>
       {/* Modal for changing order status */}

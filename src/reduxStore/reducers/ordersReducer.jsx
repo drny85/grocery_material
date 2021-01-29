@@ -8,6 +8,8 @@ import {
     ORDERS_COUNT,
     SEARCH_ORDERS,
     ORDERS_LOADING,
+    SET_CURRENT_ORDER,
+    CLEAR_CURRENT_ORDER,
 } from "../types";
 
 import moment from 'moment'
@@ -57,7 +59,7 @@ const ordersReducer = (state = initialState, action) => {
                 loading: false,
                 error: null,
             };
-        case SET_CURRENT_ITEM:
+        case SET_CURRENT_ORDER:
             return {
                 ...state,
                 current: action.payload,
@@ -65,7 +67,7 @@ const ordersReducer = (state = initialState, action) => {
                 error: null,
             };
 
-        case CLEAR_CURRENT_ITEM:
+        case CLEAR_CURRENT_ORDER:
             return {
                 ...state,
                 loading: false,

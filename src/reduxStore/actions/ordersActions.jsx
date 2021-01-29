@@ -3,12 +3,13 @@ import {
 
   GET_ORDER,
   GET_ORDERS,
-  SET_CURRENT_ITEM,
-  CLEAR_CURRENT_ITEM,
+
+  CLEAR_CURRENT_ORDER,
   CHANGE_STATUS,
   ORDERS_COUNT,
   SEARCH_ORDERS,
   ORDERS_LOADING,
+  SET_CURRENT_ORDER,
 } from "../types";
 
 
@@ -53,11 +54,15 @@ export const setCurrentOrder = (id) => async (dispatch) => {
     await db
       .collection("orders")
       .doc(id)
-      .onSnapshot((order) =>
-        dispatch({
-          type: SET_CURRENT_ITEM,
-          payload: { id: order.id, ...order.data() },
-        })
+      .onSnapshot((order) => {
+        if (order.exists) {
+          dispatch({
+            type: SET_CURRENT_ORDER,
+            payload: { id: order.id, ...order.data() },
+          })
+        }
+      }
+
       );
   } catch (error) {
     console.log(error.message);
@@ -68,8 +73,8 @@ export const filterOrders = (params) => (dispatch) => {
   dispatch({ type: SEARCH_ORDERS, payload: params });
 };
 
-export const clearCurrent = () => (dispatch) =>
-  dispatch({ type: CLEAR_CURRENT_ITEM });
+export const clearCurrentOrder = () => (dispatch) =>
+  dispatch({ type: CLEAR_CURRENT_ORDER });
 
 export const getOrder = (orderId) => async (dispatch) => {
   dispatch({ type: ORDERS_LOADING });
