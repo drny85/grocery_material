@@ -116,7 +116,7 @@ const AddItem = () => {
       }
 
       values.sizes = comeInSizes ? sizes : null
-      values.price = comeInSizes ? Object.entries(price).map(p => ({ [p[0]]: parseFloat(values.price) })) : parseFloat(values.price);
+      values.price = comeInSizes ? price : parseFloat(values.price);
       values.addedOn = new Date().toISOString();
 
       const submitted = dispatch(addItem(values));
@@ -159,9 +159,11 @@ const AddItem = () => {
 
   }
 
+  console.log(price)
+
   const handlePrices = (e) => {
     let value = e.target.value;
-    setPrice({ ...price, [e.target.name]: value })
+    setPrice({ ...price, [e.target.name]: parseFloat(value) })
   }
 
 

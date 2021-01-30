@@ -16,10 +16,16 @@ const firebaseConfig = {
 
 
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+let app;
+if (firebase.apps.length === 0) {
+    app = firebase.initializeApp(firebaseConfig);
 
-const db = firebase.firestore();
-const storage = firebase.storage();
-const auth = firebase.auth();
+} else {
+    app = firebase.app()
+}
+
+const db = app.firestore()
+const storage = app.storage();
+const auth = app.auth();
 
 export { db, storage, auth };

@@ -30,6 +30,7 @@ const initialValues = {
 const EditItem = ({ history }) => {
 
     const { id } = useParams()
+    const priceRef = useRef()
     const [item, setItem] = useState(null)
     const { items, loading } = useSelector(state => state.itemsData)
     const { categories } = useSelector(state => state.categoriesData)
@@ -77,6 +78,11 @@ const EditItem = ({ history }) => {
         e.preventDefault()
         if (comeInSizes && sizes.length === 0) {
             alert('You must select a price for each size')
+            return
+        }
+        if (!comeInSizes && values.price === '') {
+            alert('You must enter a price')
+            priceRef.current.focus()
             return
         }
 
@@ -222,7 +228,7 @@ const EditItem = ({ history }) => {
                             )}
                             {!comeInSizes && item && (
                                 <Grid item>
-                                    <Controls.Input name='price' label='Item Price' focus={true} inputProps={{ min: 0, step: 0.01 }} type='number' value={values.price} error={errors.price} onChange={handleInputChange} />
+                                    <Controls.Input name='price' inputRef={priceRef} label='Item Price' focus={true} inputProps={{ min: 0, step: 0.01 }} type='number' value={values.price} error={errors.price} onChange={handleInputChange} />
                                 </Grid>
                             )}
 

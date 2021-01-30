@@ -21,39 +21,18 @@ import LocalShippingIcon from "@material-ui/icons/LocalShipping";
 import DirectionsWalkIcon from "@material-ui/icons/DirectionsWalk";
 import OrderItem from "../../components/Order/OrderItem";
 import BackArrow from "../../components/BackArrow";
+import EditIcon from '@material-ui/icons/Edit';
 import Controls from "../../components/controls/Controls";
-
 import { phoneFormatted } from "../../utils/phoneFormatted";
 import sendNotification from "../../utils/sendNotification";
 
 import Slide from "@material-ui/core/Slide";
+import { options } from "../../utils/constants";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const options = [
-  {
-    id: "new",
-    name: "New",
-  },
-  {
-    id: "in progress",
-    name: "In Progress",
-  },
-  {
-    id: "delivered",
-    name: "Delivered",
-  },
-  {
-    id: "pickup",
-    name: "Picked Up",
-  },
-  {
-    id: "canceled",
-    name: "Cancel",
-  },
-];
 
 const OrderDetails = () => {
   const { id } = useParams();
@@ -64,7 +43,6 @@ const OrderDetails = () => {
   const [modalAlert, setModalAlert] = useState(false);
   const [status, setStatus] = useState("");
   const history = useHistory()
-
   const isDelivery = () => current?.orderType === "delivery";
 
   const changeOrderStatus = () => {
@@ -110,6 +88,9 @@ const OrderDetails = () => {
     history.goBack()
   };
 
+  const handleEditOrder = () => {
+    alert('Work in edit order')
+  }
   useEffect(() => {
     dispatch(setCurrentOrder(id));
 
@@ -174,10 +155,13 @@ const OrderDetails = () => {
         </DialogActions>
       </Dialog>
       <div className="order_details_container">
-        <Typography variant="h5">Order Details</Typography>
-
-        <div className="top">
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
           <BackArrow />
+          <Typography variant="h5">Order Details</Typography>
+          <Controls.Button style={{ backgroundColor: 'orange' }} onClick={handleEditOrder} text="Edit Order" EndIcon={<EditIcon />} />
+        </div>
+        <div className="top">
+
           <div className="order_number">
             <Typography variant="h6">
               {current.customer.name} {current.customer.lastName}

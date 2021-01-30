@@ -128,7 +128,7 @@ const AllCategories = () => {
         </Dialog>
 
 
-        {user && user.isAdmin && (
+        {((user && user.isAdmin) || (user && user.isOwner)) && (
           <>
             <Grid item container style={{ width: "80vw", margin: "1rem auto" }}>
               {error && (<Grid item style={{ margin: '1rem 0', width: '100%' }}>

@@ -14,11 +14,12 @@ const AdminRoute = ({ component: Component, ...rest }) => {
 
     if (!user) return <Signin />
 
+
     return (
         <Route
             {...rest}
             render={(props) => {
-                if (user && !loading && user.isAdmin) {
+                if ((user && !loading && user.isAdmin) || (user && user.isOwner && !loading)) {
                     return <Component {...props} />;
                 } else {
                     return <Redirect to="/signin" />;

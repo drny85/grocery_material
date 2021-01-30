@@ -19,6 +19,8 @@ import EditItem from "./pages/Admin/Items/EditItem";
 import Loader from "./components/Loader";
 import AdminRoute from "./middlewares/AdminRoute";
 import PrivateRoute from "./middlewares/PrivateRoute";
+import StoresPage from "./pages/Stores/StoresPage";
+import StoreApplication from "./pages/Stores/StoreApplication";
 
 const theme = createMuiTheme({
   palette: {
@@ -45,8 +47,10 @@ function App() {
   const [starting, setStarting] = useState(true)
   useEffect(() => {
     
-    auth.onAuthStateChanged((user) => {
+  const userSub =  auth.onAuthStateChanged( (user) => {
+     
       if (user) {
+        
         dispatch(setLogin(user));
         dispatch(userStore(user.uid));
         dispatch(getItems(user.uid));
@@ -56,6 +60,12 @@ function App() {
         setStarting(false)
       }
     });
+
+    return () => {
+      
+      console.log('App Unmounted')
+     userSub && userSub()
+    }
   }, [dispatch]);
 
   if (starting)  return <Loader />
@@ -71,6 +81,9 @@ function App() {
           <PrivateRoute exact path="/admin/item/edit/:id" component={EditItem} />
           <AdminRoute exact path="/admin/item" component={AddItem} />
           <AdminRoute exact path="/admin" component={AdminPage} />
+          <AdminRoute exact path="/admin/stores" component={StoresPage} />
+          <Route exact path="/store/application" component={StoreApplication} />
+          
           <PrivateRoute exact path="/orders/:id" component={OrderDetails} />
           <PrivateRoute exact path="/orders" component={Orders} />
           <Route exact path="/signin" component={Signin} />

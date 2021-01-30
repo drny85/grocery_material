@@ -89,9 +89,15 @@ export const setCurrentItem = (itemId, storeId) => async (dispatch, getState) =>
     dispatch({ type: LOADING_CURRENT_ITEM });
     const { userData: { store } } = getState()
 
-    const item = await db.collection('items').doc(storeId || store?.id).collection('items').doc(itemId).get()
+    const sub = await db.collection('items').doc(storeId || store?.id).collection('items').doc(itemId);
+    const listener = await sub.onSnapshot(i => {
+      if (i.exists) {
+        dispatch({ type: SET_CURRENT_ITEM, payload: { id: i.id, ...i.data() } })
+      }
+    })
 
-    dispatch({ type: SET_CURRENT_ITEM, payload: { id: item.id, ...item.data() } })
+    return listener
+
   } catch (error) {
     console.log('error setting current item', error.message)
   }
@@ -112,6 +118,25 @@ export const updateItem = item => async dispatch => {
   }
 
 }
+
+export const changeAvailability = (id, value, storeId) => async dispatch => {
+  try {
+
+    await db
+      .collection("items")
+      .doc(storeId)
+      .collection("items")
+      .doc(id)
+      .update({
+        available: value,
+      });
+    const i = await db.collection('items').doc(storeId).collection('items').doc(id).get();
+    return i.data().available
+
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 
 export const clearCurrentItem = () => dispatch => {
   dispatch({ type: CLEAR_CURRENT_ITEM })

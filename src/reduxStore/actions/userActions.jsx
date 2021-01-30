@@ -27,18 +27,17 @@ export const signin = ({ email, password }) => async (dispatch) => {
 export const setLogin = (user) => async (dispatch) => {
   try {
     dispatch({ type: actions.USER_LOADING });
-    const n = await db.collection("users").doc(user.uid).get();
+    const userSub = await db.collection("users").doc(user.uid).onSnapshot(n => {
+      if (n.exists) {
+        dispatch({
+          type: actions.USER_LOGIN,
+          payload: n.data(),
+        });
+      }
+    })
 
-    const u = n.data();
+    return userSub;
 
-    if (u) {
-      dispatch({
-        type: actions.USER_LOGIN,
-        payload: u,
-      });
-    }
-
-    //userStore(u?.store);
   } catch (error) {
     console.log("logging in", error.message);
     dispatch({ type: actions.USER_ERROR, payload: error.message })

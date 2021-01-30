@@ -8,6 +8,8 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import Controls from "../../../components/controls/Controls";
 import Loader from "../../../components/Loader";
 import {
+
+  changeAvailability,
   clearCurrentItem,
   deleteItem,
   setCurrentItem,
@@ -35,6 +37,7 @@ const useStyles = makeStyles((theme) => ({
 const ItemDetails = ({ history }) => {
   const classes = useStyles();
   const { id } = useParams();
+  const [isAvailable, setIsAvailable] = useState(false)
   const { store, user } = useSelector((state) => state.userData);
   const { current, loading } = useSelector((state) => state.itemsData);
 
@@ -50,12 +53,29 @@ const ItemDetails = ({ history }) => {
     }
   }
 
+  const handleAvailibility = async (e) => {
+    try {
+      const res = await dispatch(changeAvailability(current?.id, !current?.available, current?.storeId))
+      setIsAvailable(res)
+    } catch (error) {
+      console.log(error)
+    }
+
+  }
+
 
   useEffect(() => {
-    dispatch(setCurrentItem(id, store?.id));
+    !current && dispatch(setCurrentItem(id, store?.id))
+    if (current) {
+      setIsAvailable(current.available)
+      console.log("SOP")
+    }
+
     return () => {
-      //dispatch(clearCurrentItem());
+      dispatch(clearCurrentItem())
     };
+
+    //eslint-disable-next-line
   }, [dispatch, id, store?.id]);
 
 
@@ -87,9 +107,18 @@ const ItemDetails = ({ history }) => {
           className="image-div"
         ></div>
         <div className="desc-div">
-          <Typography className="capitalize" align="center" variant="h5">
-            {current?.name}
-          </Typography>
+          <div className="name_top" style={{ display: 'flex', alignItems: 'center', justifyContent: user && user.isAdmin ? 'space-between' : 'center' }}>
+            <Typography className="capitalize" align="center" variant="h5">
+              {current?.name}
+            </Typography>
+            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+              <Typography>Available: {isAvailable ? 'Yes' : 'No'} </Typography>
+              <Controls.Button text={current?.available ? 'Mark Unavailable' : 'Mark Available'} style={{ backgroundColor: isAvailable ? 'green' : 'orange' }} size="smaill" onClick={handleAvailibility} />
+            </div>
+
+
+          </div>
+
           <Typography style={{ padding: "1rem" }} variant="subtitle2">
             {current?.description}
           </Typography>
