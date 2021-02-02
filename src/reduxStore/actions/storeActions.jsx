@@ -1,32 +1,22 @@
 import { db } from "../../database"
-import { GET_STORES, STORE_ERROR, STORE_SUCCESS, SUBMITTING_APPLICATION } from "../types"
+import { GET_STORES, SETTING_CURRENT_STORE, STORE_ERROR, STORE_LOADING, STORE_SUCCESS, SUBMITTING_APPLICATION } from "../types"
 
 
 export const newStoreApplication = (storeInfo) => async dispatch => {
     try {
         dispatch({ type: SUBMITTING_APPLICATION })
-        console.log(storeInfo)
-        const stores = await db.collection('stores').get()
-        await stores.forEach(async s => {
-            if (s.exists) {
-                const storeData = s.data()
-                if (storeData.name === storeInfo.name || storeData.phone === storeInfo.phone || storeData.street === storeInfo.street) {
-                    dispatch({ type: STORE_ERROR, payload: 'an application already has been submitted. Check the status' })
-                    console.log('H')
-                    return false
-                }
+        const res = await db.collection('stores').where('street', '==', storeInfo.street).where('phone', '==', storeInfo.phone).get();
+        const found = res.size > 0;
+        console.log(res.size)
+        if (found) {
+            dispatch({ type: STORE_ERROR, payload: 'Application already exists' })
+            return
+        }
 
+        await db.collection('stores').add(storeInfo)
 
-            } else {
-                console.log('THERE')
-                await db.collection('stores').add(storeInfo);
-                dispatch({ type: STORE_SUCCESS })
-                return true
-            }
-
-        })
-
-
+        dispatch({ type: STORE_SUCCESS })
+        return true
 
 
 
@@ -36,6 +26,36 @@ export const newStoreApplication = (storeInfo) => async dispatch => {
         return false
     }
 
+
+}
+
+export const updateStoreApplication = storeInfo => async dispatch => {
+
+    try {
+        await db.collection('stores').doc(storeInfo.id).update(storeInfo)
+        return true
+    } catch (error) {
+        console.log(error.message)
+    }
+
+}
+
+export const clearCurrentStore = () => dispatch => dispatch({ type: "CLEAR_CURRENT_STORE" })
+
+export const getStoreDetails = storeId => async dispatch => {
+
+    try {
+        dispatch({ type: STORE_LOADING })
+        await db.collection('stores').doc(storeId).onSnapshot(doc => {
+            if (doc.exists) {
+                dispatch({ type: SETTING_CURRENT_STORE, payload: { id: doc.id, ...doc.data() } })
+            }
+        })
+
+
+    } catch (error) {
+        console.log(error.message)
+    }
 
 }
 

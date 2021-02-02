@@ -21,6 +21,9 @@ import AdminRoute from "./middlewares/AdminRoute";
 import PrivateRoute from "./middlewares/PrivateRoute";
 import StoresPage from "./pages/Stores/StoresPage";
 import StoreApplication from "./pages/Stores/StoreApplication";
+import DeveloperRoute from "./middlewares/DeveloperRoute";
+import StoreDetails from "./pages/Stores/StoreDetails";
+import ApplicationStatus from "./pages/Stores/ApplicationStatus";
 
 const theme = createMuiTheme({
   palette: {
@@ -81,8 +84,10 @@ function App() {
           <PrivateRoute exact path="/admin/item/edit/:id" component={EditItem} />
           <AdminRoute exact path="/admin/item" component={AddItem} />
           <AdminRoute exact path="/admin" component={AdminPage} />
-          <AdminRoute exact path="/admin/stores" component={StoresPage} />
+          <DeveloperRoute exact path="/admin/stores" component={StoresPage} />
+          <DeveloperRoute exact path="/admin/store/details/:id" component={StoreDetails} />
           <Route exact path="/store/application" component={StoreApplication} />
+          <Route exact path="/store/application/status" component={ApplicationStatus} />
           
           <PrivateRoute exact path="/orders/:id" component={OrderDetails} />
           <PrivateRoute exact path="/orders" component={Orders} />

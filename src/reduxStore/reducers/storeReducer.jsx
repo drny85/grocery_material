@@ -3,6 +3,7 @@ import { GET_STORES, SETTING_CURRENT_STORE, STORE_ERROR, STORE_LOADING, STORE_SU
 const initialState = {
     stores: [],
     current: null,
+    filtered: [],
     loading: false,
     error: null
 }
@@ -40,6 +41,12 @@ const storeReducer = (state = initialState, { type, payload }) => {
                 ...state,
                 loading: false,
                 error: null
+            }
+        case "CLEAR_CURRENT_STORE":
+            return {
+                ...state,
+                loading: false,
+                current: null
             }
 
         case GET_STORES:

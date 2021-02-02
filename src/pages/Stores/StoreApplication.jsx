@@ -1,6 +1,6 @@
-import { Grid, Typography } from '@material-ui/core'
+import { Grid, Paper, Typography } from '@material-ui/core'
 
-import React from 'react'
+import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import BackArrow from '../../components/BackArrow'
@@ -26,6 +26,7 @@ const initialValues = {
 
 const StoreApplication = ({ history }) => {
     const dispatch = useDispatch()
+    const [checkStatus, setCheckStatus] = useState(true)
     const { error } = useSelector(state => state.storesData)
     const validate = (fieldValues = values) => {
         let temp = { ...errors };
@@ -77,7 +78,7 @@ const StoreApplication = ({ history }) => {
         e.preventDefault();
         if (validate()) {
             try {
-
+                values.appliedOn = new Date().toISOString()
                 const submitted = await dispatch(newStoreApplication(values))
                 if (submitted) {
                     resetForm()
@@ -99,63 +100,78 @@ const StoreApplication = ({ history }) => {
         }
     }
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', margin: '0 auto', maxWidth: '1080px', width: '100%', height: '100vh' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', marginTop: '1rem' }}>
-                <BackArrow />
-                <Typography variant='h5'>Store Application</Typography>
-                <Typography></Typography>
-            </div>
-            <div style={{ padding: '0 auto', margin: '1rem auto', width: '100%' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', margin: '0 auto', width: '100%', height: '100%' }}>
+            {checkStatus ? (
+                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', minWidth: '100vw', minHeight: '100vh' }}>
+                    <Typography variant='body1'>What would like to do?</Typography>
+                    <Controls.Button onClick={() => setCheckStatus(false)} style={{ width: '200px', margin: '2rem 0' }} text='New Application' />
+                    <Controls.Button onClick={() => history.push('/store/application/status')} style={{ width: '200px' }} text='Check Status' />
 
-                <Form onSubmit={handleSubmit}>
-                    <Grid container alignContent='center' justify='center'>
-                        <Grid item xs={10} md={8} lg={7}>
-                            {error && (<Message message={error} severity='error' />)}
-                        </Grid>
-                        <Grid item xs={10} md={8} lg={7}>
-                            <Controls.Input name='name' value={values.name} placeholder={"John's Restaurant"} error={errors.name} label='Store Name' onChange={handleInputChange} />
-                        </Grid>
-                        <Grid item xs={10} md={8} lg={7}>
-                            <Controls.Input name='owner' value={values.owner} error={errors.owner} label='Owner Full Name' placeholder='John Smith' onChange={handleInputChange} />
-                        </Grid>
-                        <Grid item xs={10} md={8} lg={7}>
-                            <Controls.Input name='street' value={values.street} error={errors.street} placeholder='123 Main St' label='Street Name' onChange={handleInputChange} />
-                        </Grid>
-                        <Grid item xs={10} md={8} lg={7}>
-                            <Controls.Input name='city' value={values.city} placeholder="Manhattan" error={errors.city} label='City Name' onChange={handleInputChange} />
-                        </Grid>
-                        <Grid item container xs={10} md={8} lg={7}>
-                            <Grid item xs={12} md={6}>
-                                <Controls.Select style={{ marginRight: '8px' }} name='state' value={values.state} error={errors.state} label='Select a State' options={deliveryStates} onChange={handleInputChange} />
+
+
+                </div>
+
+            ) : (<Paper>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', marginTop: '1rem' }}>
+                    <BackArrow onClick={() => setCheckStatus(true)} />
+                    <Typography variant='h5'>Store Application</Typography>
+                    <Typography></Typography>
+
+                </div>
+                <div style={{ padding: '0 auto', margin: '1rem auto', width: '100%' }}>
+
+                    <Form onSubmit={handleSubmit}>
+                        <Grid container alignContent='center' justify='center'>
+                            <Grid item xs={10} md={8} lg={7}>
+                                {error && (<Message message={error} severity='error' />)}
+                            </Grid>
+                            <Grid item xs={10} md={8} lg={7}>
+                                <Controls.Input name='name' inputProps={{ style: { textTransform: 'capitalize' } }} value={values.name} placeholder={"John's Restaurant"} error={errors.name} label='Store Name' onChange={handleInputChange} />
+                            </Grid>
+                            <Grid item xs={10} md={8} lg={7}>
+                                <Controls.Input name='owner' inputProps={{ style: { textTransform: 'capitalize' } }} value={values.owner} error={errors.owner} label='Owner Full Name' placeholder='John Smith' onChange={handleInputChange} />
+                            </Grid>
+                            <Grid item xs={10} md={8} lg={7}>
+                                <Controls.Input name='street' inputProps={{ style: { textTransform: 'capitalize' } }} value={values.street} error={errors.street} placeholder='123 Main St' label='Street Name' onChange={handleInputChange} />
+                            </Grid>
+                            <Grid item xs={10} md={8} lg={7}>
+                                <Controls.Input name='city' value={values.city} inputProps={{ style: { textTransform: 'capitalize' } }} placeholder="Manhattan" error={errors.city} label='City Name' onChange={handleInputChange} />
+                            </Grid>
+                            <Grid item container xs={10} md={8} lg={7}>
+                                <Grid item xs={12} md={6}>
+                                    <Controls.Select style={{ marginRight: '8px' }} name='state' value={values.state} error={errors.state} label='Select a State' options={deliveryStates} onChange={handleInputChange} />
+                                </Grid>
+
+                                <Grid item xs={12} md={6}>
+                                    <Controls.Input style={{ marginLeft: '8px' }} name='zipcode' value={values.zipcode} error={errors.zipcode} placeholder='12345' label='Zip Code' onChange={handleInputChange} />
+                                </Grid>
                             </Grid>
 
-                            <Grid item xs={12} md={6}>
-                                <Controls.Input style={{ marginLeft: '8px' }} name='zipcode' value={values.zipcode} error={errors.zipcode} placeholder='12345' label='Zip Code' onChange={handleInputChange} />
+                            <Grid item xs={10} md={8} lg={7}>
+                                <Controls.Input name='phone' placeholder={'1234567890'} inputProps={{ maxLength: 12, minLength: 10 }} value={values.phone} error={errors.phone} label='Store Phone' onChange={handleInputChange} />
                             </Grid>
-                        </Grid>
-
-                        <Grid item xs={10} md={8} lg={7}>
-                            <Controls.Input name='phone' placeholder={'1234567890'} inputProps={{ maxLength: 12, minLength: 10 }} value={values.phone} error={errors.phone} label='Store Phone' onChange={handleInputChange} />
-                        </Grid>
-                        <Grid item xs={10} md={8} lg={7}>
-                            <Controls.Input name='ownerPhone' placeholder={'1234567890'} inputProps={{ maxLength: 12, minLength: 10 }} value={values.ownerPhone} error={errors.ownerPhone} label='Owner Cell Phone' onChange={handleInputChange} />
-                        </Grid>
-                        <Grid item xs={10} md={8} lg={7}>
-                            <Controls.Input name='email' value={values.email} error={errors.email} placeholder='john.smith@email.com' label='Email Address' onChange={handleInputChange} />
-                        </Grid>
+                            <Grid item xs={10} md={8} lg={7}>
+                                <Controls.Input name='ownerPhone' placeholder={'1234567890'} inputProps={{ maxLength: 12, minLength: 10 }} value={values.ownerPhone} error={errors.ownerPhone} label='Owner Cell Phone' onChange={handleInputChange} />
+                            </Grid>
+                            <Grid item xs={10} md={8} lg={7}>
+                                <Controls.Input name='email' value={values.email} error={errors.email} placeholder='john.smith@email.com' label='Email Address' onChange={handleInputChange} />
+                            </Grid>
 
 
-                    </Grid>
-                    <Grid container item sx={12} alignContent='center' justify='center'>
-                        <div style={{ marginTop: '1rem' }}>
-                            <Controls.Button text='Submit Application' type='submit' />
-                            <Controls.Button text='Reset Form' color='secondary' type='reset' onClick={resetForm} />
-                        </div>
-                    </Grid>
+                        </Grid>
+                        <Grid container item sx={12} alignContent='center' justify='center'>
+                            <div style={{ marginTop: '1rem' }}>
+                                <Controls.Button text='Submit Application' type='submit' />
+                                <Controls.Button text='Reset Form' color='secondary' type='reset' onClick={resetForm} />
+                            </div>
+                        </Grid>
 
-                </Form>
-            </div>
-        </div >
+                    </Form>
+                </div>
+            </Paper>
+                )}
+
+        </div>
     )
 }
 

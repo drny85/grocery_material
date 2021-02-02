@@ -26,6 +26,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   clearOrderFilter,
   filterOrderByDates,
+  filterOrders,
   getOrders,
 } from "../../reduxStore/actions/ordersActions";
 import { useHistory } from "react-router-dom";
@@ -211,7 +212,7 @@ const PastOrders = () => {
           margin: "10px 0",
         }}
       ></div>
-      <SearchBar />
+      <SearchBar label='Search order by number, customer name, customer last name or phone number.' filterFunction={filterOrders} clearFilter={clearOrderFilter} />
       <TableContainer component={Paper}>
         <Table className={classes.table}>
           <TableHead>
