@@ -8,6 +8,7 @@ export default function Input({ name, label, value, error = null, onChange, text
     return (
         <TextField
             variant="outlined"
+
             label={label}
             autoFocus={focus}
             inputProps={{ style: { color: textColor ? textColor : 'black', fontSize: fontSize } }}

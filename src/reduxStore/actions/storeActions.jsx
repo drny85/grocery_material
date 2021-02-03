@@ -7,16 +7,17 @@ export const newStoreApplication = (storeInfo) => async dispatch => {
         dispatch({ type: SUBMITTING_APPLICATION })
         const res = await db.collection('stores').where('street', '==', storeInfo.street).where('phone', '==', storeInfo.phone).get();
         const found = res.size > 0;
-        console.log(res.size)
+
         if (found) {
             dispatch({ type: STORE_ERROR, payload: 'Application already exists' })
             return
         }
 
-        await db.collection('stores').add(storeInfo)
+        const store = await db.collection('stores').add(storeInfo)
+
 
         dispatch({ type: STORE_SUCCESS })
-        return true
+        return { success: true, id: store.id }
 
 
 

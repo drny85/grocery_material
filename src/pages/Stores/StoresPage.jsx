@@ -5,6 +5,7 @@ import Controls from '../../components/controls/Controls';
 import { getStores } from '../../reduxStore/actions/storeActions'
 
 import EditIcon from '@material-ui/icons/Edit';
+import BackArrow from '../../components/BackArrow';
 
 const useStyles = makeStyles((theme) => ({
     table: {
@@ -63,7 +64,12 @@ const StoresPage = ({ history }) => {
             margin: "1rem auto",
             flexDirection: "column",
         }}>
-            <Typography variant='h5'>All Stores</Typography>
+            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                <BackArrow />
+                <Typography variant='h5'>All Stores</Typography>
+                <Typography></Typography>
+            </div>
+
             <TableContainer component={Paper}>
                 <Table className={classes.table}>
                     <TableHead>

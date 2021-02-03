@@ -10,6 +10,7 @@ import { clearStoreError, newStoreApplication } from '../../reduxStore/actions/s
 import { deliveryStates } from '../../utils/constants'
 
 import Message from '../../components/Message'
+import { phoneFormatted } from '../../utils/phoneFormatted'
 
 const initialValues = {
     name: '',
@@ -74,38 +75,47 @@ const StoreApplication = ({ history }) => {
 
     const { values, handleInputChange, errors, resetForm, setErrors } = useForm(initialValues, true, validate)
 
+    const reformatPhone = e => {
+        const ph = phoneFormatted(e.target.value)
+
+        const target = { target: { name: e.target.name, value: ph } }
+        handleInputChange(target)
+
+    }
+
     const handleSubmit = async e => {
         e.preventDefault();
         if (validate()) {
             try {
                 values.appliedOn = new Date().toISOString()
-                const submitted = await dispatch(newStoreApplication(values))
-                if (submitted) {
+                const { success, id } = await dispatch(newStoreApplication(values))
+                console.log(success, id)
+                if (success) {
                     resetForm()
-                    history.replace('/application/status')
+                    history.replace(`/store/application/status/${id}`)
                 } else {
 
                     setTimeout(() => {
                         dispatch(clearStoreError())
                     }, 5000);
                 }
-
+                console.log(values)
             } catch (error) {
                 console.log(error)
             }
 
         } else {
             console.error('missing fileds')
-            console.log(errors)
+
         }
     }
     return (
         <div style={{ display: 'flex', flexDirection: 'column', margin: '0 auto', width: '100%', height: '100%' }}>
             {checkStatus ? (
-                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', minWidth: '100vw', minHeight: '100vh' }}>
-                    <Typography variant='body1'>What would like to do?</Typography>
+                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100vw', height: '100vh' }}>
+                    <Typography style={{ margin: '0.2rem' }} align='center' variant='body1'>What would like to do?</Typography>
                     <Controls.Button onClick={() => setCheckStatus(false)} style={{ width: '200px', margin: '2rem 0' }} text='New Application' />
-                    <Controls.Button onClick={() => history.push('/store/application/status')} style={{ width: '200px' }} text='Check Status' />
+                    <Controls.Button onClick={() => history.push('/store/application/status/check')} style={{ width: '200px' }} text='Check Status' />
 
 
 
@@ -148,10 +158,10 @@ const StoreApplication = ({ history }) => {
                             </Grid>
 
                             <Grid item xs={10} md={8} lg={7}>
-                                <Controls.Input name='phone' placeholder={'1234567890'} inputProps={{ maxLength: 12, minLength: 10 }} value={values.phone} error={errors.phone} label='Store Phone' onChange={handleInputChange} />
+                                <Controls.Input name='phone' placeholder={'1234567890'} onKeyUp onBlur={reformatPhone} inputProps={{ maxLength: 12, minLength: 10 }} value={values.phone} error={errors.phone} label='Store Phone' onChange={handleInputChange} />
                             </Grid>
                             <Grid item xs={10} md={8} lg={7}>
-                                <Controls.Input name='ownerPhone' placeholder={'1234567890'} inputProps={{ maxLength: 12, minLength: 10 }} value={values.ownerPhone} error={errors.ownerPhone} label='Owner Cell Phone' onChange={handleInputChange} />
+                                <Controls.Input name='ownerPhone' onBlur={reformatPhone} placeholder={'1234567890'} inputProps={{ maxLength: 12, minLength: 10 }} value={values.ownerPhone} error={errors.ownerPhone} label='Owner Cell Phone' onChange={handleInputChange} />
                             </Grid>
                             <Grid item xs={10} md={8} lg={7}>
                                 <Controls.Input name='email' value={values.email} error={errors.email} placeholder='john.smith@email.com' label='Email Address' onChange={handleInputChange} />
