@@ -1,7 +1,8 @@
+import { useTheme } from "@material-ui/core";
 import React from "react";
 
 const CategoryScrollItem = ({ id, name, selected, count, onClick }) => {
-
+  const theme = useTheme()
 
   return (
     <div
@@ -10,7 +11,7 @@ const CategoryScrollItem = ({ id, name, selected, count, onClick }) => {
       style={{
         display: "flex",
         height: "3rem",
-        backgroundColor: id === selected ? "gray" : "#eee",
+        backgroundColor: id === selected ? theme.palette.secondary.main : "#eee",
         padding: "1rem 2rem",
         borderRadius: "20px",
         justifyContent: "center",

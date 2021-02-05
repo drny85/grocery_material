@@ -16,7 +16,8 @@ const useStyles = makeStyles((theme) => ({
         width: '30%',
         marginBottom: '2rem',
         marginRight: '2rem',
-        backgroundColor: theme.palette.secondary.main
+        backgroundColor: theme.palette.primary.main,
+        borderRadius: theme.spacing(2)
     },
 
     title: {

@@ -8,17 +8,18 @@ import CardMedia from '@material-ui/core/CardMedia';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import Typography from '@material-ui/core/Typography';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: 300,
     margin: '1rem',
     maxHeigh: 300,
+    borderRadius: theme.spacing(1)
 
   },
   media: {
     height: 100,
   },
-});
+}));
 
 const CardItem = ({ item, onClick }) => {
   const classes = useStyles();
