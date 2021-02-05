@@ -12,17 +12,18 @@ const useStyles = makeStyles((theme) => ({
         alignItems: 'center',
         justifyContent: 'center',
         display: 'flex',
-        height: '30%',
-        width: '30%',
-        marginBottom: '2rem',
-        marginRight: '2rem',
+        height: '25%',
+        width: '25%',
+        marginBottom: '1rem',
+        marginRight: '1rem',
         backgroundColor: theme.palette.primary.main,
         borderRadius: theme.spacing(2)
     },
 
     title: {
         fontSize: '2rem',
-        color: theme.palette.getContrastText(theme.palette.secondary.main)
+        color: theme.palette.getContrastText(theme.palette.secondary.main),
+        textAlign: 'center'
 
     },
     pos: {

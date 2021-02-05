@@ -70,11 +70,11 @@ const Home = () => {
         }}
       >
         {store && store.open ? (
-          <Typography variant="h4">Store Open</Typography>
+          <Typography variant="h6">Store Open</Typography>
         ) : (
-            <Typography variant="h4">Store Closed</Typography>
+            <Typography variant="h6">Store Closed</Typography>
           )}
-
+        <Typography style={{ fontStyle: 'italic', fontSize: '1.5rem', textTransform: 'capitalize' }}>{store.name}</Typography>
         <Typography variant="h5">{today}</Typography>
       </div>
       <div className={classes.root}>

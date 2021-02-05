@@ -25,6 +25,7 @@ import DeveloperRoute from "./middlewares/DeveloperRoute";
 import StoreDetails from "./pages/Stores/StoreDetails";
 import ApplicationStatus from "./pages/Stores/ApplicationStatus";
 import StoreProfile from "./pages/Stores/StoreProfile";
+import StoreInfo from "./pages/Stores/StoreInfo";
 
 const theme = createMuiTheme({
   palette: {
@@ -54,7 +55,7 @@ function App() {
   const userSub =  auth.onAuthStateChanged( (user) => {
      
       if (user) {
-        
+        console.log(user)
         dispatch(setLogin(user));
         dispatch(userStore(user.uid));
         dispatch(getItems(user.uid));
@@ -79,6 +80,7 @@ function App() {
       <Router>
         <Switch>
           <AdminRoute exact path="/categories" component={AllCategories} />
+          <AdminRoute exact path="/admin/storeInfo/:id" component={StoreInfo} />
           <PrivateRoute exact path="/pastOrders" component={PastOrders} />
           <PrivateRoute exact path="/item/details/:id" component={ItemDetails} />
           <PrivateRoute exact path="/admin/allItems/:id" component={AllItems} />

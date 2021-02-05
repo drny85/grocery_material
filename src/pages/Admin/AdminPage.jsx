@@ -37,6 +37,8 @@ const AdminPage = () => {
     setOpenLogoutModal(false)
     history.replace('/')
   }
+
+
   return (
     <div className="main" style={{ display: 'flex', flexDirection: 'column', maxWidth: '1080px', margin: '0 auto' }}>
       <div
@@ -130,6 +132,7 @@ const AdminPage = () => {
           onClick={() => setOpen(true)}
         />
         <ActionCard title='Add New Item' onClick={() => history.push('/admin/item')} />
+        <ActionCard title='Store Info' onClick={() => history.push(`/admin/storeInfo/${store.id}`)} />
         <ActionCard title='Store Users' onClick={() => alert('Work in assigning user for the store')} />
         <ActionCard title='Manage Coupons' onClick={() => alert('Work in adding coupons')} />
         {user && user.email === 'admin@admin.com' && (
