@@ -41,7 +41,7 @@ export const addNewCategory = category => async (dispatch, getState) => {
       return;
     }
     await db.collection('categories').doc(store.id).collection('categories').add(data)
-    getCategories()
+
     return true
 
 
@@ -56,14 +56,14 @@ export const updateCategory = category => async (dispatch, getState) => {
   try {
     const name = category.name.toLowerCase()
     const found = (await db.collection('categories').doc(category.storeId).collection('categories').where('name', '==', name).get()).size
-    console.log(found)
+
     if (found > 0) {
       dispatch({ type: CATEGORY_ERROR, payload: `${category.name} already exist!` })
       return false
     }
 
     await db.collection('categories').doc(category.storeId).collection('categories').doc(category.id).update({ name: category.name })
-    getCategories()
+
     return true
   } catch (error) {
     console.log('error updating category', error.message)
@@ -76,7 +76,7 @@ export const updateCategory = category => async (dispatch, getState) => {
 export const deleteCategory = category => async dispatch => {
   try {
     await db.collection('categories').doc(category.storeId).collection('categories').doc(category.id).delete();
-    getCategories()
+
     return true
   } catch (error) {
     console.log('error deleteing category', error.message)

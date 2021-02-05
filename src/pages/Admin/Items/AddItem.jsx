@@ -10,6 +10,8 @@ import { addItem } from "../../../reduxStore/actions/itemsActions";
 import Message from "../../../components/Message";
 import { SIZES } from '../../../utils/constants'
 
+import AllCategories from "../Categories/AllCategories";
+
 const initialValues = {
   name: "",
   description: "",
@@ -23,7 +25,7 @@ const initialValues = {
 };
 
 const AddItem = () => {
-  const { categories } = useSelector(state => state.categoriesData)
+  const { categories, loading } = useSelector(state => state.categoriesData)
   const { user } = useSelector(state => state.userData)
   const [error, setError] = useState(null)
   const dispatch = useDispatch()
@@ -201,6 +203,11 @@ const AddItem = () => {
     dispatch(getCategories(user?.userId))
 
   }, [dispatch, user, image])
+
+
+  if (categories.length === 0 && !loading) {
+    return <AllCategories />
+  }
   return (
     <div
       style={{

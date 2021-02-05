@@ -89,11 +89,11 @@ const AllCategories = () => {
 
   useEffect(() => {
 
-    dispatch(getCategories(user?.userId))
+    // dispatch(getCategories(user?.userId))
     return () => {
 
     }
-  }, [dispatch, user]);
+  }, []);
 
   if (loading) return <Loader />;
   return (
@@ -103,20 +103,22 @@ const AllCategories = () => {
         margin: "1rem auto",
         justifyContent: "center",
         alignItems: "center",
+        flexDirection: 'column',
         maxWidth: "1080px",
         height: "100%",
       }}
     >
+      <div style={{ display: 'flex', justifyContent: 'space-between', maxWidth: '1080px', width: '80%', margin: '0 auto' }}>
+        <BackArrow />
+        <Typography align="center" variant="h5">
+          All Categories
+          </Typography>
+        <Typography></Typography>
+      </div>
 
       <Grid container alignContent="center">
 
-        <Grid item xs={12}>
-          <BackArrow />
-          <Typography align="center" variant="h5">
-            All Categories
-          </Typography>
 
-        </Grid>
         <Dialog open={show}>
           <DialogContent>
             <Typography>Are you sure you want to delete {current?.name} ?</Typography>
@@ -143,7 +145,9 @@ const AllCategories = () => {
                 label="Category Name"
                 value={category}
                 variant="outlined"
+                placeholder='Sandwiches, Coffee, Juices, Tacos, etc...'
                 fullWidth
+                inputProps={{ style: { textTransform: 'capitalize' } }}
                 error={fieldError}
                 helperText={errorMessage}
                 onChange={onChangetext}
@@ -169,7 +173,7 @@ const AllCategories = () => {
           </>
         )}
 
-        <Grid item container alignItems="center">
+        <Grid item container alignItems="center" justify='center'>
           {categories.length > 0 ? (
             categories
               .sort((a, b) => (a.name < b.name ? -1 : 1))

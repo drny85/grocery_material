@@ -42,8 +42,11 @@ const AllItems = ({ history }) => {
 
 
   if (loading) return <Loader />;
+
+
   return (
     <div className="main" style={{ maxWidth: "1280px", margin: "0 auto", width: '100%' }}>
+
       <div
         className="back_arroe"
         style={{
@@ -79,31 +82,52 @@ const AllItems = ({ history }) => {
           padding: "1rem",
         }}
       >
-        <ArrowBackIosIcon />
-        <CategoryScrollItem
-          name="All Categories"
-
-          key="all"
-          id="all"
-          selected={id}
-          onClick={() => {
-            history.push("/admin/allItems/all");
-            dispatch(clearItemsFilters());
-          }}
-        />
-        {categories
-          .sort((a, b) => (a.name > b.name ? 1 : -1))
-          .map((i) => (
+        {categories.length > 0 && (
+          <>
+            <ArrowBackIosIcon />
             <CategoryScrollItem
-              key={i.id}
-              name={i.name}
-              id={i.id}
+              name="All Categories"
+
+              key="all"
+              id="all"
               selected={id}
-              onClick={() => filterItemsByCategory(i.id)}
+              onClick={() => {
+                history.push("/admin/allItems/all");
+                dispatch(clearItemsFilters());
+              }}
             />
-          ))}
-        <ArrowForwardIosIcon />
+            {categories
+              .sort((a, b) => (a.name > b.name ? 1 : -1))
+              .map((i) => (
+                <CategoryScrollItem
+                  key={i.id}
+                  name={i.name}
+                  id={i.id}
+                  selected={id}
+                  onClick={() => filterItemsByCategory(i.id)}
+                />
+              ))}
+            <ArrowForwardIosIcon />
+          </>
+        )}
+
       </div>
+      {categories.length === 0 && !loading ? (
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', margin: '0 auto', height: '70vh' }}>
+          <h4>No Products added yet</h4>
+          <p style={{ padding: '1.5rem 1rem' }}>You must add at least a category first in order to add an item</p>
+
+          <Controls.Button text='Add Categories' onClick={() => history.push('/categories')} />
+        </div>
+      ) : items.length === 0 && !loading ? (
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', margin: '0 auto', height: '70vh' }}>
+          <h4>No Products added yet</h4>
+          <p style={{ padding: '1.5rem 1rem' }}>Please add your first product/item and happy selling!</p>
+
+          <Controls.Button text='Add First Item' onClick={() => history.push('/admin/item')} />
+        </div>
+      ) : null}
+
       <Grid container alignItems="center" justify="center" style={{ padding: '0 auto', maxWidth: '1280px', width: '100%' }}>
         {!filtered ? (
           items.map((item) => (
@@ -114,7 +138,7 @@ const AllItems = ({ history }) => {
               />
             </Grid>
           ))
-        ) : filtered.length === 0 ? (
+        ) : filtered.length === 0 || items.length === 0 ? (
           <div
             style={{
               display: "flex",
