@@ -54,7 +54,7 @@ const StoresPage = ({ history }) => {
         }
     }, [dispatch])
 
-    console.log(stores)
+
     return (
         <div style={{
             maxWidth: "1080px",

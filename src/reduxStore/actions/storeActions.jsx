@@ -59,6 +59,16 @@ export const updateStoreApplication = storeInfo => async dispatch => {
 
 }
 
+export const updateStoreApplicationStatus = (info) => async dispatch => {
+    try {
+
+        await db.collection('stores').doc(info.id).update(info)
+        return true
+    } catch (error) {
+        console.log(error.message)
+    }
+}
+
 export const clearCurrentStore = () => dispatch => dispatch({ type: "CLEAR_CURRENT_STORE" })
 
 export const getStoreDetails = storeId => async dispatch => {

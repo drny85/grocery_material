@@ -235,6 +235,7 @@ const AddItem = () => {
                 name="name"
                 error={errors.name}
                 value={values.name}
+                inputProps={{ style: { textTransform: 'capitalize' } }}
                 label="Item Name"
                 onChange={handleInputChange}
               />

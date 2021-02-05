@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import Controls from "../../../components/controls/Controls";
 import CategoryScrollItem from "../../../components/Items/CategoryScrollItem";
 import Loader from "../../../components/Loader";
-import { addNewCategory, clearCategoriesError, deleteCategory, getCategories, updateCategory } from '../../../reduxStore/actions/categoriesActions'
+import { addNewCategory, clearCategoriesError, deleteCategory, updateCategory } from '../../../reduxStore/actions/categoriesActions'
 import CloseIcon from '@material-ui/icons/Close';
 import { Alert } from "@material-ui/lab";
 import BackArrow from '../../../components/BackArrow'
@@ -108,7 +108,7 @@ const AllCategories = () => {
         height: "100%",
       }}
     >
-      <div style={{ display: 'flex', justifyContent: 'space-between', maxWidth: '1080px', width: '80%', margin: '0 auto' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', maxWidth: '1080px', width: '100%', margin: '0 auto' }}>
         <BackArrow />
         <Typography align="center" variant="h5">
           All Categories

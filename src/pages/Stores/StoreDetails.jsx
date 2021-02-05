@@ -6,7 +6,7 @@ import { useParams } from 'react-router-dom'
 import BackArrow from '../../components/BackArrow'
 import Controls from '../../components/controls/Controls'
 import Loader from '../../components/Loader'
-import { clearCurrentStore, getStoreDetails, updateStoreApplication } from '../../reduxStore/actions/storeActions'
+import { clearCurrentStore, getStoreDetails, updateStoreApplicationStatus } from '../../reduxStore/actions/storeActions'
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -36,7 +36,7 @@ const StoreDetails = () => {
         }
         u.updatedOn = new Date().toISOString()
         u.status = status
-        const updated = await dispatch(updateStoreApplication(u))
+        const updated = await dispatch(updateStoreApplicationStatus(u))
         if (updated) {
             setShow(false)
             setStatus('')

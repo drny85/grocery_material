@@ -1,10 +1,11 @@
 import { db } from "../../database";
 import {
   ADD_ITEM,
-  CATEGORY_LOADING,
+
   CLEAR_CURRENT_ITEM,
   CLEAR_ITEMS_FILTERS,
   FILTER_BY_CATEGORY,
+
   GET_ITEMS,
   ITEMS_LOADING,
   LOADING_CURRENT_ITEM,
@@ -143,7 +144,7 @@ export const clearCurrentItem = () => dispatch => {
 }
 
 export const filterCategoriesBy = (categoryId) => (dispatch) => {
-  dispatch({ type: CATEGORY_LOADING });
+
   dispatch({ type: FILTER_BY_CATEGORY, payload: categoryId });
 };
 

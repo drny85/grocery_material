@@ -99,7 +99,7 @@ const StoreApplication = ({ history }) => {
                         dispatch(clearStoreError())
                     }, 5000);
                 }
-                console.log(values)
+
             } catch (error) {
                 console.log(error)
             }
@@ -158,7 +158,7 @@ const StoreApplication = ({ history }) => {
                             </Grid>
 
                             <Grid item xs={10} md={8} lg={7}>
-                                <Controls.Input name='phone' placeholder={'1234567890'} onKeyUp onBlur={reformatPhone} inputProps={{ maxLength: 12, minLength: 10 }} value={values.phone} error={errors.phone} label='Store Phone' onChange={handleInputChange} />
+                                <Controls.Input name='phone' placeholder={'1234567890'} onBlur={reformatPhone} inputProps={{ maxLength: 12, minLength: 10 }} value={values.phone} error={errors.phone} label='Store Phone' onChange={handleInputChange} />
                             </Grid>
                             <Grid item xs={10} md={8} lg={7}>
                                 <Controls.Input name='ownerPhone' onBlur={reformatPhone} placeholder={'1234567890'} inputProps={{ maxLength: 12, minLength: 10 }} value={values.ownerPhone} error={errors.ownerPhone} label='Owner Cell Phone' onChange={handleInputChange} />

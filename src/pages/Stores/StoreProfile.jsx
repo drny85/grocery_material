@@ -27,9 +27,11 @@ const StoreProfile = () => {
     const { id } = useParams()
     const history = useHistory()
     const estRef = useRef()
+    const zipRef = useRef()
     const dispatch = useDispatch()
     const { current, error } = useSelector(state => state.storesData)
     const [estimated, setEstimated] = React.useState('')
+    const [deliveryZip, setDeliveryZip] = React.useState('')
     const [password, setPassword] = React.useState('')
     const [confirm, setConfirm] = React.useState('')
 
@@ -60,7 +62,29 @@ const StoreProfile = () => {
             estRef.current.focus()
             return false
         }
-        return true
+        if (deliveryZip.length < 5) {
+            alert('Please enter all delivery zipcodes')
+            zipRef.current.focus()
+            return false
+
+        } else if (deliveryZip.length >= 5) {
+            const v = deliveryZip.split(', ')
+            v.forEach(i => {
+                if (i.length !== 5) {
+
+                    alert('Please make sure to separate zipcode by commas then space. Check example')
+                    zipRef.current.focus()
+                    return false
+                } else {
+                    setDeliveryZip(v)
+                    return true
+                }
+            })
+        }
+
+
+
+
     }
 
     const generateTime = (t) => {
@@ -68,6 +92,7 @@ const StoreProfile = () => {
     }
 
     const { values, setValues } = useForm(initialState, true, validate)
+
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -86,11 +111,12 @@ const StoreProfile = () => {
             values.estimatedDeliveryTime = estimated
             values.hasItems = false
             values.password = password
+            values.deliveryZip = deliveryZip
 
 
 
             const res = await dispatch(updateStoreApplication(values))
-            if (res.ressuccess) {
+            if (res.success) {
                 dispatch(signin(res.email, res.password))
                 history.replace('/')
             }
@@ -107,6 +133,8 @@ const StoreProfile = () => {
     }, [id, dispatch])
 
     if (!current) return <Loader />
+    console.log(deliveryZip.slice(0, -1))
+    console.log(deliveryZip.split(', '))
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', maxWidth: '1080px', margin: '1rem auto' }}>
@@ -257,7 +285,7 @@ const StoreProfile = () => {
 
                                         <KeyboardTimePicker
                                             margin="normal"
-                                            id="time-picker5"
+                                            id="time-picker66"
                                             label="Close Hours for Saturdays"
                                             value={saturday.close}
                                             onChange={time => setSaturday({ ...saturday, close: time })}
@@ -305,6 +333,12 @@ const StoreProfile = () => {
                             <Grid item xs={12}>
                                 <Controls.Input inputRef={estRef} name='estimated' label='Estimated Delivery Time' placeholder='25-30' value={estimated} onChange={e => setEstimated(e.target.value)} />
                                 <span style={{ marginLeft: '1rem', fontSize: '12px' }}>{estimated !== '' && (estimated + ' mins')}</span>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Typography style={{ marginLeft: '1rem' }} variant='caption'>Note: Please enter all the zip codes your store will be making deliveries separated by commas</Typography>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Controls.Input inputRef={zipRef} name='deliveryZip' label='Delivery Zip Codes' value={deliveryZip} placeholder='10456,10458,10451' onChange={e => setDeliveryZip(e.target.value)} />
                             </Grid>
 
 

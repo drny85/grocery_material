@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import './styles.css'
 import { signin } from '../../reduxStore/actions/userActions';
 import { Link, useHistory } from 'react-router-dom';
+import Message from '../../components/Message';
 
 const initialValues = {
     email: '',
@@ -18,7 +19,7 @@ const initialValues = {
 const Signing = () => {
     const dispatch = useDispatch()
     const history = useHistory()
-    const { user } = useSelector(state => state.userData)
+    const { user, error } = useSelector(state => state.userData)
 
 
     const validate = (fieldValues = values) => {
@@ -68,6 +69,9 @@ const Signing = () => {
     }, [user, history])
     return (
         <div className="auth_login_container">
+            <div className='error_message'>
+                {error && (<Message message={error} severity='error' />)}
+            </div>
             <Form onSubmit={handleSubmit}>
                 <Grid
                     container
