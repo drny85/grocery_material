@@ -1,4 +1,4 @@
-import { db } from "../../database"
+import { auth, db } from "../../database"
 import { GET_STORES, SETTING_CURRENT_STORE, STORE_ERROR, STORE_LOADING, STORE_SUCCESS, SUBMITTING_APPLICATION } from "../types"
 
 
@@ -33,10 +33,28 @@ export const newStoreApplication = (storeInfo) => async dispatch => {
 export const updateStoreApplication = storeInfo => async dispatch => {
 
     try {
-        await db.collection('stores').doc(storeInfo.id).update(storeInfo)
-        return true
+
+        const u = await auth.createUserWithEmailAndPassword(storeInfo.email, storeInfo.password)
+        if (u) {
+            const { uid, email } = u.user
+            storeInfo.userId = uid
+            await db.collection('users').doc(uid).set({ email: email, name: storeInfo.owner, isActive: true, isOwner: true, isAdmin: true, store: storeInfo.id, userId: uid })
+            await db.collection('stores').doc(storeInfo.id).update(storeInfo)
+
+            const updated = await db.collection('stores').doc(storeInfo.id).get()
+
+            dispatch({ type: SETTING_CURRENT_STORE, payload: { id: updated.id, ...updated.data() } })
+
+            return { success: true, email: email, password: storeInfo.password }
+
+        } else {
+            return false
+        }
+
+
     } catch (error) {
         console.log(error.message)
+        dispatch({ type: STORE_ERROR, payload: error.message })
     }
 
 }

@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import './styles.css'
 import { signin } from '../../reduxStore/actions/userActions';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 const initialValues = {
     email: '',
@@ -27,9 +27,8 @@ const Signing = () => {
         if ('email' in fieldValues)
             temp.email = fieldValues.email.length !== 0 ? '' : 'Email is required';
         if ('email' in fieldValues)
-            temp.email = /$^|.+@.+..+/.test(fieldValues.email)
-                ? ''
-                : 'Email is not valid.';
+            temp.email = temp.email = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(fieldValues.email) ? '' : 'Invalid email'
+
 
         if ('password' in fieldValues)
             temp.password =
@@ -108,14 +107,14 @@ const Signing = () => {
                             /> */}
                         </div>
                     </Grid>
-                    {/* <Grid item xs={12}>
-                        <p style={{ padding: '10px 8px', color: 'GrayText' }}>
+                    <Grid item xs={12}>
+                        <p style={{ padding: '2rem 1rem', color: 'GrayText' }}>
                             Do not have an account?{' '}
                             <span style={{ marginLeft: '10px' }}>
-                                <Link to='/signup'>Sign Up</Link>
+                                <Link to='/store/application'>Sign Up</Link>
                             </span>
                         </p>
-                    </Grid> */}
+                    </Grid>
                 </Grid>
             </Form>
         </div>

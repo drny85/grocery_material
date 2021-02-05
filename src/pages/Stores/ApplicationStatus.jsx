@@ -1,6 +1,7 @@
 import { Grid, Typography } from '@material-ui/core'
 import React, { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import BackArrow from '../../components/BackArrow'
 import Controls from '../../components/controls/Controls'
 import Message from '../../components/Message'
 import { Form } from '../../components/useForm'
@@ -33,7 +34,7 @@ const ApplicationStatus = ({ history }) => {
             history.push(`/store/application/status/${st[0].id}`)
         })
             .catch(error => {
-                console.log(error.message)
+                console.error(error.message)
                 setError('No Data Found. Make sure you entered the right information')
                 setTimeout(() => {
                     setError(null)
@@ -61,11 +62,14 @@ const ApplicationStatus = ({ history }) => {
             console.log('ran')
         }
 
-
+        //eslint-disable-next-line
     }, [id])
     return (
         <div style={{ display: 'flex', flexDirection: 'column', maxWidth: '640px', margin: '0 auto', alignItems: 'center', justifyContent: 'center', width: '100vw', height: '100vh' }}>
-            {error && (<Message message={error} severity='error' />)}
+            <div style={{ margin: '1.5rem auto', width: "100%", display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                {error && (<Message message={error} severity='error' />)}
+            </div>
+
             {store ? (<div>
                 <Typography variant='h6' align='center'>Your Application Status</Typography>
                 <div style={{ padding: '3rem', boxShadow: '3px 5px 3px rgba(0,0,0,0.3', display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly', height: '18rem', width: '22rem', alignItems: 'center', borderRadius: '1rem', marginTop: '1rem', backgroundColor: '#eee' }}>
@@ -83,13 +87,17 @@ const ApplicationStatus = ({ history }) => {
                 </div>
             </div>) : (
                     <div>
-                        <Typography align='center' variant='h5'>Application Status</Typography>
+                        <div>
+                            <BackArrow />
+                            <Typography align='center' variant='h5'>Application Status</Typography>
+                        </div>
+
                         <Grid container>
                             <Form >
                                 <Grid item xs={12}>
 
                                     <Controls.Input label="Store Phone Number" onKeyUp={e => { if (e.target.value.length === 10) { zipRef.current.focus() } }} onBlur={e => setPhone(phoneFormatted(e.target.value))} value={phone} onChange={e => setPhone(e.target.value)} />
-                                    <Controls.Input inputRef={zipRef} label="Store Zip Code" value={zipcode} onChange={e => setZipcode(e.target.value)} />
+                                    <Controls.Input inputRef={zipRef} label="Store Zip Code" inputProps={{ maxLength: 5, minLength: 5 }} value={zipcode} onChange={e => setZipcode(e.target.value)} />
 
 
                                 </Grid>

@@ -110,7 +110,7 @@ const StoreApplication = ({ history }) => {
         }
     }
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', margin: '0 auto', width: '100%', height: '100%' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', margin: '0 auto', width: '100%', height: '100%', maxWidth: '1080px', alignItems: 'center' }}>
             {checkStatus ? (
                 <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100vw', height: '100vh' }}>
                     <Typography style={{ margin: '0.2rem' }} align='center' variant='body1'>What would like to do?</Typography>
@@ -122,13 +122,13 @@ const StoreApplication = ({ history }) => {
                 </div>
 
             ) : (<Paper>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', marginTop: '1rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', maxWidth: '1080px', marginTop: '1rem' }}>
                     <BackArrow onClick={() => setCheckStatus(true)} />
                     <Typography variant='h5'>Store Application</Typography>
                     <Typography></Typography>
 
                 </div>
-                <div style={{ padding: '0 auto', margin: '1rem auto', width: '100%' }}>
+                <div style={{ padding: '0 auto', margin: '1rem auto', width: '100%', maxWidth: '1080px' }}>
 
                     <Form onSubmit={handleSubmit}>
                         <Grid container alignContent='center' justify='center'>
