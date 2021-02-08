@@ -48,6 +48,7 @@ export const CLEAR_ADDON = "CLEAR_ADDON";
 export const UPDATE_ADDON = "UPDATE_ADDON";
 export const SET_ADDON = "SET_ADDON";
 export const SET_STORE = "SET_STORE";
+export const CLEAR_USER_ERROR = 'CLEAR_USER_ERROR'
 
 // user constants
 export const USER_SIGN_UP = "USER_SIGN_UP";

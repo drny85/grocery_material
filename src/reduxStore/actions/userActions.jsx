@@ -3,19 +3,27 @@ import * as actions from "../types";
 
 export const signin = ({ email, password }) => async (dispatch) => {
   try {
+    console.log('SIgning in')
     dispatch({ type: actions.USER_LOADING });
     const response = await auth.signInWithEmailAndPassword(email, password);
     const user = await db.collection("users").doc(response.user.uid).get();
 
-    if (user.id) {
+    console.log(user.data())
+    if (user.data().isActive) {
       dispatch({
         type: actions.USER_LOGIN,
         payload: { id: user.id, ...user.data() },
       });
+
+    } else if (!user.data().isActive) {
+      dispatch({
+        type: actions.USER_ERROR,
+        payload: "Account is not active",
+      });
     } else {
       dispatch({
         type: actions.USER_ERROR,
-        payload: "invalid email or password",
+        payload: "Invalid email or password",
       });
     }
   } catch (error) {
@@ -25,14 +33,24 @@ export const signin = ({ email, password }) => async (dispatch) => {
 };
 
 export const setLogin = (user) => async (dispatch) => {
+  console.log('setting login')
   try {
     dispatch({ type: actions.USER_LOADING });
     const userSub = await db.collection("users").doc(user.uid).onSnapshot(n => {
       if (n.exists) {
-        dispatch({
-          type: actions.USER_LOGIN,
-          payload: n.data(),
-        });
+        if (n.data().isActive) {
+          dispatch({
+            type: actions.USER_LOGIN,
+            payload: n.data(),
+          });
+        } else {
+          dispatch({ type: actions.USER_ERROR, payload: 'Account is not active' })
+          setTimeout(() => {
+            dispatch({ type: actions.CLEAR_USER_ERROR })
+          }, 4000)
+          logout()
+        }
+
       }
     })
 
@@ -70,6 +88,7 @@ export const userStore = (userId) => async (dispatch) => {
   }
 };
 
+
 export const closeOpenStore = () => async (dispatch, getState) => {
   const {
     userData: { store },
@@ -91,7 +110,7 @@ export const autoLogin = () => dispatch => {
   }
 
 };
-
+export const clearUserError = () => dispatch => dispatch({ type: actions.CLEAR_USER_ERROR })
 export const logout = () => async (dispatch) => {
   dispatch({ type: actions.USER_LOADING });
   await auth.signOut();

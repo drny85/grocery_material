@@ -161,7 +161,7 @@ const AddItem = () => {
 
   }
 
-  console.log(price)
+
 
   const handlePrices = (e) => {
     let value = e.target.value;

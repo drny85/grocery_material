@@ -1,8 +1,9 @@
-import { Grid, Typography } from '@material-ui/core'
+import { Button, Grid, InputAdornment, Typography } from '@material-ui/core'
 import React, { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
 import Controls from '../../components/controls/Controls'
+import CloseIcon from '@material-ui/icons/Close';
 import { Form, useForm } from '../../components/useForm'
 import { getStoreDetails, updateStoreApplication } from '../../reduxStore/actions/storeActions'
 
@@ -28,10 +29,12 @@ const StoreProfile = () => {
     const history = useHistory()
     const estRef = useRef()
     const zipRef = useRef()
+    const btnRef = useRef()
     const dispatch = useDispatch()
     const { current, error } = useSelector(state => state.storesData)
     const [estimated, setEstimated] = React.useState('')
     const [deliveryZip, setDeliveryZip] = React.useState('')
+    const [zips, setZips] = React.useState([])
     const [password, setPassword] = React.useState('')
     const [confirm, setConfirm] = React.useState('')
 
@@ -62,30 +65,16 @@ const StoreProfile = () => {
             estRef.current.focus()
             return false
         }
-        if (deliveryZip.length < 5) {
+        if (zips.length < 1) {
             alert('Please enter all delivery zipcodes')
             zipRef.current.focus()
             return false
 
-        } else if (deliveryZip.length >= 5) {
-            const v = deliveryZip.split(', ')
-            v.forEach(i => {
-                if (i.length !== 5) {
-
-                    alert('Please make sure to separate zipcode by commas then space. Check example')
-                    zipRef.current.focus()
-                    return false
-                } else {
-                    setDeliveryZip(v)
-                    return true
-                }
-            })
         }
 
-
-
-
+        return true
     }
+
 
     const generateTime = (t) => {
         return `${moment(t.open).hour()}:${moment(weekday.open).minute() < 10 ? '0' + moment(t.open).minute() : moment(t.open).minute()}am-${moment(t.close).hour() > 12 ? (moment(t.close).hour() - 12) : moment(t.close).hour()}:${moment(t.close).minute() < 10 ? '0' + moment(t.close).minute() : moment(weekday.close).minute()}pm`
@@ -93,10 +82,53 @@ const StoreProfile = () => {
 
     const { values, setValues } = useForm(initialState, true, validate)
 
+    const handleDeliveryZip = e => {
+
+        e.preventDefault()
+        if (deliveryZip.length === 5) {
+            const index = zips.indexOf(deliveryZip)
+            if (index > -1) {
+                if (zips.length === 0) {
+                    setZips([...zips, deliveryZip])
+                    setDeliveryZip('')
+                } else {
+                    alert(`${deliveryZip} was already entered`)
+                    return;
+                }
+
+
+            } else {
+                console.log('not found')
+
+                setZips([...zips, deliveryZip])
+                setDeliveryZip('')
+
+
+            }
+        }
+    }
+
+    const addZipByPressingEnter = e => {
+        if (e.key === 'Enter') {
+            btnRef.current.click()
+        }
+    }
+
+    const deleteZip = e => {
+        const index = zips.indexOf(e)
+        if (index > -1) {
+            const newZips = [...zips]
+            newZips.splice(index, 1)
+            setZips(newZips)
+        }
+    }
+
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+
         if (validate()) {
+            console.log('VALID')
             values.hours = {
                 mon: generateTime(weekday),
                 tue: generateTime(weekday),
@@ -111,30 +143,38 @@ const StoreProfile = () => {
             values.estimatedDeliveryTime = estimated
             values.hasItems = false
             values.password = password
-            values.deliveryZip = deliveryZip
+            values.deliveryZip = zips
+            values.profileCreated = true
 
 
 
             const res = await dispatch(updateStoreApplication(values))
             if (res.success) {
-                dispatch(signin(res.email, res.password))
+                dispatch(signin(values.email, values.password))
                 history.replace('/')
             }
+        } else {
+            console.log('INVALID')
         }
     }
 
     useEffect(() => {
         dispatch(getStoreDetails(id))
-        if (current) {
-            setValues(current)
-        }
 
         //eslint-disable-next-line
     }, [id, dispatch])
 
+    useEffect(() => {
+        if (current) {
+            setValues(current)
+        }
+        return () => {
+
+        }
+    }, [current, setValues])
+
     if (!current) return <Loader />
-    console.log(deliveryZip.slice(0, -1))
-    console.log(deliveryZip.split(', '))
+    console.log(zips)
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', maxWidth: '1080px', margin: '1rem auto' }}>
@@ -335,24 +375,30 @@ const StoreProfile = () => {
                                 <span style={{ marginLeft: '1rem', fontSize: '12px' }}>{estimated !== '' && (estimated + ' mins')}</span>
                             </Grid>
                             <Grid item xs={12}>
-                                <Typography style={{ marginLeft: '1rem' }} variant='caption'>Note: Please enter all the zip codes your store will be making deliveries separated by commas</Typography>
+                                <Typography style={{ marginLeft: '1rem' }} variant='caption'>Note: Please enter all the zip codes your store will be making deliveries.</Typography>
                             </Grid>
                             <Grid item xs={12}>
-                                <Controls.Input inputRef={zipRef} name='deliveryZip' label='Delivery Zip Codes' value={deliveryZip} placeholder='10456,10458,10451' onChange={e => setDeliveryZip(e.target.value)} />
+
+                                <Controls.Input inputRef={zipRef} name='deliveryZip' label='Delivery Zip Codes' onKeyDown={addZipByPressingEnter} endAdornment={(<InputAdornment position='end'><Button ref={btnRef} onClick={handleDeliveryZip} color='primary' variant='outlined' disabled={deliveryZip.length !== 5}>Add</Button></InputAdornment>)} inputProps={{ maxLength: 5 }} value={deliveryZip} placeholder='10456' onChange={e => setDeliveryZip(e.target.value)} />
+                                <div style={{ display: 'flex', margin: '4px 10px', alignItems: 'center' }}>
+                                    {zips.map(zip => (
+                                        <p style={{ marginRight: '8px', alignItems: 'center', justifyContent: 'center', display: 'flex' }}>{zip} <CloseIcon onClick={() => deleteZip(zip)} style={{ marginRight: '8px', cursor: 'pointer' }} htmlColor='red' /></p>
+                                    ))}
+                                </div>
                             </Grid>
 
 
 
                         </Grid>
                         <Grid item style={{ marginTop: '1rem' }}>
-                            <Controls.Button text='Update My Store Information' type='submit' />
+                            <Controls.Button text='Update My Store Information' onClick={handleSubmit} />
 
                         </Grid>
 
                     </Grid>
                 </Form>
             </div>
-        </div>
+        </div >
     )
 }
 

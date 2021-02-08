@@ -19,7 +19,7 @@ const AdminRoute = ({ component: Component, ...rest }) => {
         <Route
             {...rest}
             render={(props) => {
-                if ((user && !loading && user.isAdmin) || (user && user.isOwner && !loading)) {
+                if ((user && !loading && user.isAdmin && user.isActive) || (user && user.isOwner && !loading)) {
                     return <Component {...props} />;
                 } else {
                     return <Redirect to="/signin" />;

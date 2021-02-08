@@ -133,7 +133,7 @@ const AdminPage = () => {
         />
         <ActionCard title='Add New Item' onClick={() => history.push('/admin/item')} />
         <ActionCard title='Store Info' onClick={() => history.push(`/admin/storeInfo/${store.id}`)} />
-        <ActionCard title='Store Users' onClick={() => alert('Work in assigning user for the store')} />
+        <ActionCard title='Store Users' onClick={() => history.push('/admin/store/users')} />
         <ActionCard title='Manage Coupons' onClick={() => alert('Work in adding coupons')} />
         {user && user.email === 'admin@admin.com' && (
           <ActionCard title='Manage Stores' onClick={() => history.push('/admin/stores')} />

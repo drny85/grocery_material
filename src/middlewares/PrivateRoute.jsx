@@ -18,7 +18,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
         <Route
             {...rest}
             render={(props) => {
-                if (user && !loading && user.isActive) {
+                if (user && !loading && user.isActive && user.isActive) {
                     return <Component {...props} />;
                 } else {
                     return <Redirect to="/signin" />;

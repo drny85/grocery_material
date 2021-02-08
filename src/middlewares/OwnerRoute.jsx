@@ -18,7 +18,7 @@ const OwnerRoute = ({ component: Component, ...rest }) => {
         <Route
             {...rest}
             render={(props) => {
-                if ((user && !loading && user.isOwner) || (user && user.isAdmin)) {
+                if ((user && !loading && user.isOwner && user.isActive) || (user && user.isAdmin)) {
                     return <Component {...props} />;
                 } else {
                     return <Redirect to="/signin" />;

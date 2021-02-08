@@ -68,7 +68,7 @@ const ItemDetails = ({ history }) => {
     !current && dispatch(setCurrentItem(id, store?.id))
     if (current) {
       setIsAvailable(current.available)
-      console.log("SOP")
+
     }
 
     return () => {

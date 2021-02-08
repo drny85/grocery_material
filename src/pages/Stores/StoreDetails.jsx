@@ -36,6 +36,7 @@ const StoreDetails = () => {
         }
         u.updatedOn = new Date().toISOString()
         u.status = status
+        u.userId = current?.userId
         const updated = await dispatch(updateStoreApplicationStatus(u))
         if (updated) {
             setShow(false)
@@ -83,6 +84,9 @@ const StoreDetails = () => {
 
                         <Grid item xs={12}>
                             <Typography style={{ padding: '0.5rem 0rem' }}>Store Phone: {current.phone}</Typography>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Typography style={{ padding: '0.5rem 0rem' }}>Email Address: {current.email}</Typography>
                         </Grid>
                         <Grid item xs={12}>
                             <Typography style={{ padding: '0.5rem 0rem' }}>Application Status: {current.status}</Typography>

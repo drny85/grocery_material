@@ -5,6 +5,7 @@ import {
   USER_SIGN_UP,
   SET_STORE,
   USER_LOADING,
+  CLEAR_USER_ERROR,
 } from "../types";
 
 const initialState = {
@@ -50,8 +51,15 @@ const userReducer = (state = initialState, action) => {
         store: action.payload,
         loading: false,
       };
+    case CLEAR_USER_ERROR:
+      return {
+        ...state,
+        error: null,
+        loading: false
+      }
 
     case USER_ERROR:
+
       return {
         ...state,
         user: null,

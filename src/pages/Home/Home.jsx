@@ -74,7 +74,7 @@ const Home = () => {
         ) : (
             <Typography variant="h6">Store Closed</Typography>
           )}
-        <Typography style={{ fontStyle: 'italic', fontSize: '1.5rem', textTransform: 'capitalize' }}>{store.name}</Typography>
+        <Typography style={{ fontStyle: 'italic', fontSize: '1.5rem', textTransform: 'capitalize' }}>{store?.name}</Typography>
         <Typography variant="h5">{today}</Typography>
       </div>
       <div className={classes.root}>

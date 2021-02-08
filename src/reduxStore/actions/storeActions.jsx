@@ -62,7 +62,24 @@ export const updateStoreApplication = storeInfo => async dispatch => {
 export const updateStoreApplicationStatus = (info) => async dispatch => {
     try {
 
-        await db.collection('stores').doc(info.id).update(info)
+
+        const user = await db.collection('users').doc(info.userId).get()
+
+        if (user.exists) {
+            if (info.status !== 'approved') {
+                await db.collection('users').doc(info.userId).update({ isActive: false })
+                await db.collection('stores').doc(info.id).update(info)
+
+            } else if (info.status === 'approved') {
+
+                await db.collection('users').doc(info.userId).update({ isActive: true })
+            }
+        } else {
+
+            await db.collection('stores').doc(info.id).update({ status: info.status })
+
+        }
+
         return true
     } catch (error) {
         console.log(error.message)
