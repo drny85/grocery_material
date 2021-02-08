@@ -19,6 +19,7 @@ import moment from 'moment'
 import Loader from '../../components/Loader'
 import Message from '../../components/Message'
 import { signin } from '../../reduxStore/actions/userActions'
+import { storage } from '../../database'
 
 const initialState = {}
 
@@ -29,10 +30,13 @@ const StoreProfile = () => {
     const history = useHistory()
     const estRef = useRef()
     const zipRef = useRef()
+    const picRef = useRef()
     const btnRef = useRef()
     const dispatch = useDispatch()
     const { current, error } = useSelector(state => state.storesData)
     const [estimated, setEstimated] = React.useState('')
+    const [submitting, setSubmitting] = React.useState(false)
+    const [imageUrl, setImageUrl] = React.useState('')
     const [deliveryZip, setDeliveryZip] = React.useState('')
     const [zips, setZips] = React.useState([])
     const [password, setPassword] = React.useState('')
@@ -82,6 +86,24 @@ const StoreProfile = () => {
 
     const { values, setValues } = useForm(initialState, true, validate)
 
+    const handleStorePic = event => {
+        const image = event.target.files && event.target.files[0]
+
+        if (image) {
+            if (image.type.includes('images')) {
+                const fileReader = new FileReader()
+                fileReader.onload = function (e) {
+                    setImageUrl(e.target.result)
+                }
+
+                fileReader.readAsDataURL(image)
+            } else {
+                alert('Please select a valid image')
+            }
+        }
+    }
+
+
     const handleDeliveryZip = e => {
 
         e.preventDefault()
@@ -96,13 +118,10 @@ const StoreProfile = () => {
                     return;
                 }
 
-
             } else {
-                console.log('not found')
 
                 setZips([...zips, deliveryZip])
                 setDeliveryZip('')
-
 
             }
         }
@@ -123,38 +142,56 @@ const StoreProfile = () => {
         }
     }
 
-
     const handleSubmit = async (e) => {
         e.preventDefault()
 
         if (validate()) {
-            console.log('VALID')
-            values.hours = {
-                mon: generateTime(weekday),
-                tue: generateTime(weekday),
-                wed: generateTime(weekday),
-                thu: generateTime(weekday),
-                fri: generateTime(friday),
-                sat: generateTime(saturday),
-                sun: generateTime(sunday),
+
+
+            try {
+                const task = storage.ref(`/images/${picRef.current.files[0].name}`).put(picRef.current.files[0])
+
+                task.on('state_changed', (snapShop) => {
+
+                }, (err) => {
+                    console.log(err)
+                }, () => {
+                    storage.ref('images').child(picRef.current.files[0].name).getDownloadURL().then(async url => {
+                        values.imageUrl = url
+                        values.hours = {
+                            mon: generateTime(weekday),
+                            tue: generateTime(weekday),
+                            wed: generateTime(weekday),
+                            thu: generateTime(weekday),
+                            fri: generateTime(friday),
+                            sat: generateTime(saturday),
+                            sun: generateTime(sunday),
+                        }
+                        values.open = true
+                        values.updatedOn = new Date().toISOString()
+                        values.estimatedDeliveryTime = estimated
+                        values.hasItems = false
+                        values.password = password
+                        values.deliveryZip = zips
+                        values.profileCreated = true
+
+                        const res = await dispatch(updateStoreApplication(values))
+                        if (res.success) {
+                            dispatch(signin(values.email, values.password))
+                            history.replace('/')
+
+                        } else {
+                            console.log('INVALID')
+                        }
+                    })
+                })
+            } catch (error) {
+                console.log(error)
             }
-            values.open = true
-            values.updatedOn = new Date().toISOString()
-            values.estimatedDeliveryTime = estimated
-            values.hasItems = false
-            values.password = password
-            values.deliveryZip = zips
-            values.profileCreated = true
+
+            //valid image
 
 
-
-            const res = await dispatch(updateStoreApplication(values))
-            if (res.success) {
-                dispatch(signin(values.email, values.password))
-                history.replace('/')
-            }
-        } else {
-            console.log('INVALID')
         }
     }
 
@@ -173,8 +210,7 @@ const StoreProfile = () => {
         }
     }, [current, setValues])
 
-    if (!current) return <Loader />
-    console.log(zips)
+    if (!current || submitting) return <Loader />
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', maxWidth: '1080px', margin: '1rem auto' }}>
@@ -229,6 +265,18 @@ const StoreProfile = () => {
                         </Grid>
                         <Grid item xs={12}>
                             <Typography style={{ marginLeft: '1rem' }} variant='caption'>Note: your application was submitted on {moment(values.appliedOn).format('LLL')} and was approved on {moment(values.approvedOn).format('LLL')}</Typography>
+                        </Grid>
+                        {/* STORE PICTURE UPLOAD */}
+                        <Grid item container alignContent='center' justify='center' style={{ height: '10rem', margin: '1rem' }}>
+                            <Grid item xs={7}>
+                                <input style={{ display: 'none' }} ref={picRef} type="file" onChange={handleStorePic} />
+                                <Button onClick={() => picRef.current.click()} color='primary' variant='outlined'>{imageUrl ? 'Change Picture' : 'Add Store Picture'}</Button>
+                            </Grid>
+                            <Grid style={{ position: 'relative' }} item xs={5}>
+                                <img style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '10px', maxHeight: '10rem' }} src={imageUrl ? imageUrl : ''} alt="Store Pic" />
+                                <p style={{ position: 'absolute', bottom: 5, right: 5, color: '#eee', fontSize: '1.1rem', textTransform: 'capitalize', padding: '0.5rem' }}>{values.name}</p>
+                            </Grid>
+
                         </Grid>
                         <Grid item xs={12}><Typography style={{ marginTop: '1rem' }} align='center'>Store Hours</Typography></Grid>
                         <Grid item container style={{ marginTop: '1rem' }} xs={12}>
@@ -382,7 +430,7 @@ const StoreProfile = () => {
                                 <Controls.Input inputRef={zipRef} name='deliveryZip' label='Delivery Zip Codes' onKeyDown={addZipByPressingEnter} endAdornment={(<InputAdornment position='end'><Button ref={btnRef} onClick={handleDeliveryZip} color='primary' variant='outlined' disabled={deliveryZip.length !== 5}>Add</Button></InputAdornment>)} inputProps={{ maxLength: 5 }} value={deliveryZip} placeholder='10456' onChange={e => setDeliveryZip(e.target.value)} />
                                 <div style={{ display: 'flex', margin: '4px 10px', alignItems: 'center' }}>
                                     {zips.map(zip => (
-                                        <p style={{ marginRight: '8px', alignItems: 'center', justifyContent: 'center', display: 'flex' }}>{zip} <CloseIcon onClick={() => deleteZip(zip)} style={{ marginRight: '8px', cursor: 'pointer' }} htmlColor='red' /></p>
+                                        <p key={zip} style={{ marginRight: '8px', alignItems: 'center', justifyContent: 'center', display: 'flex' }}>{zip} <CloseIcon onClick={() => deleteZip(zip)} style={{ marginRight: '8px', cursor: 'pointer' }} htmlColor='red' /></p>
                                     ))}
                                 </div>
                             </Grid>
