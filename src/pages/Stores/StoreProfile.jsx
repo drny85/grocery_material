@@ -18,7 +18,7 @@ import moment from 'moment'
 
 import Loader from '../../components/Loader'
 import Message from '../../components/Message'
-import { signin } from '../../reduxStore/actions/userActions'
+
 import { storage } from '../../database'
 
 const initialState = {}
@@ -90,7 +90,8 @@ const StoreProfile = () => {
         const image = event.target.files && event.target.files[0]
 
         if (image) {
-            if (image.type.includes('images')) {
+            console.log(image)
+            if (image.type.includes('image') || image.type.includes('images')) {
                 const fileReader = new FileReader()
                 fileReader.onload = function (e) {
                     setImageUrl(e.target.result)
@@ -146,9 +147,10 @@ const StoreProfile = () => {
         e.preventDefault()
 
         if (validate()) {
-
+            setSubmitting(true)
 
             try {
+                console.log(picRef.current.files[0])
                 const task = storage.ref(`/images/${picRef.current.files[0].name}`).put(picRef.current.files[0])
 
                 task.on('state_changed', (snapShop) => {
@@ -175,9 +177,9 @@ const StoreProfile = () => {
                         values.deliveryZip = zips
                         values.profileCreated = true
 
-                        const res = await dispatch(updateStoreApplication(values))
-                        if (res.success) {
-                            dispatch(signin(values.email, values.password))
+                        const { success } = dispatch(updateStoreApplication(values))
+                        if (success) {
+
                             history.replace('/')
 
                         } else {
@@ -187,9 +189,9 @@ const StoreProfile = () => {
                 })
             } catch (error) {
                 console.log(error)
+            } finally {
+                setSubmitting(false)
             }
-
-            //valid image
 
 
         }
@@ -273,7 +275,7 @@ const StoreProfile = () => {
                                 <Button onClick={() => picRef.current.click()} color='primary' variant='outlined'>{imageUrl ? 'Change Picture' : 'Add Store Picture'}</Button>
                             </Grid>
                             <Grid style={{ position: 'relative' }} item xs={5}>
-                                <img style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '10px', maxHeight: '10rem' }} src={imageUrl ? imageUrl : ''} alt="Store Pic" />
+                                <img style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '10px', maxHeight: '10rem' }} src={imageUrl ? imageUrl : 'https://www.gaithersburgdental.com/wp-content/uploads/2016/10/orionthemes-placeholder-image.png'} alt="Store Pic" />
                                 <p style={{ position: 'absolute', bottom: 5, right: 5, color: '#eee', fontSize: '1.1rem', textTransform: 'capitalize', padding: '0.5rem' }}>{values.name}</p>
                             </Grid>
 

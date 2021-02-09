@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import BackArrow from '../../components/BackArrow'
 import Controls from '../../components/controls/Controls'
+import moment from 'moment'
 import Loader from '../../components/Loader'
 import { clearCurrentStore, getStoreDetails, updateStoreApplicationStatus } from '../../reduxStore/actions/storeActions'
 
@@ -93,7 +94,12 @@ const StoreDetails = () => {
                         </Grid>
                         {current.appliedOn && (
                             <Grid item xs={12}>
-                                <Typography style={{ padding: '0.5rem 0rem' }}>Applied On: {current.appliedOn && current.appliedOn}</Typography>
+                                <Typography style={{ padding: '0.5rem 0rem' }}>Applied On: {moment(current.appliedOn && current.appliedOn).format('LLL')}</Typography>
+                            </Grid>
+                        )}
+                        {current.approvedOn && (
+                            <Grid item xs={12}>
+                                <Typography style={{ padding: '0.5rem 0rem' }}>Applied On: {moment(current.approvedOn).format('LLL')}</Typography>
                             </Grid>
                         )}
 

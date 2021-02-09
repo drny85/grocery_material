@@ -38,6 +38,7 @@ export const updateStoreApplication = storeInfo => async dispatch => {
         if (u) {
             const { uid, email } = u.user
             storeInfo.userId = uid
+            delete storeInfo.password
             await db.collection('users').doc(uid).set({ email: email, name: storeInfo.owner, isActive: true, isOwner: true, isAdmin: true, store: storeInfo.id, userId: uid })
             await db.collection('stores').doc(storeInfo.id).update(storeInfo)
 
@@ -45,7 +46,7 @@ export const updateStoreApplication = storeInfo => async dispatch => {
 
             dispatch({ type: SETTING_CURRENT_STORE, payload: { id: updated.id, ...updated.data() } })
 
-            return { success: true, email: email, password: storeInfo.password }
+            return { success: true }
 
         } else {
             return false
@@ -111,7 +112,7 @@ export const clearStoreError = () => dispatch => dispatch({ type: 'CLEAR_STORE_E
 export const getStores = () => async dispatch => {
 
     try {
-        await db.collection('stores').onSnapshot(docs => {
+        await db.collection('stores').orderBy('appliedOn', 'desc').onSnapshot(docs => {
             const stores = []
             docs.forEach(doc => {
                 if (doc.exists) {
