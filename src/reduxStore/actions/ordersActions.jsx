@@ -32,10 +32,13 @@ export const getOrders = (restaurantId) => async (dispatch, getState) => {
             ...doc.data(),
           };
           newOrders.push(order);
+
         });
 
 
         dispatch({ type: GET_ORDERS, payload: newOrders });
+        dispatch({ type: ORDERS_COUNT });
+
         calculateOrderCounts();
       }, (e) => {
         console.log(e)

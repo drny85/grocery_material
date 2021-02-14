@@ -1,5 +1,6 @@
 import { Grid, Typography } from "@material-ui/core";
 import React from "react";
+
 import { useHistory } from "react-router-dom";
 import BackArrow from "../../components/BackArrow";
 import Controls from "../../components/controls/Controls";
@@ -12,7 +13,6 @@ const SHRINK_SIZE = 4;
 const Orders = () => {
   const history = useHistory();
   const orders = useDatedOrders();
-
 
   const checkForCancels = () => {
     const found = orders.find((o) => o.status === "canceled");

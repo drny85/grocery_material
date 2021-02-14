@@ -20,7 +20,7 @@ const initialState = {
     loading: false,
     delivered: 0,
     in_progress: 0,
-    _new: 0,
+    newOrders: 0,
 };
 
 
@@ -43,7 +43,7 @@ const ordersReducer = (state = initialState, action) => {
                 in_progress: state.orders.filter(
                     (order) => order.status === "in progress"
                 ).length,
-                new: state.orders.filter((order) => order.status === "new").length,
+                newOrders: state.orders.filter((order) => order.status === "new").length,
             };
 
         case CHANGE_STATUS:
