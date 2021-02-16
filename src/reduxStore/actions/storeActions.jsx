@@ -92,9 +92,12 @@ export const clearCurrentStore = () => dispatch => dispatch({ type: "CLEAR_CURRE
 export const getStoreDetails = storeId => async dispatch => {
 
     try {
+        console.log(storeId)
         dispatch({ type: STORE_LOADING })
         await db.collection('stores').doc(storeId).onSnapshot(doc => {
+           
             if (doc.exists) {
+                
                 dispatch({ type: SETTING_CURRENT_STORE, payload: { id: doc.id, ...doc.data() } })
             }
         })

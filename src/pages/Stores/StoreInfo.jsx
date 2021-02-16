@@ -9,19 +9,19 @@ import { getStoreDetails } from '../../reduxStore/actions/storeActions'
 const StoreInfo = () => {
     const { id } = useParams()
     const dispatch = useDispatch()
-    const { current } = useSelector(state => state.storesData)
+    const { current, loading } = useSelector(state => state.storesData)
 
     useEffect(() => {
 
-        dispatch(getStoreDetails(id))
+        !current && dispatch(getStoreDetails(id))
 
         return () => {
 
         }
 
-    }, [id, dispatch])
+    }, [id, dispatch, current])
 
-    if (!current) <Loader />
+    if (!current || loading) <Loader />
 
     return (
         <div>
@@ -34,9 +34,9 @@ const StoreInfo = () => {
                 <Grid container>
                     <Grid item xs={12}>
                         <Paper style={{ margin: '1rem', padding: '1rem' }}>
-                            <Typography className='capitalize'>Name: {current.name}</Typography>
-                            <Typography className='capitalize'>Address: {current.street} {current.city} {current.state}, {current.zipcode}</Typography>
-                            <Typography>Name: {current.name}</Typography>
+                            <Typography className='capitalize'>Name: {current?.name}</Typography>
+                            <Typography className='capitalize'>Address: {current?.street} {current?.city} {current?.state}, {current?.zipcode}</Typography>
+                            <Typography>Name: {current?.name}</Typography>
                         </Paper>
                     </Grid>
                 </Grid>

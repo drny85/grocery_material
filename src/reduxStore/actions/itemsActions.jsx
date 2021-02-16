@@ -17,7 +17,6 @@ export const getItems = (userId) => async (dispatch, getState) => {
     const { store } = await (
       await db.collection("users").doc(userId).get()
     ).data();
-
     dispatch({ type: ITEMS_LOADING });
     db.collection("items")
       .doc(store)
@@ -40,9 +39,10 @@ export const getItems = (userId) => async (dispatch, getState) => {
 export const addItem = item => async (dispatch, getState) => {
   try {
     dispatch({ type: ITEMS_LOADING })
-    const { userData: { store } } = getState()
+    const { userData: { store} } = getState()
 
     item.storeId = store?.id;
+  
     await db.collection('items').doc(store?.id).collection('items').add(item)
     const itemData = await db
       .collection("items")
