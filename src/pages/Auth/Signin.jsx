@@ -68,7 +68,6 @@ const Signing = () => {
         user && user.isActive && history.replace('/')
     }, [user, history])
 
-    console.log(user)
     return (
         <div className="auth_login_container">
             <div className='error_message'>
