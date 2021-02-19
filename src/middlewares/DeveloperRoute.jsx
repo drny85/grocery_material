@@ -19,7 +19,7 @@ const DeveloperRoute = ({ component: Component, ...rest }) => {
         <Route
             {...rest}
             render={(props) => {
-                if ((user && !loading && user.email === 'admin@admin.com' && user.name === 'robert')) {
+                if ((user && !loading && user.email === 'admin@admin.com' && user.name === 'robert') || user.email === 'melendez@robertdev.net') {
                     return <Component {...props} />;
                 } else {
                     return <Redirect to="/signin" />;

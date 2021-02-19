@@ -93,7 +93,7 @@ export const filterOrderByDates = (start, end) => dispatch => {
 
 export const clearOrderFilter = () => dispatch => dispatch({ type: "SET_CLEAR" });
 
-export const changeStatus = (id, status, user = null) => async (dispatch) => {
+export const changeStatus = (id, status, user = null, reason = null) => async (dispatch) => {
   try {
     dispatch({ type: ORDERS_LOADING });
     await db
@@ -102,12 +102,13 @@ export const changeStatus = (id, status, user = null) => async (dispatch) => {
       .update({
         status,
         deliveredOn: status === "delivered" ? new Date().toISOString() : null,
+        cancelReason: status === 'canceled' ? reason : null,
         markedAsDeliveredBy: user,
       });
 
     dispatch({ type: CHANGE_STATUS, payload: { id, status } });
   } catch (error) {
-    console.log(error);
+    console.log(error.message);
   }
 };
 

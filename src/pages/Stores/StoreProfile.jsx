@@ -177,7 +177,7 @@ const StoreProfile = () => {
                         values.deliveryZip = zips
                         values.profileCreated = true
 
-                        const { success } = dispatch(updateStoreApplication(values))
+                        const { success } = await dispatch(updateStoreApplication(values))
                         if (success) {
 
                             history.replace('/')

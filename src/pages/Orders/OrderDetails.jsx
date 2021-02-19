@@ -40,6 +40,9 @@ const OrderDetails = () => {
   const { user } = useSelector((state) => state.userData);
   const dispatch = useDispatch();
   const [show, setShow] = useState(false);
+  const [reason, setReason] = useState('');
+  const [error, setError] = useState(null);
+
   const [modalAlert, setModalAlert] = useState(false);
   const [status, setStatus] = useState("");
   const history = useHistory()
@@ -66,10 +69,30 @@ const OrderDetails = () => {
           "Your order has been picked up, enjoy!",
           current
         );
-      } else {
+      } else if (status === 'canceled') {
+        if (reason === '') {
+          setError('You must provide a reason for cancellation')
+          return
+        } else {
+          dispatch(changeStatus(current.id, status, user, reason))
+          setShow(false)
+          setStatus('')
+          setReason('')
+          setError(null)
+          sendNotification(`We sorry ${current.customer.name}`, `Your order has been canceled. Reason: ${reason}`,
+            current
+          )
+        }
+
+
+
+      }
+      else {
         dispatch(changeStatus(current.id, status));
         setShow(false);
         setStatus("");
+        setReason('')
+        setError(null)
       }
 
     }
@@ -105,6 +128,7 @@ const OrderDetails = () => {
     <div>
       {/* Modal for changing order status */}
       <Dialog
+
         open={show}
         TransitionComponent={Transition}
         aria-labelledby="alert-dialog-slide-title"
@@ -114,9 +138,10 @@ const OrderDetails = () => {
         <DialogContent>
           <div
             className="content_dialog"
-            style={{ width: "100%", height: "8rem" }}
+            style={{ width: status === 'canceled' ? '30vw' : 'auto', height: "auto", maxHeight: '20rem', }}
           >
             <Controls.Select
+              style={{ width: '100%' }}
               value={status}
               label="Status"
               options={
@@ -126,13 +151,21 @@ const OrderDetails = () => {
               }
               onChange={(e) => setStatus(e.target.value)}
             />
+            {status === 'canceled' && (
+              <div style={{ width: '100%', marginTop: '1rem' }}>
+                <Controls.Input style={{ width: '100%' }} multiline={true} value={reason} error={error} onChange={e => setReason(e.target.value)} label='Cancellation Reason' />
+              </div>
+            )}
           </div>
         </DialogContent>
         <DialogActions>
           <Controls.Button
             color="secondary"
             text="Cancel"
-            onClick={() => setShow(false)}
+            onClick={() => {
+              setShow(false)
+              setReason('')
+            }}
           />
           <Controls.Button text="Change" onClick={changeOrderStatus} />
         </DialogActions>
@@ -198,6 +231,7 @@ const OrderDetails = () => {
               ) : (
                   <Typography></Typography>
                 )}
+              {current.cancelReason && (<Typography>Cancellation Reason: {current.cancelReason}</Typography>)}
               <Typography
                 variant="body2"
                 style={{ textTransform: "capitalize" }}
@@ -209,6 +243,7 @@ const OrderDetails = () => {
                   Delivery Instuctions: {current.instruction}
                 </Typography>
               )}
+
             </div>
             <div className="actions">
               <Typography
@@ -220,7 +255,10 @@ const OrderDetails = () => {
                 text="Change Status"
                 onClick={() => setShow(true)}
               />
+
             </div>
+
+
           </div>
           <div className="bottom_details">
             {current.items.map((item) => (

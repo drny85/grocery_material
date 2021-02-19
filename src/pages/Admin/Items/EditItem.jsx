@@ -90,7 +90,7 @@ const EditItem = ({ history }) => {
         values.price = comeInSizes ? price : parseFloat(values.price);
         values.sizes = comeInSizes ? sizes : null;
         if (validate()) {
-            console.log(values)
+
             const updated = await dispatch(updateItem(values))
 
             if (updated) {

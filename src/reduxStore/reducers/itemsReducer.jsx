@@ -6,6 +6,7 @@ import {
   FILTER_BY_CATEGORY,
   GET_ITEMS,
   ITEMS_LOADING,
+  ITEM_ERROR,
   LOADING_CURRENT_ITEM,
   SET_CURRENT_ITEM,
 } from "../types";
@@ -65,6 +66,14 @@ const itemsReducer = (state = initialState, action) => {
         loading: false,
         error: null,
       }
+
+    case ITEM_ERROR: {
+      return {
+        ...state,
+        loading: false,
+        error: action.payload
+      }
+    }
     case CLEAR_ITEMS_FILTERS:
       return {
         ...state,

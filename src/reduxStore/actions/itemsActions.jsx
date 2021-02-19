@@ -8,6 +8,7 @@ import {
 
   GET_ITEMS,
   ITEMS_LOADING,
+  ITEM_ERROR,
   LOADING_CURRENT_ITEM,
   SET_CURRENT_ITEM,
 } from "../types";
@@ -33,16 +34,18 @@ export const getItems = (userId) => async (dispatch, getState) => {
       });
   } catch (error) {
     console.log("Error getting items", error.message);
+    dispatch({ type: ITEM_ERROR, payload: error.message })
   }
 };
 
 export const addItem = item => async (dispatch, getState) => {
+  console.log(item)
   try {
     dispatch({ type: ITEMS_LOADING })
-    const { userData: { store} } = getState()
+    const { userData: { store } } = getState()
 
     item.storeId = store?.id;
-  
+
     await db.collection('items').doc(store?.id).collection('items').add(item)
     const itemData = await db
       .collection("items")
@@ -69,6 +72,8 @@ export const addItem = item => async (dispatch, getState) => {
     return true;
   } catch (error) {
     console.log('Error adding item', error.message)
+    dispatch({ type: ITEM_ERROR, payload: error.message })
+    return false
   }
 
 
@@ -77,10 +82,12 @@ export const addItem = item => async (dispatch, getState) => {
 
 export const deleteItem = (id, storeId) => async dispatch => {
   try {
+    console.log(id, storeId)
     await db.collection('items').doc(storeId).collection('items').doc(id).delete();
     return true
   } catch (error) {
     console.log("Error deleting item", error.message)
+    dispatch({ type: ITEM_ERROR, payload: error.message })
     return false
   }
 }
@@ -101,6 +108,7 @@ export const setCurrentItem = (itemId, storeId) => async (dispatch, getState) =>
 
   } catch (error) {
     console.log('error setting current item', error.message)
+    dispatch({ type: ITEM_ERROR, payload: error.message })
   }
 
 }

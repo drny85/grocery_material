@@ -21,6 +21,7 @@ const initialState = {
     delivered: 0,
     in_progress: 0,
     newOrders: 0,
+    error: null,
 };
 
 

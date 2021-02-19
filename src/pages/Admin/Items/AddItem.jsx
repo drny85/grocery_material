@@ -27,7 +27,8 @@ const initialValues = {
 const AddItem = () => {
   const { categories, loading } = useSelector(state => state.categoriesData)
   const { user } = useSelector(state => state.userData)
-  const [error, setError] = useState(null)
+  const { error } = useSelector(state => state.itemsData)
+  const [localError, setError] = useState(null)
   const dispatch = useDispatch()
   const imgRef = useRef()
   const priceRef = useRef()
@@ -38,6 +39,7 @@ const AddItem = () => {
 
   const validate = (fieldValues = values) => {
     let temp = { ...errors };
+
     if ("name" in fieldValues)
       temp.name = fieldValues.name ? "" : "This field is required.";
     if ("description" in fieldValues)
@@ -58,6 +60,10 @@ const AddItem = () => {
         fieldValues.estimatedDelivery.length !== 0
           ? ""
           : "Estimated delivery is required";
+
+    if (values.imageUrl === '' && image !== '') {
+      values.imageUrl = image
+    }
 
     setErrors({
       ...temp,
@@ -121,17 +127,22 @@ const AddItem = () => {
       values.price = comeInSizes ? price : parseFloat(values.price);
       values.addedOn = new Date().toISOString();
 
-      const submitted = dispatch(addItem(values));
+      const submitted = await dispatch(addItem(values));
       if (submitted) {
         resetEverything()
         showMessage('Item has been added', 'success')
       } else {
-        alert('Error adding item')
+        if (error) {
+          showMessage(error, 'error')
+        }
+
       }
 
 
     } else {
       console.log('not valid')
+      console.log(values)
+
     }
 
   };
@@ -225,7 +236,7 @@ const AddItem = () => {
           Add Item
       </Typography>
       </div>
-      {error && (<Message message={error?.message} severity={error?.severity} />)}
+      {(error || localError) && (<Message message={localError.message} severity={error?.severity} />)}
 
       <div style={{ margin: "1.5rem 2rem" }}>
         <Form onSubmit={handleSubmit}>
