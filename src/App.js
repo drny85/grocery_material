@@ -27,6 +27,7 @@ import ApplicationStatus from "./pages/Stores/ApplicationStatus";
 import StoreProfile from "./pages/Stores/StoreProfile";
 import StoreInfo from "./pages/Stores/StoreInfo";
 import StoreUsers from "./pages/Stores/StoreUsers";
+import CouponsPage from "./pages/Admin/Coupons/CouponsPage";
 
 const theme = createMuiTheme({
   palette: {
@@ -83,6 +84,7 @@ function App() {
           <AdminRoute exact path="/categories" component={AllCategories} />
           <AdminRoute exact path="/admin/storeInfo/:id" component={StoreInfo} />
           <AdminRoute exact path="/admin/store/users" component={StoreUsers} />
+          <AdminRoute exact path="/admin/coupons" component={CouponsPage} />
           <PrivateRoute exact path="/pastOrders" component={PastOrders} />
           <PrivateRoute exact path="/item/details/:id" component={ItemDetails} />
           <PrivateRoute exact path="/admin/allItems/:id" component={AllItems} />

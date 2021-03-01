@@ -88,7 +88,7 @@ const AddItem = () => {
     setImage('')
     imgRef.current.style.backgroundImage = null;
     setComeInSizes(false)
-    setSizes(null)
+    setSizes([])
 
     resetForm()
 

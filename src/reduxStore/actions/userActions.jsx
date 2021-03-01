@@ -3,13 +3,11 @@ import * as actions from "../types";
 
 export const signin = ({ email, password }) => async (dispatch) => {
   try {
-    console.log('SIgning in')
-    console.log(email, password)
+
     dispatch({ type: actions.USER_LOADING });
     const response = await auth.signInWithEmailAndPassword(email, password);
     const user = await db.collection("users").doc(response.user.uid).get();
 
-    console.log(user.data())
     if (user.data().isActive) {
       dispatch({
         type: actions.USER_LOGIN,

@@ -5,11 +5,12 @@ import categoriesReducer from "./reduxStore/reducers/categoriesReducer";
 import ordersReducer from "./reduxStore/reducers/ordersReducer";
 import itemsReducer from "./reduxStore/reducers/itemsReducer";
 import storeReducer from "./reduxStore/reducers/storeReducer";
+import couponsReducer from "./reduxStore/reducers/couponsReducer";
 // import cartReducer from './reduxStore/reducers/shoppingCartReducer'
 
 const reducer = combineReducers({
   itemsData: itemsReducer,
-  // cartData: cartReducer,
+  couponsData: couponsReducer,
   userData: userReducer,
   categoriesData: categoriesReducer,
   storesData: storeReducer,

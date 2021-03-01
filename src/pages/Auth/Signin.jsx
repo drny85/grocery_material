@@ -87,6 +87,7 @@ const Signing = () => {
                             fontSize={32}
                             value={values.email}
                             error={errors.email}
+                            inputProps={{ style: { textTransform: 'lowercase' } }}
                             label='Email'
                             onChange={handleInputChange}
                         />

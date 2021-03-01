@@ -1,4 +1,4 @@
-import { Button, Grid, InputAdornment, Typography } from '@material-ui/core'
+import { Button, Grid, IconButton, InputAdornment, Typography } from '@material-ui/core'
 import React, { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
@@ -20,6 +20,7 @@ import Loader from '../../components/Loader'
 import Message from '../../components/Message'
 
 import { storage } from '../../database'
+import { Visibility, VisibilityOff } from '@material-ui/icons'
 
 const initialState = {}
 
@@ -29,6 +30,7 @@ const StoreProfile = () => {
     const { id } = useParams()
     const history = useHistory()
     const estRef = useRef()
+    const minRef = useRef()
     const zipRef = useRef()
     const picRef = useRef()
     const btnRef = useRef()
@@ -36,7 +38,10 @@ const StoreProfile = () => {
     const { current, error } = useSelector(state => state.storesData)
     const [estimated, setEstimated] = React.useState('')
     const [submitting, setSubmitting] = React.useState(false)
+    const [showPassword, setShowPassword] = React.useState(false)
     const [imageUrl, setImageUrl] = React.useState('')
+    const [minimum, setMinimum] = React.useState('')
+
     const [deliveryZip, setDeliveryZip] = React.useState('')
     const [zips, setZips] = React.useState([])
     const [password, setPassword] = React.useState('')
@@ -75,6 +80,11 @@ const StoreProfile = () => {
             return false
 
         }
+        if (minimum === '') {
+            alert('Please enter a minimum amount for delivery')
+            minRef.current.focus()
+            return false
+        }
 
         return true
     }
@@ -90,7 +100,7 @@ const StoreProfile = () => {
         const image = event.target.files && event.target.files[0]
 
         if (image) {
-            console.log(image)
+
             if (image.type.includes('image') || image.type.includes('images')) {
                 const fileReader = new FileReader()
                 fileReader.onload = function (e) {
@@ -103,6 +113,15 @@ const StoreProfile = () => {
             }
         }
     }
+
+    const handleClickShowPassword = () => {
+        setShowPassword(preview => !preview)
+    };
+
+    const handleMouseDownPassword = (event) => {
+        event.preventDefault();
+    };
+
 
 
     const handleDeliveryZip = e => {
@@ -173,6 +192,7 @@ const StoreProfile = () => {
                         values.updatedOn = new Date().toISOString()
                         values.estimatedDeliveryTime = estimated
                         values.hasItems = false
+                        values.deliveryMinimum = parseInt(minimum)
                         values.password = password
                         values.deliveryZip = zips
                         values.profileCreated = true
@@ -259,10 +279,29 @@ const StoreProfile = () => {
                         </Grid>
                         <Grid container item xs={12}>
                             <Grid item xs={12} sm={6}>
-                                <Controls.Input value={password} label='Password' type='password' error={password.length < 6 && password.length > 1 ? 'At least 6 characters required' : null} onChange={e => setPassword(e.target.value)} />
+                                <Controls.Input value={password} label='Password' type={showPassword ? 'text' : 'password'} endAdornment={
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            aria-label="toggle password visibility"
+                                            onClick={handleClickShowPassword}
+                                            onMouseDown={handleMouseDownPassword}
+                                        >
+                                            {showPassword ? <Visibility /> : <VisibilityOff />}
+                                        </IconButton>
+                                    </InputAdornment>
+                                } error={password.length < 6 && password.length > 1 ? 'At least 6 characters required' : null} onChange={e => setPassword(e.target.value)} />
                             </Grid>
                             <Grid item xs={12} sm={6}>
-                                <Controls.Input value={confirm} label='Confirm Password' type='password' error={confirm !== password && confirm.length > 5 ? 'Passwords must match' : null} onChange={e => setConfirm(e.target.value)} />
+                                <Controls.Input value={confirm} label='Confirm Password' type={showPassword ? 'text' : 'password'} endAdornment={
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            aria-label="toggle password visibility"
+                                            onClick={handleClickShowPassword}
+                                            onMouseDown={handleMouseDownPassword}
+                                        >
+                                            {showPassword ? <Visibility /> : <VisibilityOff />}
+                                        </IconButton>
+                                    </InputAdornment>} error={confirm !== password && confirm.length > 5 ? 'Passwords must match' : null} onChange={e => setConfirm(e.target.value)} />
                             </Grid>
                         </Grid>
                         <Grid item xs={12}>
@@ -423,6 +462,10 @@ const StoreProfile = () => {
                             <Grid item xs={12}>
                                 <Controls.Input inputRef={estRef} name='estimated' label='Estimated Delivery Time' placeholder='25-30' value={estimated} onChange={e => setEstimated(e.target.value)} />
                                 <span style={{ marginLeft: '1rem', fontSize: '12px' }}>{estimated !== '' && (estimated + ' mins')}</span>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Controls.Input inputRef={minRef} name='minimum' label='Delivery Minimum Amount' placeholder='10' value={minimum} type='number' startAdornment={<InputAdornment position="start">$</InputAdornment>} inputProps={{ min: 0, max: 30 }} step="1.00" onChange={e => setMinimum(e.target.value)} />
+                                <span style={{ marginLeft: '1rem', fontSize: '12px' }}>{minimum !== '' && (minimum + ' Dollars')}</span>
                             </Grid>
                             <Grid item xs={12}>
                                 <Typography style={{ marginLeft: '1rem' }} variant='caption'>Note: Please enter all the zip codes your store will be making deliveries.</Typography>

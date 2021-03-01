@@ -12,6 +12,7 @@ export default function Input({ name, label, value, error = null, onChange, text
             label={label}
             autoFocus={focus}
             inputProps={{ style: { color: textColor ? textColor : 'black', fontSize: fontSize } }}
+
             name={name}
             disabled={disabled}
 
