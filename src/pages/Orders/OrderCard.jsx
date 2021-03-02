@@ -95,7 +95,7 @@ const OrderCard = ({ order, onClick, shrink = false }) => {
             </div>
             <div className="price">
               <Typography variant="h6">
-                Total ${order?.totalAmount.toFixed(2)}
+                Total ${order?.totalAmount}
               </Typography>
             </div>
           </div>

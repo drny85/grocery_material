@@ -271,7 +271,7 @@ const OrderDetails = () => {
           <div className="totalPrice">
             <Typography variant="h6">Grand Total</Typography>
             <Typography variant="h6">
-              ${current.totalAmount.toFixed(2)}
+              ${current.totalAmount}
             </Typography>
           </div>
         </div>
