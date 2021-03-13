@@ -32,7 +32,7 @@ export const signin = ({ email, password }) => async (dispatch) => {
 };
 
 export const setLogin = (user) => async (dispatch) => {
-  console.log('setting login')
+
   try {
     dispatch({ type: actions.USER_LOADING });
     const userSub = await db.collection("users").doc(user.uid).onSnapshot(n => {
@@ -93,7 +93,8 @@ export const closeOpenStore = () => async (dispatch, getState) => {
     userData: { store },
   } = getState();
 
-  await db.collection("stores").doc(store.id).update({ open: !store.open });
+  console.log(store)
+  await db.collection("stores").doc(store?.id).update({ open: !store.open });
 };
 
 export const autoLogin = () => dispatch => {

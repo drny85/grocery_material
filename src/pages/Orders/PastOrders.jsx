@@ -236,7 +236,7 @@ const PastOrders = () => {
                   <TableCell className="capitalize">
                     {order.customer.name} {order.customer.lastName}
                   </TableCell>
-                  <TableCell>${order.totalAmount.toFixed(2)}</TableCell>
+                  <TableCell>${order.totalAmount}</TableCell>
                   <TableCell>
                     {new Date(order.orderPlaced).toLocaleString()}
                   </TableCell>

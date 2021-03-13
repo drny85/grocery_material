@@ -16,19 +16,26 @@ export const addCoupon = (values) => async (dispatch, getState) => {
 }
 
 export const getCoupons = () => async (dispatch, getState) => {
-    const { userData: { store } } = getState()
+    const { userData: { user } } = getState()
     try {
 
-        const found = (await db.collection('stores').doc(store?.id).collection('coupons').get()).size
+        const found = (await db.collection('stores').doc(user.store).collection('coupons').get()).size
         if (found === 0) { }
         dispatch({ type: COUPONS_LOADING })
-        const coupons = (await db.collection('stores').doc(store.id).collection('coupons').get()).docs.map((doc) => {
-            return {
-                id: doc.id, ...doc.data()
-            }
-        })
 
-        dispatch({ type: GET_COUPONS, payload: coupons })
+        const subs = (await db.collection('stores').doc(user.store).collection('coupons').onSnapshot(snap => {
+            const coupons = []
+            snap.forEach(doc => {
+                if (doc.exists) {
+                    coupons.push({ id: doc.id, ...doc.data() })
+                }
+            })
+            dispatch({ type: GET_COUPONS, payload: coupons })
+        }))
+
+
+
+        return subs
 
 
     } catch (error) {
@@ -37,10 +44,24 @@ export const getCoupons = () => async (dispatch, getState) => {
 }
 
 export const updateCoupon = coupon => async (dispatch, getState) => {
-    const { userData: { store } } = getState()
+    const { userData: { user } } = getState()
     try {
-        await db.collection('stores').doc(store?.id).collection('coupons').doc(coupon.id).update(coupon)
+        await db.collection('stores').doc(user.store).collection('coupons').doc(coupon.id).update(coupon)
+
+        return true
     } catch (error) {
         console.log("error updating coupon", error)
+        return false
+    }
+}
+
+export const deleteCoupon = couponId => async (dispatch, getState) => {
+    try {
+        const { userData: { user } } = getState()
+        await db.collection('stores').doc(user.store).collection('coupons').doc(couponId).delete()
+        return true
+    } catch (error) {
+        console.log("error deleting coupon", error.message)
+        return false
     }
 }

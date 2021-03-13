@@ -60,6 +60,7 @@ export const updateStoreApplication = storeInfo => async dispatch => {
 
 }
 
+
 export const updateStoreApplicationStatus = (info) => async dispatch => {
     try {
 
@@ -89,15 +90,25 @@ export const updateStoreApplicationStatus = (info) => async dispatch => {
 
 export const clearCurrentStore = () => dispatch => dispatch({ type: "CLEAR_CURRENT_STORE" })
 
+
+export const updateStoreInfo = info => async dispatch => {
+    try {
+        await db.collection('stores').doc(info.id).update(info)
+    } catch (error) {
+        console.log('error updating store', error)
+    }
+
+}
+
 export const getStoreDetails = storeId => async dispatch => {
 
     try {
-        console.log(storeId)
+
         dispatch({ type: STORE_LOADING })
         await db.collection('stores').doc(storeId).onSnapshot(doc => {
-           
+
             if (doc.exists) {
-                
+
                 dispatch({ type: SETTING_CURRENT_STORE, payload: { id: doc.id, ...doc.data() } })
             }
         })

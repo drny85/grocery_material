@@ -37,6 +37,7 @@ const StoreProfile = () => {
     const dispatch = useDispatch()
     const { current, error } = useSelector(state => state.storesData)
     const [estimated, setEstimated] = React.useState('')
+    const [deliveryType, setDeliveryType] = React.useState('both')
     const [submitting, setSubmitting] = React.useState(false)
     const [showPassword, setShowPassword] = React.useState(false)
     const [imageUrl, setImageUrl] = React.useState('')
@@ -74,13 +75,13 @@ const StoreProfile = () => {
             estRef.current.focus()
             return false
         }
-        if (zips.length < 1) {
+        if (zips.length < 1 && deliveryType !== 'pickupOnly') {
             alert('Please enter all delivery zipcodes')
             zipRef.current.focus()
             return false
 
         }
-        if (minimum === '') {
+        if (minimum === '' && deliveryType !== 'pickupOnly') {
             alert('Please enter a minimum amount for delivery')
             minRef.current.focus()
             return false
@@ -192,9 +193,10 @@ const StoreProfile = () => {
                         values.updatedOn = new Date().toISOString()
                         values.estimatedDeliveryTime = estimated
                         values.hasItems = false
-                        values.deliveryMinimum = parseInt(minimum)
+                        values.deliveryType = deliveryType
+                        values.deliveryMinimum = deliveryType !== 'pickupOnly' ? parseInt(minimum) : null
                         values.password = password
-                        values.deliveryZip = zips
+                        values.deliveryZip = deliveryType !== 'pickupOnly' ? zips : null
                         values.profileCreated = true
 
                         const { success } = await dispatch(updateStoreApplication(values))
@@ -460,27 +462,38 @@ const StoreProfile = () => {
                                 </MuiPickersUtilsProvider>
                             </Grid>
                             <Grid item xs={12}>
-                                <Controls.Input inputRef={estRef} name='estimated' label='Estimated Delivery Time' placeholder='25-30' value={estimated} onChange={e => setEstimated(e.target.value)} />
+                                <Controls.Select label='Delivery Type' onChange={e => setDeliveryType(e.target.value)} value={deliveryType} name='deliveryType' options={[{ id: 'both', name: 'Delivery & Pick up' }, { id: 'deliveryOnly', name: 'Delivery Only' }, { id: 'pickupOnly', name: 'Pick up Only' }]} />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Controls.Input inputRef={estRef} name='estimated' label='Estimated Delivery / Pick Up Time' placeholder='25-30' value={estimated} onChange={e => setEstimated(e.target.value)} />
                                 <span style={{ marginLeft: '1rem', fontSize: '12px' }}>{estimated !== '' && (estimated + ' mins')}</span>
                             </Grid>
-                            <Grid item xs={12}>
-                                <Controls.Input inputRef={minRef} name='minimum' label='Delivery Minimum Amount' placeholder='10' value={minimum} type='number' startAdornment={<InputAdornment position="start">$</InputAdornment>} inputProps={{ min: 0, max: 30 }} step="1.00" onChange={e => setMinimum(e.target.value)} />
-                                <span style={{ marginLeft: '1rem', fontSize: '12px' }}>{minimum !== '' && (minimum + ' Dollars')}</span>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <Typography style={{ marginLeft: '1rem' }} variant='caption'>Note: Please enter all the zip codes your store will be making deliveries.</Typography>
-                            </Grid>
-                            <Grid item xs={12}>
-
-                                <Controls.Input inputRef={zipRef} name='deliveryZip' label='Delivery Zip Codes' onKeyDown={addZipByPressingEnter} endAdornment={(<InputAdornment position='end'><Button ref={btnRef} onClick={handleDeliveryZip} color='primary' variant='outlined' disabled={deliveryZip.length !== 5}>Add</Button></InputAdornment>)} inputProps={{ maxLength: 5 }} value={deliveryZip} placeholder='10456' onChange={e => setDeliveryZip(e.target.value)} />
-                                <div style={{ display: 'flex', margin: '4px 10px', alignItems: 'center' }}>
-                                    {zips.map(zip => (
-                                        <p key={zip} style={{ marginRight: '8px', alignItems: 'center', justifyContent: 'center', display: 'flex' }}>{zip} <CloseIcon onClick={() => deleteZip(zip)} style={{ marginRight: '8px', cursor: 'pointer' }} htmlColor='red' /></p>
-                                    ))}
-                                </div>
-                            </Grid>
 
 
+                            {deliveryType !== 'pickupOnly' && (
+                                <>
+                                    <Grid item xs={12}>
+                                        <Controls.Input inputRef={minRef} name='minimum' label='Delivery Minimum Amount' placeholder='10' value={minimum} type='number' startAdornment={<InputAdornment position="start">$</InputAdornment>} inputProps={{ min: 0, max: 30 }} step="1.00" onChange={e => setMinimum(e.target.value)} />
+                                        <span style={{ marginLeft: '1rem', fontSize: '12px' }}>{minimum !== '' && (minimum + ' Dollars')}</span>
+                                    </Grid>
+                                    <Grid item xs={12}>
+
+                                        <Controls.Input inputRef={zipRef} name='deliveryZip' label='Delivery Zip Codes' onKeyDown={addZipByPressingEnter} endAdornment={(<InputAdornment position='end'><Button ref={btnRef} onClick={handleDeliveryZip} color='primary' variant='outlined' disabled={deliveryZip.length !== 5}>Add</Button></InputAdornment>)} inputProps={{ maxLength: 5 }} value={deliveryZip} placeholder='10456' onChange={e => setDeliveryZip(e.target.value)} />
+                                        <div style={{ display: 'flex', margin: '4px 10px', alignItems: 'center' }}>
+                                            {zips.map(zip => (
+                                                <p key={zip} style={{ marginRight: '8px', alignItems: 'center', justifyContent: 'center', display: 'flex' }}>{zip} <CloseIcon onClick={() => deleteZip(zip)} style={{ marginRight: '8px', cursor: 'pointer' }} htmlColor='red' /></p>
+                                            ))}
+                                        </div>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <Typography style={{ marginLeft: '1rem' }} variant='caption'>Note: Please enter all the zip codes your store will be making deliveries.</Typography>
+                                    </Grid>
+                                </>
+                            )
+                            }
+
+
+wan
 
                         </Grid>
                         <Grid item style={{ marginTop: '1rem' }}>
