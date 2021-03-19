@@ -492,9 +492,6 @@ const StoreProfile = () => {
                             )
                             }
 
-
-wan
-
                         </Grid>
                         <Grid item style={{ marginTop: '1rem' }}>
                             <Controls.Button text='Update My Store Information' onClick={handleSubmit} />

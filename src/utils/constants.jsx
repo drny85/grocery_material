@@ -22,6 +22,12 @@ export const options = [
     },
 ];
 
+export const deliveryTypes = [
+    { id: 'both', name: 'Delivery & Pickup' },
+    { id: 'deliveryOnly', name: 'Delivery Only' },
+    { id: 'pickupOnly', name: 'Pickup Only' }
+]
+
 export const deliveryStates = [
     'New York',
     'New Jersey',

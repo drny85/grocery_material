@@ -93,6 +93,7 @@ export const clearCurrentStore = () => dispatch => dispatch({ type: "CLEAR_CURRE
 
 export const updateStoreInfo = info => async dispatch => {
     try {
+
         await db.collection('stores').doc(info.id).update(info)
     } catch (error) {
         console.log('error updating store', error)

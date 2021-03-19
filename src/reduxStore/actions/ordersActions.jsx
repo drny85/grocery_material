@@ -102,6 +102,8 @@ export const changeStatus = (id, status, user = null, reason = null) => async (d
       .update({
         status,
         deliveredOn: status === "delivered" ? new Date().toISOString() : null,
+        pickedOn: status === "pickup" ? new Date().toISOString() : null,
+        processingOn: status === 'in progress' ? new Date().toISOString() : null,
         cancelReason: status === 'canceled' ? reason : null,
         markedAsDeliveredBy: user,
       });
