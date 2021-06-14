@@ -384,7 +384,7 @@ const StoreProfile = () => {
                                             id="time-picker3"
                                             label="Close Hours for Fridays"
                                             value={friday.close}
-                                            onChange={time => setWeekday({ ...friday, close: time })}
+                                            onChange={time => setFriday({ ...friday, close: time })}
                                             KeyboardButtonProps={{
                                                 'aria-label': 'change time',
                                             }}

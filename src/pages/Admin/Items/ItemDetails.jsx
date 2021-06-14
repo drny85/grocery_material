@@ -113,7 +113,7 @@ const ItemDetails = ({ history }) => {
             </Typography>
             <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
               <Typography>Available: {isAvailable ? 'Yes' : 'No'} </Typography>
-              <Controls.Button text={current?.available ? 'Mark Unavailable' : 'Mark Available'} style={{ backgroundColor: isAvailable ? 'green' : 'orange' }} size="smaill" onClick={handleAvailibility} />
+              <Controls.Button text={current?.available ? 'Mark Unavailable' : 'Mark Available'} style={{ backgroundColor: isAvailable ? 'green' : 'orange' }} size="small" onClick={handleAvailibility} />
             </div>
 
 
@@ -145,7 +145,7 @@ const ItemDetails = ({ history }) => {
                 onClick={() => history.push(`/admin/item/edit/${current?.id}`)}
               />
             )}
-            <Typography>Unit Sold: {current?.unitSold}</Typography>
+            <Typography>Sold: {current?.unitSold}</Typography>
           </div>
 
           {/* <Typography>${current?.price}</Typography> */}

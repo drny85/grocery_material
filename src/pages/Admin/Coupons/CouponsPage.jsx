@@ -193,7 +193,7 @@ const CouponsPage = () => {
                         {coupons.length > 0 ?
                             (coupons.map(coupon => (<div key={coupon.id + coupon.code} style={{ padding: '1rem 1.5rem', boxShadow: '2px 4px 5px rgba(0,0,0,0.5)', margin: '1rem 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                 <Typography>{coupon.code.toUpperCase()}</Typography>
-                                <Typography>{coupon.value}</Typography>
+                                <Typography>{coupon.value}%</Typography>
                                 <Typography>{moment(coupon.expires).format('LLL')}</Typography>
                                 <EditIcon elevation={10} cursor='pointer' onClick={() => updateCouponHandler(coupon.id)} />
 

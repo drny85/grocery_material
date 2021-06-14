@@ -74,6 +74,7 @@ const OrderDetails = () => {
           setError('You must provide a reason for cancellation')
           return
         } else {
+
           dispatch(changeStatus(current.id, status, user, reason))
           setShow(false)
           setStatus('')

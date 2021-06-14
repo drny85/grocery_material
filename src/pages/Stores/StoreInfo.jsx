@@ -1,4 +1,4 @@
-import { Button, Grid, InputAdornment, Paper, Typography } from '@material-ui/core'
+import { Button, Fade, Grid, InputAdornment, Paper, Typography } from '@material-ui/core'
 import React, { useEffect, useState, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
@@ -7,9 +7,18 @@ import Loader from '../../components/Loader'
 import { getStoreDetails, updateStoreInfo } from '../../reduxStore/actions/storeActions'
 import EditIcon from '@material-ui/icons/Edit';
 import CloseIcon from '@material-ui/icons/Close';
+import moment from 'moment'
 
+import SaveIcon from '@material-ui/icons/Save';
 import EditStoreField from '../../components/EditStoreField'
 import Controls from '../../components/controls/Controls'
+
+import DateFnsUtils from '@date-io/date-fns';
+import {
+    MuiPickersUtilsProvider,
+    KeyboardTimePicker,
+
+} from '@material-ui/pickers';
 import { deliveryTypes } from '../../utils/constants'
 
 
@@ -23,7 +32,31 @@ const StoreInfo = () => {
     const { current, loading } = useSelector(state => state.storesData)
     const [store, setStore] = useState({})
 
+
+    const [weekday, setWeekday] = React.useState(
+        { open: new Date('2021 08:00:00 GMT-0500'), close: new Date('2021 22:00:00 GMT-0500') }
+    );
+
+    const [friday, setFriday] = React.useState(
+        { open: new Date('2021 08:00:00 GMT-0500'), close: new Date('2021 22:00:00 GMT-0500') }
+    );
+
+    const [saturday, setSaturday] = React.useState(
+        { open: new Date('2021 08:00:00 GMT-0500'), close: new Date('2021 23:00:00 GMT-0500') }
+    );
+
+    const [sunday, setSunday] = React.useState(
+        { open: new Date('2021 09:00:00 GMT-0500'), close: new Date('2021 20:00:00 GMT-0500') }
+    );
+
+
     const [editing, setEditing] = useState(false)
+
+    const generateTime = (t) => {
+        console.log(moment(t.close).minutes())
+        console.log(moment(t.close).minute())
+        return `${moment(t.open).hour()}:${moment(t.open).minutes() < 10 ? '0' + moment(t.open).minutes() : moment(t.open).minutes()}am-${moment(t.close).hour() > 12 ? (moment(t.close).hour() - 12) : moment(t.close).hour()}:${moment(t.close).minutes() < 10 ? ('0' + moment(t.close).minutes()) : moment(t.close).minutes()}pm`
+    }
 
     const handleDeliveryZip = e => {
 
@@ -50,6 +83,41 @@ const StoreInfo = () => {
         }
 
     }
+
+    const updateStoreHours = () => {
+        setStore({
+            ...store, hours: {
+
+                mon: generateTime(weekday),
+                tue: generateTime(weekday),
+                wed: generateTime(weekday),
+                thu: generateTime(weekday),
+                fri: generateTime(friday),
+                sat: generateTime(saturday),
+                sun: generateTime(sunday),
+
+            }
+        })
+
+        console.log(store.hours)
+
+        // dispatch(updateStoreInfo({
+        //     ...store, hours: {
+
+        //         mon: generateTime(weekday),
+        //         tue: generateTime(weekday),
+        //         wed: generateTime(weekday),
+        //         thu: generateTime(weekday),
+        //         fri: generateTime(friday),
+        //         sat: generateTime(saturday),
+        //         sun: generateTime(sunday),
+
+        //     }
+        // }))
+
+        setEditing(false)
+    }
+
 
     const updateZipcodes = () => {
 
@@ -104,6 +172,7 @@ const StoreInfo = () => {
 
     useEffect(() => {
         setStore(current)
+        //setWeekday({ open: current.wee })
         current && current.deliveryZip && setZips(current.deliveryZip)
         console.log(current)
         //eslint-disable-next-line
@@ -152,7 +221,162 @@ const StoreInfo = () => {
                                 <p key={zip} style={{ marginRight: '8px', alignItems: 'center', justifyContent: 'center', display: 'flex' }}>{zip} <CloseIcon onClick={() => deleteZip(zip)} style={{ marginRight: '8px', cursor: 'pointer' }} htmlColor='red' /></p>
                             ))}
                         </div>
+
                     </Grid>
+
+                    <Grid item container style={{ marginTop: '1rem', boxShadow: '5px 2px 5px 3px rgba(0,0,0,0.3)', padding: '1rem 0' }} xs={12}>
+                        <Grid item xs={12}>
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '60%', margin: '1rem auto' }}>
+                                <Typography style={{ marginTop: '1rem' }} align='center'>Store Hours</Typography>
+                                <Button disabled={!editing} onClick={updateStoreHours} startIcon={<SaveIcon />} variant='outlined' color='primary'>Update Hours</Button>
+                            </div>
+
+                        </Grid>
+                        <Fade in={true}>
+                            <>
+                                <Grid item xs={6}>
+                                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                        <Grid container justify="space-around">
+
+                                            <KeyboardTimePicker
+                                                margin="normal"
+                                                id="time-picker18"
+                                                label="Open Hours from Mon - Thu"
+                                                value={weekday?.open}
+                                                onChange={time => setWeekday({ ...weekday, open: time })}
+                                                KeyboardButtonProps={{
+                                                    'aria-label': 'change time',
+                                                }}
+                                            />
+                                        </Grid>
+                                    </MuiPickersUtilsProvider>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                        <Grid container justify="space-around">
+
+                                            <KeyboardTimePicker
+                                                margin="normal"
+                                                id="time-picker12"
+                                                label="Close Hours from Mon - Thu"
+                                                value={weekday?.close}
+                                                onChange={time => setWeekday({ ...weekday, close: time })}
+                                                KeyboardButtonProps={{
+                                                    'aria-label': 'change time',
+                                                }}
+                                            />
+                                        </Grid>
+                                    </MuiPickersUtilsProvider>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                        <Grid container justify="space-around">
+
+                                            <KeyboardTimePicker
+                                                margin="normal"
+                                                id="time-picker1"
+                                                label="Open Hours for Fridays"
+                                                value={friday.open}
+                                                onChange={time => setFriday({ ...friday, open: time })}
+                                                KeyboardButtonProps={{
+                                                    'aria-label': 'change time',
+                                                }}
+                                            />
+                                        </Grid>
+                                    </MuiPickersUtilsProvider>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                        <Grid container justify="space-around">
+
+                                            <KeyboardTimePicker
+                                                margin="normal"
+                                                id="time-picker3"
+                                                label="Close Hours for Fridays"
+                                                value={friday.close}
+                                                onChange={time => setFriday({ ...friday, close: time })}
+                                                KeyboardButtonProps={{
+                                                    'aria-label': 'change time',
+                                                }}
+                                            />
+                                        </Grid>
+                                    </MuiPickersUtilsProvider>
+                                </Grid>
+                                {/* SAturdays hours */}
+                                <Grid item xs={6}>
+                                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                        <Grid container justify="space-around">
+
+                                            <KeyboardTimePicker
+                                                margin="normal"
+                                                id="time-picker5"
+                                                label="Open Hours for Saturdays"
+                                                value={saturday?.open}
+                                                onChange={time => setSaturday({ ...saturday, open: time })}
+                                                KeyboardButtonProps={{
+                                                    'aria-label': 'change time',
+                                                }}
+                                            />
+                                        </Grid>
+                                    </MuiPickersUtilsProvider>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                        <Grid container justify="space-around">
+
+                                            <KeyboardTimePicker
+                                                margin="normal"
+                                                id="time-picker66"
+                                                label="Close Hours for Saturdays"
+                                                value={saturday?.close}
+                                                onChange={time => setSaturday({ ...saturday, close: time })}
+                                                KeyboardButtonProps={{
+                                                    'aria-label': 'change time',
+                                                }}
+                                            />
+                                        </Grid>
+                                    </MuiPickersUtilsProvider>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                        <Grid container justify="space-around">
+
+                                            <KeyboardTimePicker
+                                                margin="normal"
+                                                id="time-picker6"
+                                                label="Open Hours for Sundays"
+                                                value={sunday?.open}
+                                                onChange={time => setSunday({ ...sunday, open: time })}
+                                                KeyboardButtonProps={{
+                                                    'aria-label': 'change time',
+                                                }}
+                                            />
+                                        </Grid>
+                                    </MuiPickersUtilsProvider>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                        <Grid container justify="space-around">
+
+                                            <KeyboardTimePicker
+                                                margin="normal"
+                                                id="time-picker7"
+                                                label="Close Hours for Sundays"
+                                                value={sunday?.close}
+                                                onChange={time => setSunday({ ...sunday, close: time })}
+                                                KeyboardButtonProps={{
+                                                    'aria-label': 'change time',
+                                                }}
+                                            />
+                                        </Grid>
+                                    </MuiPickersUtilsProvider>
+
+                                </Grid>
+                            </>
+                        </Fade>
+
+                    </Grid>
+
 
                 </Grid>
             </div>

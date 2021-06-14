@@ -20,6 +20,7 @@ import { useHistory } from "react-router-dom";
 const AdminPage = () => {
   const history = useHistory();
   const { store, user } = useSelector((state) => state.userData);
+
   const [open, setOpen] = useState(false);
   const [openLogoutModal, setOpenLogoutModal] = useState(false);
   const dispatch = useDispatch();
@@ -34,6 +35,7 @@ const AdminPage = () => {
 
   const handleLogout = () => {
     dispatch(logout())
+
     setOpenLogoutModal(false)
     history.replace('/')
   }

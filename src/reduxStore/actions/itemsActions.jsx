@@ -39,7 +39,7 @@ export const getItems = (userId) => async (dispatch, getState) => {
 };
 
 export const addItem = item => async (dispatch, getState) => {
-  console.log(item)
+
   try {
     dispatch({ type: ITEMS_LOADING })
     const { userData: { store } } = getState()

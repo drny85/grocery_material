@@ -31,6 +31,7 @@ const AddItem = () => {
   const [localError, setError] = useState(null)
   const dispatch = useDispatch()
   const imgRef = useRef()
+  const inputImgRef = useRef()
   const priceRef = useRef()
   const [price, setPrice] = useState(null)
   const [comeInSizes, setComeInSizes] = useState(false)
@@ -86,8 +87,9 @@ const AddItem = () => {
   const resetEverything = () => {
 
     setImage('')
+    inputImgRef.current.value = null;
     imgRef.current.style.backgroundImage = null;
-    setComeInSizes(false)
+    setPrice(null)
     setSizes([])
 
     resetForm()
@@ -97,53 +99,64 @@ const AddItem = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    try {
+      if (comeInSizes && sizes.length > 0) {
+        const sl = sizes.length
+        const pl = Object.keys(price).length;
 
-    //verified that all sizes selcted have prices assigned
-    if (comeInSizes && sizes.length > 0) {
-      const sl = sizes.length
-      const pl = Object.keys(price).length;
-
-      if (sl !== pl) {
+        if (sl !== pl) {
+          showMessage('All sizes must have a price', 'error')
+          return
+        }
+      } else if (comeInSizes && sizes === null) {
         showMessage('All sizes must have a price', 'error')
         return
       }
-    } else if (comeInSizes && sizes === null) {
-      showMessage('All sizes must have a price', 'error')
-      return
-    }
 
-    if (validate()) {
-      if (!comeInSizes && values.price === '') {
-
-        showMessage('Item price is missing', 'error')
-        priceRef.current.focus()
-
-
-        return
-
+      if (comeInSizes && price === null) {
+        showMessage("You need a price for this item")
+        return;
       }
 
-      values.sizes = comeInSizes ? sizes : null
-      values.price = comeInSizes ? price : parseFloat(values.price);
-      values.addedOn = new Date().toISOString();
+      if (validate()) {
+        if (!comeInSizes && values.price === '') {
 
-      const submitted = await dispatch(addItem(values));
-      if (submitted) {
-        resetEverything()
-        showMessage('Item has been added', 'success')
-      } else {
-        if (error) {
-          showMessage(error, 'error')
+          showMessage('Item price is missing', 'error')
+          priceRef.current.focus()
+
+
+          return
+
         }
 
+        values.sizes = comeInSizes ? sizes : null
+        values.price = comeInSizes ? price : parseFloat(values.price);
+        values.addedOn = new Date().toISOString();
+
+        console.log(values)
+        const submitted = await dispatch(addItem(values));
+        if (submitted) {
+
+          resetEverything()
+          showMessage('Item has been added', 'success')
+        } else {
+          if (error) {
+            showMessage(error, 'error')
+          }
+
+        }
+
+
+      } else {
+        console.log('not valid')
+        console.log(values)
+
       }
 
-
-    } else {
-      console.log('not valid')
-      console.log(values)
-
+    } catch (error) {
+      console.log('Error @adding Item', error)
     }
+    //verified that all sizes selcted have prices assigned
 
   };
 
@@ -172,13 +185,12 @@ const AddItem = () => {
 
   }
 
-
+  console.log(sizes, price)
 
   const handlePrices = (e) => {
     let value = e.target.value;
     setPrice({ ...price, [e.target.name]: parseFloat(value) })
   }
-
 
   const handleImage = async (e) => {
     if (e.target.files && e.target.files[0]) {
@@ -186,7 +198,7 @@ const AddItem = () => {
       if (image.type.includes('image')) {
 
         //valid image
-        const task = storage.ref(`/images/${image.name}`).put(image)
+        const task = storage.ref(`/images/${user.store}/${image.name}`).put(image)
         task.on('state_changed', (snapShop) => {
 
         }, (err) => {
@@ -260,7 +272,7 @@ const AddItem = () => {
               />
 
               <Controls.Select name='category' error={errors.category} label='Select a Category' value={values.category} onChange={handleInputChange} options={categories.sort((a, b) => (a.name < b.name ? -1 : 1))} />
-              <Controls.Input error={errors.imageUrl} type='file' onChange={handleImage} />
+              <Controls.Input inputRef={inputImgRef} error={errors.imageUrl} type='file' onChange={handleImage} />
 
               <Grid item container>
                 <Grid item>

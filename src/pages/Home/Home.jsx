@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import ActionCard from "../../components/ActionCard/ActionCard";
 
 import { makeStyles } from "@material-ui/core/styles";
 import { Typography } from "@material-ui/core";
-import moment from "moment";
+import moment from 'moment'
+
 import Loader from "../../components/Loader";
 
 //import Button from '@material-ui/core/Button';
@@ -13,7 +14,7 @@ import Loader from "../../components/Loader";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    backgroundColor: theme.palette.background.paper,
+    backgroundColor: theme.palette.background.default,
     width: "100vw",
     height: "90vh",
 
@@ -39,11 +40,11 @@ const Home = () => {
   const { user, store, loading } = useSelector((state) => state.userData);
   const classes = useStyles();
   const history = useHistory();
-  const [today, setToday] = useState("");
+  // const [today, setToday] = useState("");
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setToday(moment().format("MMMM Do YYYY, h:mm:ss a"));
+      //setToday(moment().format("MMMM Do YYYY, h:mm:ss a"));
 
     }, 1000);
 
@@ -51,6 +52,7 @@ const Home = () => {
       clearInterval(interval);
     };
   }, []);
+
 
   if (loading) return <Loader />
 
@@ -63,10 +65,11 @@ const Home = () => {
           display: "flex",
           margin: '1rem auto',
           padding: '0rem 2rem',
-          width: "100vw",
+          width: "100%",
           maxWidth: '1280px',
-          justifyContent: "space-between",
+          justifyContent: 'space-evenly',
           alignItems: "center",
+
         }}
       >
         {store && store.open ? (
@@ -75,7 +78,7 @@ const Home = () => {
             <Typography variant="h6">Store Closed</Typography>
           )}
         <Typography style={{ fontStyle: 'italic', fontSize: '1.5rem', textTransform: 'capitalize' }}>{store?.name}</Typography>
-        <Typography variant="h5">{today}</Typography>
+        <Typography variant="h5">{moment(new Date()).format('ll')}</Typography>
       </div>
       <div className={classes.root}>
         <ActionCard
