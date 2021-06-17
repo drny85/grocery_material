@@ -64,6 +64,7 @@ export const USER_LOADING = "USER_LOADING";
 export const ITEMS_LOADING = "ITEMS_LOADING";
 export const STORE_LOADING = "STORE_LOADING";
 export const ORDERS_LOADING = "ORDERS_LOADING";
+export const UPDATE_ORDER = "UPDATE_ORDER";
 export const LOADING_CURRENT_ITEM = 'LOADING_CURRENT_ITEM'
 
 ///store application

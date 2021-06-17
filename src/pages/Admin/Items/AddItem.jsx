@@ -185,7 +185,6 @@ const AddItem = () => {
 
   }
 
-  console.log(sizes, price)
 
   const handlePrices = (e) => {
     let value = e.target.value;

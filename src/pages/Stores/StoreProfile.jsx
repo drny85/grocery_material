@@ -35,7 +35,7 @@ const StoreProfile = () => {
     const picRef = useRef()
     const btnRef = useRef()
     const dispatch = useDispatch()
-    const { current, error } = useSelector(state => state.storesData)
+    const { current, error: storeError } = useSelector(state => state.storesData)
     const [estimated, setEstimated] = React.useState('')
     const [deliveryType, setDeliveryType] = React.useState('both')
     const [submitting, setSubmitting] = React.useState(false)
@@ -90,7 +90,7 @@ const StoreProfile = () => {
         return true
     }
 
-
+    console.log(storeError)
     const generateTime = (t) => {
         return `${moment(t.open).hour()}:${moment(weekday.open).minute() < 10 ? '0' + moment(t.open).minute() : moment(t.open).minute()}am-${moment(t.close).hour() > 12 ? (moment(t.close).hour() - 12) : moment(t.close).hour()}:${moment(t.close).minute() < 10 ? '0' + moment(t.close).minute() : moment(weekday.close).minute()}pm`
     }
@@ -122,7 +122,6 @@ const StoreProfile = () => {
     const handleMouseDownPassword = (event) => {
         event.preventDefault();
     };
-
 
 
     const handleDeliveryZip = e => {
@@ -170,7 +169,7 @@ const StoreProfile = () => {
             setSubmitting(true)
 
             try {
-                console.log(picRef.current.files[0])
+
                 const task = storage.ref(`/images/${picRef.current.files[0].name}`).put(picRef.current.files[0])
 
                 task.on('state_changed', (snapShop) => {
@@ -193,24 +192,29 @@ const StoreProfile = () => {
                         values.updatedOn = new Date().toISOString()
                         values.estimatedDeliveryTime = estimated
                         values.hasItems = false
+                        values.chargeCardFee = false
                         values.deliveryType = deliveryType
                         values.deliveryMinimum = deliveryType !== 'pickupOnly' ? parseInt(minimum) : null
                         values.password = password
                         values.deliveryZip = deliveryType !== 'pickupOnly' ? zips : null
                         values.profileCreated = true
 
-                        const { success } = await dispatch(updateStoreApplication(values))
-                        if (success) {
+                        const success = await dispatch(updateStoreApplication(values))
+                        console.log(success, storeError)
+                        if (!storeError && success) {
+                            console.log(success)
 
                             history.replace('/')
 
                         } else {
-                            console.log('INVALID')
+
+                            console.log(storeError)
+                            return
                         }
                     })
                 })
-            } catch (error) {
-                console.log(error)
+            } catch (err) {
+                console.log(err)
             } finally {
                 setSubmitting(false)
             }
@@ -240,8 +244,8 @@ const StoreProfile = () => {
         <div style={{ display: 'flex', flexDirection: 'column', maxWidth: '1080px', margin: '1rem auto' }}>
             <Typography variant='h6' align='center'>Store Profile</Typography>
             <Typography variant='caption' style={{ fontStyle: 'italic', textAlign: 'center', marginTop: '1rem' }}>Please fill out all the information bellow</Typography>
-            <div style={{ width: '100%', margin: '10px auto' }}>
-                {error && <Message message={error} severity='error' />}
+            <div style={{ width: '100%', margin: '10px auto', alignSelf: 'center', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                {storeError && <Message message={storeError} severity='error' />}
             </div>
             <div className="form_div" style={{ maxWidth: '800px', margin: '1rem auto' }}>
                 <Form onSubmit={handleSubmit}>

@@ -46,7 +46,7 @@ export const updateStoreApplication = storeInfo => async dispatch => {
 
             dispatch({ type: SETTING_CURRENT_STORE, payload: { id: updated.id, ...updated.data() } })
 
-            return { success: true }
+            return true
 
         } else {
             return false
@@ -55,7 +55,9 @@ export const updateStoreApplication = storeInfo => async dispatch => {
 
     } catch (error) {
         console.log(error.message)
+
         dispatch({ type: STORE_ERROR, payload: error.message })
+        return false;
     }
 
 }

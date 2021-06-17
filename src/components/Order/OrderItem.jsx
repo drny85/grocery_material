@@ -1,10 +1,12 @@
-import { Typography } from '@material-ui/core'
+import { ButtonGroup, Typography, Button } from '@material-ui/core'
 import React from 'react'
+import AddIcon from '@material-ui/icons/Add';
+import RemoveIcon from '@material-ui/icons/Remove';
 
 import './styles.css'
 
 
-const OrderItem = ({ item }) => {
+const OrderItem = ({ item, editMode = false, onPressAdd, onPressRemove }) => {
 
     return (
         <div className='order_item'>
@@ -22,6 +24,20 @@ const OrderItem = ({ item }) => {
                 <div className="total">
                     <Typography variant='h6'> ${(item.price * item.quantity).toFixed(2)}</Typography>
                 </div>
+            </div>
+            <div>
+                {editMode && (
+                    <div className='edit-mode' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', marginRight: 10 }}>
+                        <ButtonGroup color="primary" aria-label="outlined primary button group">
+                            <Button onClick={onPressRemove}>
+                                <RemoveIcon />
+                            </Button>
+                            <Button onClick={onPressAdd}>
+                                <AddIcon />
+                            </Button>
+                        </ButtonGroup>
+                    </div>
+                )}
 
             </div>
 

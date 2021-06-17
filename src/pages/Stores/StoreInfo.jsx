@@ -194,7 +194,7 @@ const StoreInfo = () => {
                         <Paper style={{ margin: '1rem', padding: '1rem', display: 'flex', justifyContent: 'space-around', backgroundColor: '#eee' }}>
                             <Typography className='capitalize'>Name: {current?.name}</Typography>
                             <Typography className='capitalize'>Address: {current?.street} {current?.city} {current?.state}, {current?.zipcode}</Typography>
-                            <Button color='primary' variant='contained' onClick={!editing ? () => setEditing(true) : () => {
+                            <Button color={editing ? 'primary' : 'secondary'} variant='outlined' onClick={!editing ? () => setEditing(true) : () => {
                                 setStore(current)
                                 setEditing(false)
                             }} endIcon={<EditIcon />} >{editing ? 'Cancel' : 'Edit Store'}</Button>

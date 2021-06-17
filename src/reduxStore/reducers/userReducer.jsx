@@ -37,7 +37,6 @@ const userReducer = (state = initialState, action) => {
 
     case USER_LOGOUT:
       return {
-        ...state,
         user: null,
         error: null,
         loading: false,
@@ -47,7 +46,6 @@ const userReducer = (state = initialState, action) => {
     case SET_STORE:
       return {
         ...state,
-
         store: action.payload,
         loading: false,
       };

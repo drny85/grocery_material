@@ -9,6 +9,7 @@ import {
     ORDERS_LOADING,
     SET_CURRENT_ORDER,
     CLEAR_CURRENT_ORDER,
+    UPDATE_ORDER,
 } from "../types";
 
 import moment from 'moment'
@@ -74,6 +75,13 @@ const ordersReducer = (state = initialState, action) => {
                 current: null,
                 error: null,
             };
+
+        case UPDATE_ORDER:
+            return {
+                ...state,
+                loading: false,
+                error: null,
+            }
 
         case GET_ORDER:
             return {

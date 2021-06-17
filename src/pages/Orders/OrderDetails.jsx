@@ -25,9 +25,13 @@ import EditIcon from '@material-ui/icons/Edit';
 import Controls from "../../components/controls/Controls";
 import { phoneFormatted } from "../../utils/phoneFormatted";
 import sendNotification from "../../utils/sendNotification";
+import PaymentIcon from '@material-ui/icons/Payment';
+
+import { loadStripe } from '@stripe/stripe-js'
 
 import Slide from "@material-ui/core/Slide";
 import { options } from "../../utils/constants";
+import axios from "axios";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -42,7 +46,7 @@ const OrderDetails = () => {
   const [show, setShow] = useState(false);
   const [reason, setReason] = useState('');
   const [error, setError] = useState(null);
-
+  const [processing, setProcessing] = useState(false)
   const [modalAlert, setModalAlert] = useState(false);
   const [status, setStatus] = useState("");
   const history = useHistory()
@@ -84,9 +88,6 @@ const OrderDetails = () => {
             current
           )
         }
-
-
-
       }
       else {
         dispatch(changeStatus(current.id, status));
@@ -95,7 +96,6 @@ const OrderDetails = () => {
         setReason('')
         setError(null)
       }
-
     }
 
     if (status === "delivered") {
@@ -112,8 +112,46 @@ const OrderDetails = () => {
     history.goBack()
   };
 
+  const goToPaymentScreen = async () => {
+    try {
+
+      const res = await axios.get(`https://us-central1-grocery-409ef.cloudfunctions.net/makePayment/stripeKey/${current.restaurantId}`)
+
+      const publicKey = await res.data
+      const { items } = current
+
+      if (publicKey && current) {
+        const stripe = await loadStripe(publicKey)
+        const checkoutSession = await axios.post("https://us-central1-grocery-409ef.cloudfunctions.net/makePayment/payment", {
+          amount: current.totalAmount,
+          items: items,
+          email: current.customer.email,
+          phone: current.customer.phone,
+          customer: current.customer.address,
+          cardFee: current.restaurant.chargeCardFee
+        })
+        setProcessing(true)
+
+        const result = await stripe.redirectToCheckout({
+          sessionId: checkoutSession.data.session_id
+        })
+
+        if (result.error) {
+          alert(error.message)
+        }
+        console.log(result)
+
+      }
+
+    } catch (error) {
+      console.log(error.message)
+    } finally {
+      setProcessing(false)
+    }
+  }
+
   const handleEditOrder = () => {
-    alert('Work in edit order')
+    history.push(`/admin/edit-order/${id}`)
   }
   useEffect(() => {
     dispatch(setCurrentOrder(id));
@@ -124,7 +162,7 @@ const OrderDetails = () => {
     };
   }, [id, dispatch]);
 
-  if (!current) return <Loader />;
+  if (!current || processing) return <Loader />;
   return (
     <div>
       {/* Modal for changing order status */}
@@ -192,7 +230,11 @@ const OrderDetails = () => {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
           <BackArrow />
           <Typography variant="h5">Order Details</Typography>
-          <Controls.Button style={{ backgroundColor: 'orange' }} onClick={handleEditOrder} text="Edit Order" EndIcon={<EditIcon />} />
+          <div>
+            <Controls.Button style={{ backgroundColor: 'grey' }} onClick={goToPaymentScreen} text="Take Payment" EndIcon={<PaymentIcon />} />
+            <Controls.Button style={{ backgroundColor: 'orange' }} onClick={handleEditOrder} text="Edit Order" EndIcon={<EditIcon />} />
+          </div>
+
         </div>
         <div className="top">
 

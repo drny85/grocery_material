@@ -10,7 +10,9 @@ import {
   SEARCH_ORDERS,
   ORDERS_LOADING,
   SET_CURRENT_ORDER,
+  UPDATE_ORDER
 } from "../types";
+
 
 
 export const getOrders = (restaurantId) => async (dispatch, getState) => {
@@ -34,7 +36,6 @@ export const getOrders = (restaurantId) => async (dispatch, getState) => {
           newOrders.push(order);
 
         });
-
 
         dispatch({ type: GET_ORDERS, payload: newOrders });
         dispatch({ type: ORDERS_COUNT });
@@ -88,6 +89,17 @@ export const getOrder = (orderId) => async (dispatch) => {
 export const filterOrderByDates = (start, end) => dispatch => {
   dispatch({ type: ORDERS_LOADING });
   dispatch({ type: 'BY_DATES', payload: { start, end } })
+}
+
+export const updateOrder = order => async dispatch => {
+  try {
+    dispatch({ type: ORDERS_LOADING });
+    await db.collection('orders').doc(order.id).update(order)
+    dispatch({ type: UPDATE_ORDER })
+    return true;
+  } catch (error) {
+    console.log('@Error at updateOrder', error.message)
+  }
 }
 
 
