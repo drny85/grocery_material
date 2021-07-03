@@ -105,6 +105,7 @@ const AllCategories = () => {
         alignItems: "center",
         flexDirection: 'column',
         maxWidth: "1080px",
+        padding: '0rem 2rem',
         height: "100%",
       }}
     >

@@ -100,7 +100,7 @@ function App() {
 					<AdminRoute exact path='/admin' component={AdminPage} />
 					<AdminRoute
 						exact
-						path='/payment/success'
+						path='/payment/success/:orderId'
 						component={PaymentSuccess}
 					/>
 					<AdminRoute exact path='/payment/failed' component={PaymentFailed} />

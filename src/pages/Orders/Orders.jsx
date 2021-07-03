@@ -37,7 +37,7 @@ const Orders = () => {
           margin: '1rem'
         }}
       >
-        <BackArrow />
+        <BackArrow onClick={() => history.push('/')} />
         <Typography variant="h5">Today's Orders</Typography>
         <Controls.Button
           text="View Past Orders"

@@ -84,7 +84,7 @@ const ItemDetails = ({ history }) => {
   }
   return (
     <div className="main">
-      <div style={{ maxWidth: "1080px", margin: "1rem auto", display: 'flex', justifyContent: 'space-between' }}>
+      <div style={{ maxWidth: "1080px", margin: "1rem auto", display: 'flex', justifyContent: 'space-between', padding: '0rem 2rem' }}>
         <BackArrow />
         <Typography variant="h4" align="center">
           Item Details

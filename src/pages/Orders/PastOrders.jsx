@@ -137,6 +137,7 @@ const PastOrders = () => {
         justifyContent: "center",
         margin: "1rem auto",
         flexDirection: "column",
+        padding: '0rem 2rem'
       }}
     >
       <div
@@ -221,7 +222,7 @@ const PastOrders = () => {
               <TableCell className={classes.cell}>Customer</TableCell>
               <TableCell className={classes.cell}>Amount</TableCell>
               <TableCell className={classes.cell}>Date</TableCell>
-              <TableCell className={classes.cell}>Status</TableCell>
+              <TableCell className={classes.cell}>Status / Type</TableCell>
               <TableCell className={classes.cell}>Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -240,7 +241,7 @@ const PastOrders = () => {
                   <TableCell>
                     {new Date(order.orderPlaced).toLocaleString()}
                   </TableCell>
-                  <TableCell>{orderStatus(order.status)}</TableCell>
+                  <TableCell>{orderStatus(order.status)} / {order.orderType}</TableCell>
                   <TableCell>
                     <Controls.Button
                       text="View Order"

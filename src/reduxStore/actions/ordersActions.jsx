@@ -102,6 +102,21 @@ export const updateOrder = order => async dispatch => {
   }
 }
 
+export const processPaymentAndUpdateOrder = orderId => async dispatch => {
+  try {
+    const current = await db.collection('orders').doc(orderId).get()
+    if (!current.data().isPaid) {
+      await db.collection('orders').doc(orderId).update({ isPaid: true, status: 'pickup' })
+    }
+
+
+    dispatch({ type: SET_CURRENT_ORDER, payload: { id: current.id, ...current.data() } })
+
+  } catch (error) {
+    console.log('Erro processing payment and edting order', error.message)
+  }
+}
+
 
 export const clearOrderFilter = () => dispatch => dispatch({ type: "SET_CLEAR" });
 

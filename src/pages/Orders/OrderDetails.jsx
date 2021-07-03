@@ -116,7 +116,8 @@ const OrderDetails = () => {
     try {
 
       const res = await axios.get(`https://us-central1-grocery-409ef.cloudfunctions.net/makePayment/stripeKey/${current.restaurantId}`)
-
+      const data = await axios.post('https://us-central1-grocery-409ef.cloudfunctions.net/makePayment/create_stripe_customer', { userId: current?.userId, email: current.customer.email, restaurantId: current.restaurantId, name: current.customer.name + ' ' + current.customer.lastName })
+      const { customer_id } = data.data;
       const publicKey = await res.data
       const { items } = current
 
@@ -125,6 +126,8 @@ const OrderDetails = () => {
         const checkoutSession = await axios.post("https://us-central1-grocery-409ef.cloudfunctions.net/makePayment/payment", {
           amount: current.totalAmount,
           items: items,
+          orderId: current.id,
+          customerId: customer_id,
           email: current.customer.email,
           phone: current.customer.phone,
           customer: current.customer.address,
@@ -228,10 +231,10 @@ const OrderDetails = () => {
       </Dialog>
       <div className="order_details_container">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
-          <BackArrow />
+          <BackArrow onClick={() => history.push('/orders')} />
           <Typography variant="h5">Order Details</Typography>
           <div>
-            <Controls.Button style={{ backgroundColor: 'grey' }} onClick={goToPaymentScreen} text="Take Payment" EndIcon={<PaymentIcon />} />
+            {!current.isPaid && <Controls.Button disable={processing} style={{ backgroundColor: 'grey' }} onClick={goToPaymentScreen} text="Take Payment" EndIcon={<PaymentIcon />} />}
             <Controls.Button style={{ backgroundColor: 'orange' }} onClick={handleEditOrder} text="Edit Order" EndIcon={<EditIcon />} />
           </div>
 
@@ -280,6 +283,12 @@ const OrderDetails = () => {
                 style={{ textTransform: "capitalize" }}
               >
                 Payment Type: {current.paymentMethod}
+              </Typography>
+              <Typography
+                variant="body2"
+                style={{ textTransform: "capitalize" }}
+              >
+                Paid: {current.isPaid ? 'Yes' : 'No'}
               </Typography>
               {current.instruction && (
                 <Typography variant="body2">
