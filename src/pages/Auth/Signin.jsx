@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import Controls from '../../components/controls/Controls'
-import { Grid } from '@material-ui/core';
+import { Grid, Typography } from '@material-ui/core';
 import { useForm, Form } from '../../components/useForm'
 import { useDispatch, useSelector } from 'react-redux';
 // import { Link } from 'react-router-dom';
@@ -73,56 +73,55 @@ const Signing = () => {
             <div className='error_message'>
                 {error && (<Message message={error} severity='error' />)}
             </div>
-            <Form onSubmit={handleSubmit}>
-                <Grid
-                    container
-                    alignContent='center'
-                    justify='center'
-                    direction='column'
-                >
-                    {/* {error && <Message type='error'>{error}</Message>} */}
-                    <Grid item sx={12} md={12}>
-                        <Controls.Input
-                            name='email'
-                            fontSize={32}
-                            value={values.email}
-                            error={errors.email}
-                            inputProps={{ style: { textTransform: 'lowercase' } }}
-                            label='Email'
-                            onChange={handleInputChange}
-                        />
+            <div style={{ width: '100%', alignSelf: 'center' }}>
+                <Form onSubmit={handleSubmit}>
+                    <Grid
+                        container
+                        alignContent='center'
+                        justify='center'
+                        direction='column'
+                    >
+                        {/* {error && <Message type='error'>{error}</Message>} */}
+                        <Typography variant='h4' align='center' style={{ marginBottom: '1.5rem' }}>Login</Typography>
+                        <Grid item sx={12} md={12}>
+                            <Controls.Input
+                                name='email'
+                                fontSize={32}
+                                value={values.email}
+                                error={errors.email}
+                                inputProps={{ style: { textTransform: 'lowercase' } }}
+                                label='Email'
+                                onChange={handleInputChange}
+                            />
 
-                        <Controls.Input
-                            name='password'
-                            type='password'
-                            fontSize={32}
-                            value={values.password}
-                            error={errors.password}
-                            label='Password'
-                            style={{ color: 'white' }}
-                            onChange={handleInputChange}
-                        />
+                            <Controls.Input
+                                name='password'
+                                type='password'
+                                fontSize={28}
+                                value={values.password}
+                                error={errors.password}
+                                label='Password'
+                                style={{ color: 'white' }}
+                                onChange={handleInputChange}
+                            />
 
-                        {/* <Controls.Select  /> */}
-                        <div style={{ margin: '15px 10px', width: '100%' }}>
-                            <Controls.Button type='submit' text='LOGIN' style={{ width: '100%' }} />
-                            {/* <Controls.Button
-                                text='Reset'
-                                color='default'
-                                onClick={resetForm}
-                            /> */}
-                        </div>
+                            {/* <Controls.Select  /> */}
+                            <div style={{ width: '100%' }}>
+                                <Controls.Button type='submit' text='LOGIN' style={{ width: '100%' }} />
+
+                            </div>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <p style={{ padding: '2rem 1rem', color: 'GrayText' }}>
+                                Do not have an account?{' '}
+                                <span style={{ marginLeft: '10px' }}>
+                                    <Link to='/store/application'>Sign Up</Link>
+                                </span>
+                            </p>
+                        </Grid>
                     </Grid>
-                    <Grid item xs={12}>
-                        <p style={{ padding: '2rem 1rem', color: 'GrayText' }}>
-                            Do not have an account?{' '}
-                            <span style={{ marginLeft: '10px' }}>
-                                <Link to='/store/application'>Sign Up</Link>
-                            </span>
-                        </p>
-                    </Grid>
-                </Grid>
-            </Form>
+                </Form>
+            </div>
         </div>
     )
 }

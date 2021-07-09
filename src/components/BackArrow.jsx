@@ -18,7 +18,7 @@ const BackArrow = ({ onClick }) => {
         justifyContent: "center",
         display: "flex",
         float: "left",
-        marginBottom: "1rem",
+
       }}
       className="back"
     >

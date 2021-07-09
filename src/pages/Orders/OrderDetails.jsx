@@ -44,6 +44,7 @@ const OrderDetails = () => {
   const { user } = useSelector((state) => state.userData);
   const dispatch = useDispatch();
   const [show, setShow] = useState(false);
+  const [checkModal, setCheckModal] = useState(false);
   const [reason, setReason] = useState('');
   const [error, setError] = useState(null);
   const [processing, setProcessing] = useState(false)
@@ -114,7 +115,7 @@ const OrderDetails = () => {
 
   const goToPaymentScreen = async () => {
     try {
-
+      setProcessing(true)
       const res = await axios.get(`https://us-central1-grocery-409ef.cloudfunctions.net/makePayment/stripeKey/${current.restaurantId}`)
       const data = await axios.post('https://us-central1-grocery-409ef.cloudfunctions.net/makePayment/create_stripe_customer', { userId: current?.userId, email: current.customer.email, restaurantId: current.restaurantId, name: current.customer.name + ' ' + current.customer.lastName })
       const { customer_id } = data.data;
@@ -133,7 +134,7 @@ const OrderDetails = () => {
           customer: current.customer.address,
           cardFee: current.restaurant.chargeCardFee
         })
-        setProcessing(true)
+
 
         const result = await stripe.redirectToCheckout({
           sessionId: checkoutSession.data.session_id
@@ -165,9 +166,27 @@ const OrderDetails = () => {
     };
   }, [id, dispatch]);
 
+  console.log(current?.status)
+
   if (!current || processing) return <Loader />;
   return (
     <div>
+      <Dialog open={checkModal}>
+        <DialogContent>
+          <DialogTitle>This order was marked as {current?.status}
+
+          </DialogTitle>
+          <Typography variant='subtitle1' align='center'>Do you still want to make changes?</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Controls.Button text='No' color='primary' onClick={() => setCheckModal(false)} />
+          <Controls.Button text='Yes' color='secondary' onClick={() => {
+            setCheckModal(false)
+            setShow(true)
+          }} />
+        </DialogActions>
+
+      </Dialog>
       {/* Modal for changing order status */}
       <Dialog
 
@@ -235,7 +254,7 @@ const OrderDetails = () => {
           <Typography variant="h5">Order Details</Typography>
           <div>
             {!current.isPaid && <Controls.Button disable={processing} style={{ backgroundColor: 'grey' }} onClick={goToPaymentScreen} text="Take Payment" EndIcon={<PaymentIcon />} />}
-            <Controls.Button style={{ backgroundColor: 'orange' }} onClick={handleEditOrder} text="Edit Order" EndIcon={<EditIcon />} />
+            <Controls.Button disabled={current.isPaid} style={{ backgroundColor: 'orange' }} onClick={handleEditOrder} text="Edit Order" EndIcon={<EditIcon />} />
           </div>
 
         </div>
@@ -305,7 +324,14 @@ const OrderDetails = () => {
               </Typography>
               <Controls.Button
                 text="Change Status"
-                onClick={() => setShow(true)}
+                onClick={() => {
+                  if (current?.status === 'pickup' || current?.status === 'delivered') {
+                    setCheckModal(true)
+                  } else {
+
+                    setShow(true)
+                  }
+                }}
               />
 
             </div>

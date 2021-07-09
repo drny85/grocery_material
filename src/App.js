@@ -103,7 +103,11 @@ function App() {
 						path='/payment/success/:orderId'
 						component={PaymentSuccess}
 					/>
-					<AdminRoute exact path='/payment/failed' component={PaymentFailed} />
+					<AdminRoute
+						exact
+						path='/payment/failed/:orderId'
+						component={PaymentFailed}
+					/>
 					<AdminRoute
 						exact
 						path='/admin/edit-order/:id'

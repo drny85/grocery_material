@@ -113,9 +113,10 @@ const StoreApplication = ({ history }) => {
         <div style={{ display: 'flex', flexDirection: 'column', margin: '0 auto', width: '100%', height: '100%', maxWidth: '1080px', alignItems: 'center' }}>
             {checkStatus ? (
                 <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100vw', height: '100vh' }}>
-                    <Typography style={{ margin: '0.2rem' }} align='center' variant='body1'>What would like to do?</Typography>
+                    <Typography style={{ margin: '0.2rem' }} align='center' variant='body1'>What would you like to do?</Typography>
                     <Controls.Button onClick={() => setCheckStatus(false)} style={{ width: '200px', margin: '2rem 0' }} text='New Application' />
                     <Controls.Button onClick={() => history.push('/store/application/status/check')} style={{ width: '200px' }} text='Check Status' />
+                    <Controls.Button onClick={() => history.goBack()} style={{ width: '200px', marginTop: '2rem', backgroundColor: 'grey' }} text='Go Back' />
 
 
 
